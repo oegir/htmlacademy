@@ -2,75 +2,74 @@
 
 class Task
 {
-    const STATUS_NEW = 'Новое';
-    const STATUS_WORK = 'В работе';
-    const ACTION_WORK = 'В работать';
-    const STATUS_COMPLETE = 'Выполнено';
-    const ACTION_COMPLETE = 'Выполнить';
-    const STATUS_FAILED = 'Провалено';
-    const ACTION_FAILED = 'Провалить';
-    const STATUS_CANCEL = 'Отменено';
-    const ACTION_CANCEL = 'Отменить';
 
-    private $status = self::STATUS_NEW;
-    private $workerId;
-    private $ownerId;
+    const STATUS_NEW = 'new';
+    const STATUS_IN_WORK= 'in_work';
+    const STATUS_DONE = 'done';
+    const STATUS_FAILED = 'failed';
+    const STATUS_CANCEL = 'cancel';
 
-    public function __construct($workerId, $ownerId)
+    const ACTION_CANCEL = 'cancel_task';
+    const ACTION_ANSWER = 'answer';
+    const ACTION_FINISHED = 'finished';
+    const ACTION_DECLINE = 'decline';
+    const ACTION_ACCEPT = 'accept';
+
+    protected $arrayMapActionAndStatus = [
+        self::STATUS_NEW => 'Новое',
+        self::STATUS_IN_WORK => 'В работе',
+        self::STATUS_DONE => 'Выполнено',
+        self::STATUS_FAILED => 'Провалено',
+        self::STATUS_CANCEL => 'Отменено',
+        self::ACTION_CANCEL => 'Отменить',
+        self::ACTION_ANSWER => 'Откликнуться',
+        self::ACTION_FINISHED => 'Выполнено',
+        self::ACTION_DECLINE => 'Отказаться',
+        self::ACTION_ACCEPT => 'Принять'
+    ];
+    protected $arrayNextActionAndNextStatus = [
+        self::ACTION_CANCEL => self::STATUS_CANCEL,
+        self::ACTION_ANSWER => null,
+        self::ACTION_FINISHED => self::STATUS_DONE,
+        self::ACTION_DECLINE => self::STATUS_FAILED,
+        self::ACTION_ACCEPT => self::STATUS_IN_WORK,
+        self::STATUS_NEW => [
+            'implementer' => self::ACTION_ANSWER,
+            'customer' => self::ACTION_CANCEL
+        ],
+        self::STATUS_IN_WORK => [
+            'implementer' => self::ACTION_DECLINE,
+            'customer' => self::ACTION_FINISHED
+        ],
+        self::STATUS_DONE => null,
+        self::STATUS_FAILED => null,
+        self::STATUS_CANCEL => null,
+    ];
+    public $strUser = '';
+
+    protected $intIdTask = null;
+    protected $intIdStatus = null;
+
+    public function __construct(int $intIdTask,int $intIdStatus)
     {
-        $this->workerId = $workerId;
-        $this->ownerId = $ownerId;
+        $this->intIdTask = $intIdTask;
+        $this->intIdStatus = $intIdStatus;
     }
 
-    public function setWorkTask($userId)
+
+    public function getNextStatus(string $action)
     {
-        if ($userId == $this->workerId) {
-            $this->status = self::STATUS_WORK;
+        if(strlen($action) < 1){
+            return null;
         }
-        return $this->status;
+        return $this->arrayNextActionAndNextStatus[$action];
     }
 
-    public function setCompleteTask($userId)
+    public function getNextAction(string $status)
     {
-        if ($userId == $this->ownerId && $this->status == self::STATUS_WORK) {
-            $this->status = self::STATUS_COMPLETE;
+        if(strlen($status) < 1){
+            return null;
         }
-        return $this->status;
-    }
-
-    public function setFailedTask($userId)
-    {
-        if ($userId == $this->workerId && $this->status == self::STATUS_WORK) {
-            $this->status = self::STATUS_FAILED;
-        }
-        return $this->status;
-    }
-
-    public function setCancelTask($userId)
-    {
-        if ($userId == $this->ownerId) {
-            $this->status = self::STATUS_CANCEL;
-        }
-        return $this->status;
-    }
-
-    public function getNextStatus($action, $userId)
-    {
-        switch ($action) {
-            case self::ACTION_WORK:
-                return $this->setWorkTask($userId);
-                break;
-            case self::ACTION_COMPLETE:
-                return $this->setCompleteTask($userId);
-                break;
-            case self::ACTION_FAILED:
-                return $this->setFailedTask($userId);
-                break;
-            case self::ACTION_CANCEL:
-                return $this->setCancelTask($userId);
-                break;
-            default :
-                return $this->status;
-        }
+        return $this->arrayNextActionAndNextStatus[$status][$this->strUser];
     }
 }
