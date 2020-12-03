@@ -4,7 +4,7 @@ assert_options(ASSERT_BAIL,     1);
 assert_options(ASSERT_WARNING,  false);
 assert_options(ASSERT_CALLBACK, 'assert_failure');
 
-require 'src\Task.php';
+require 'src\controllers\Task.php';
 
 $task = new Task(1, 2);
 
