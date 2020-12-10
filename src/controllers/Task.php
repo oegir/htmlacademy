@@ -4,7 +4,7 @@ class Task
 {
 
     const STATUS_NEW = 'new';
-    const STATUS_IN_WORK= 'in_work';
+    const STATUS_IN_WORK = 'in_work';
     const STATUS_DONE = 'done';
     const STATUS_FAILED = 'failed';
     const STATUS_CANCEL = 'cancel';
@@ -15,61 +15,68 @@ class Task
     const ACTION_DECLINE = 'decline';
     const ACTION_ACCEPT = 'accept';
 
-    protected $arrayMapActionAndStatus = [
+    const ROLE_IMPLEMENT = 'implementer';
+    const ROLE_CUSTOMER = 'customer';
+
+    protected $statusNames  = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_IN_WORK => 'В работе',
         self::STATUS_DONE => 'Выполнено',
         self::STATUS_FAILED => 'Провалено',
-        self::STATUS_CANCEL => 'Отменено',
+        self::STATUS_CANCEL => 'Отменено'
+    ];
+
+    protected $actionNames = [
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
         self::ACTION_FINISHED => 'Выполнено',
         self::ACTION_DECLINE => 'Отказаться',
         self::ACTION_ACCEPT => 'Принять'
     ];
-    protected $arrayNextActionAndNextStatus = [
+
+    protected $nextActionAndNextStatus = [
         self::ACTION_CANCEL => self::STATUS_CANCEL,
         self::ACTION_ANSWER => null,
         self::ACTION_FINISHED => self::STATUS_DONE,
         self::ACTION_DECLINE => self::STATUS_FAILED,
         self::ACTION_ACCEPT => self::STATUS_IN_WORK,
         self::STATUS_NEW => [
-            'implementer' => self::ACTION_ANSWER,
-            'customer' => self::ACTION_CANCEL
+            self::ROLE_IMPLEMENT => self::ACTION_ANSWER,
+            self::ROLE_CUSTOMER => self::ACTION_CANCEL
         ],
         self::STATUS_IN_WORK => [
-            'implementer' => self::ACTION_DECLINE,
-            'customer' => self::ACTION_FINISHED
+            self::ROLE_IMPLEMENT => self::ACTION_DECLINE,
+            self::ROLE_CUSTOMER => self::ACTION_FINISHED
         ],
         self::STATUS_DONE => null,
         self::STATUS_FAILED => null,
         self::STATUS_CANCEL => null,
     ];
-    public $strUser = '';
+    public $user = '';
 
-    protected $intIdTask = null;
-    protected $intIdStatus = null;
+    protected $idTask = null;
+    protected $idStatus = null;
 
-    public function __construct(int $intIdTask,int $intIdStatus)
+    public function __construct(int $idTask, int $idStatus)
     {
-        $this->intIdTask = $intIdTask;
-        $this->intIdStatus = $intIdStatus;
+        $this->idTask = $idTask;
+        $this->idStatus = $idStatus;
     }
 
 
     public function getNextStatus(string $action)
     {
-        if(strlen($action) < 1){
+        if (!$action) {
             return null;
         }
-        return $this->arrayNextActionAndNextStatus[$action];
+        return $this->nextActionAndNextStatus[$action];
     }
 
     public function getNextAction(string $status)
     {
-        if(strlen($status) < 1){
+        if (!$status) {
             return null;
         }
-        return $this->arrayNextActionAndNextStatus[$status][$this->strUser];
+        return $this->nextActionAndNextStatus[$status][$this->user];
     }
 }
