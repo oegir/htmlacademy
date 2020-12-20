@@ -18,7 +18,7 @@ class Task
     const ROLE_IMPLEMENT = 'implementer';
     const ROLE_CUSTOMER = 'customer';
 
-    protected $statusNames  = [
+    const STAUS_NAME  = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_IN_WORK => 'В работе',
         self::STATUS_DONE => 'Выполнено',
@@ -26,7 +26,7 @@ class Task
         self::STATUS_CANCEL => 'Отменено'
     ];
 
-    protected $actionNames = [
+    const ACTION_NAME = [
         self::ACTION_CANCEL => 'Отменить',
         self::ACTION_ANSWER => 'Откликнуться',
         self::ACTION_FINISHED => 'Выполнено',
@@ -57,12 +57,12 @@ class Task
     protected $idTask = null;
     protected $idStatus = null;
 
+
     public function __construct(int $idTask, int $idStatus)
     {
         $this->idTask = $idTask;
         $this->idStatus = $idStatus;
     }
-
 
     public function getNextStatus(string $action)
     {

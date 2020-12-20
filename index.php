@@ -1,40 +1,21 @@
 <?php
-assert_options(ASSERT_ACTIVE,   true);
-assert_options(ASSERT_BAIL,     1);
-assert_options(ASSERT_WARNING,  false);
-assert_options(ASSERT_CALLBACK, 'assert_failure');
+assert_options(ASSERT_ACTIVE, 1);
+assert_options(ASSERT_WARNING, 0);
+assert_options(ASSERT_QUIET_EVAL, 1);
 
-require 'src\controllers\Task.php';
+require 'src\Task.php';
 
 $task = new Task(1, 2);
 
+	echo '<pre>';
 
-// Тестовая функция
-function assert_failure()
-{
-    echo 'Проверка провалена';
-}
+	print_r($task::STAUS_NAME);
 
-// Тестовая функция
-function test_assert($parameter)
-{
-    assert(is_bool($parameter));
-}
+	print_r($task::ACTION_NAME);
 
-test_assert(1);
-echo 'Никогда не будет выведено';
+    print_r($task->getNextStatus("new"));
 
 
-
-//	echo '<pre>';
-//
-//	print_r($task::ACTION_CANCEL);
-//
-//	print_r($task::STATUS_IN_WORK);
-
-echo $task->getNextStatus('done') . '<br>';
-
-print_r($task->getNextStatus("done"));
-
-assert($task->getNextStatus("done") == Task::STATUS_DONE, 'Ожидайте действие: "in work"');
+assert($task->getNextStatus("done") !== Task::STATUS_DONE, 'Ожидайте действие: "in work"');
 assert($task->getNextStatus("cancel") == Task::STATUS_CANCEL, 'Ожидайте действие: "cancel"');
+
