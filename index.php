@@ -1,21 +1,16 @@
 <?php
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 0);
-assert_options(ASSERT_QUIET_EVAL, 1);
 
-require 'src\Task.php';
+require 'src'.DIRECTORY_SEPARATOR.'Task.php'; 
 
 $task = new Task(1, 2);
 
-	echo '<pre>';
+if($task->getNextStatus(Task::ACTION_APPROVE, Task::CUSTOMER_ROLE) == Task::STATUS_IN_WORK) {
+    echo 'Следующий статус: ' . $task->getNextStatus(Task::ACTION_APPROVE, Task::CUSTOMER_ROLE);
+}
 
-	print_r($task::STAUS_NAME);
+echo '<hr/>';
 
-	print_r($task::ACTION_NAME);
-
-    print_r($task->getNextStatus("new"));
-
-
-assert($task->getNextStatus("done") !== Task::STATUS_DONE, 'Ожидайте действие: "in work"');
-assert($task->getNextStatus("cancel") == Task::STATUS_CANCEL, 'Ожидайте действие: "cancel"');
-
+echo 'Доступные действия для заказчика:';
+echo '<pre>';
+var_dump($task->getAvailableCustomerActions(Task::STATUS_NEW));
+echo '</pre>';

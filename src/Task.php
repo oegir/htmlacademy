@@ -1,82 +1,131 @@
 <?php
 
-class Task
-{
+class Task {
+    public const STATUS_NEW = 'new';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_IN_WORK = 'in_work';
+    public const STATUS_PERFORMED = 'performed';
+    public const STATUS_FAILED = 'failed';
+    public const STATUS_COMPLETED = 'completed';
 
-    const STATUS_NEW = 'new';
-    const STATUS_IN_WORK = 'in_work';
-    const STATUS_DONE = 'done';
-    const STATUS_FAILED = 'failed';
-    const STATUS_CANCEL = 'cancel';
+    public const ACTION_CANCEL = 'cancel';
+    public const ACTION_RESPOND = 'respond';
+    public const ACTION_APPROVE = 'approve';
+    public const ACTION_REFUSE = 'refuse';
+    public const ACTION_COMPLETE = 'complete';
 
-    const ACTION_CANCEL = 'cancel_task';
-    const ACTION_ANSWER = 'answer';
-    const ACTION_FINISHED = 'finished';
-    const ACTION_DECLINE = 'decline';
-    const ACTION_ACCEPT = 'accept';
+    public const CUSTOMER_ROLE = 'customer';
+    public const EXECUTOR_ROLE = 'executor';
 
-    const ROLE_IMPLEMENT = 'implementer';
-    const ROLE_CUSTOMER = 'customer';
+    private string $current_status = self::STATUS_NEW;
+    private int $executor_id;
+    private int $customer_id;
 
-    const STAUS_NAME  = [
+    public static array $status_map = [
         self::STATUS_NEW => 'Новое',
+        self::STATUS_CANCELED => 'Завершено',
         self::STATUS_IN_WORK => 'В работе',
-        self::STATUS_DONE => 'Выполнено',
+        self::STATUS_PERFORMED => 'Выполнено',
         self::STATUS_FAILED => 'Провалено',
-        self::STATUS_CANCEL => 'Отменено'
+        self::STATUS_COMPLETED => 'Выполнено'
     ];
 
-    const ACTION_NAME = [
-        self::ACTION_CANCEL => 'Отменить',
-        self::ACTION_ANSWER => 'Откликнуться',
-        self::ACTION_FINISHED => 'Выполнено',
-        self::ACTION_DECLINE => 'Отказаться',
-        self::ACTION_ACCEPT => 'Принять'
+    public static array $action_map = [
+        self::ACTION_CANCEL => 'Завершить',
+        self::ACTION_RESPOND => 'Откликнуться',
+        self::ACTION_APPROVE => 'Утвердить',
+        self::ACTION_REFUSE => 'Отказаться',
+        self::ACTION_COMPLETE => 'Завершить'
     ];
 
-    protected $nextActionAndNextStatus = [
-        self::ACTION_CANCEL => self::STATUS_CANCEL,
-        self::ACTION_ANSWER => null,
-        self::ACTION_FINISHED => self::STATUS_DONE,
-        self::ACTION_DECLINE => self::STATUS_FAILED,
-        self::ACTION_ACCEPT => self::STATUS_IN_WORK,
+    public static array $status_action_map = [
         self::STATUS_NEW => [
-            self::ROLE_IMPLEMENT => self::ACTION_ANSWER,
-            self::ROLE_CUSTOMER => self::ACTION_CANCEL
+            self::EXECUTOR_ROLE => [
+                self::ACTION_RESPOND => null,
+                self::ACTION_REFUSE => null
+            ],
+            self::CUSTOMER_ROLE => [
+                self::ACTION_CANCEL => self::STATUS_CANCELED,
+                self::ACTION_APPROVE => self::STATUS_IN_WORK
+            ]
+        ],
+        self::STATUS_CANCELED => [
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
         ],
         self::STATUS_IN_WORK => [
-            self::ROLE_IMPLEMENT => self::ACTION_DECLINE,
-            self::ROLE_CUSTOMER => self::ACTION_FINISHED
+            self::EXECUTOR_ROLE => [
+                self::ACTION_REFUSE => self::STATUS_FAILED
+            ],
+            self::CUSTOMER_ROLE => [
+                self::ACTION_COMPLETE => self::STATUS_COMPLETED
+            ]
         ],
-        self::STATUS_DONE => null,
-        self::STATUS_FAILED => null,
-        self::STATUS_CANCEL => null,
+        self::STATUS_PERFORMED => [
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
+        ],
+        self::STATUS_FAILED => [
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
+        ]
     ];
-    public $user = '';
 
-    protected $idTask = null;
-    protected $idStatus = null;
+    public static $role_map = [
+        self::CUSTOMER_ROLE => 'Заказчик',
+        self::EXECUTOR_ROLE => 'Исполнитель'
+    ];
 
-
-    public function __construct(int $idTask, int $idStatus)
-    {
-        $this->idTask = $idTask;
-        $this->idStatus = $idStatus;
+    public function __construct(int $customer_id, int $executor_id = 0) {
+        $this->executor_id = $executor_id;
+        $this->customer_id = $customer_id;
     }
 
-    public function getNextStatus(string $action)
-    {
-        if (!$action) {
-            return null;
-        }
-        return $this->nextActionAndNextStatus[$action];
+    public function getCurrentStatus(): string {
+        return $this->current_status;
     }
 
-    public function getNextAction(string $status)
-    {
-        if (!$status) {
-            return null;
+    public static function getStatusMap(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return self::$status_action_map[$status];
         }
-        return $this->nextActionAndNextStatus[$status][$this->user];
+    }
+
+    private function getAvailableActions(string $status, string $role): array {
+        $actionsArray = self::$status_action_map[$status][$role];
+        $result = [];
+        if(!empty($actionsArray)) {
+            foreach($actionsArray as $action => $status) {
+                $result[] = $action;
+            }
+        }
+        return $result;
+    }
+
+
+    public function getAvailableExecutorActions(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return $this->getAvailableActions($status, self::EXECUTOR_ROLE);
+        }
+    }
+
+    public function getAvailableCustomerActions(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return $this->getAvailableActions($status, self::CUSTOMER_ROLE);
+        }
+    }
+
+    public function getNextStatus(string $action, string $role): string {
+        if(isset(self::$action_map[$action]) && isset(self::$role_map[$role])) {
+            return self::$status_action_map[$this->current_status][$role][$action] ?? '';
+        }
+    }
+
+    public function setStatus(string $newStatus): bool {
+        if(isset(self::$status_map[$newStatus])) {
+            $this->current_status = $newStatus;
+            return true;
+        }
+        return false;
     }
 }
