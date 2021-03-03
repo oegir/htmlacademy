@@ -17,11 +17,11 @@ class Task {
     public const CUSTOMER_ROLE = 'customer';
     public const EXECUTOR_ROLE = 'executor';
 
-    private string $current_status = self::STATUS_NEW;
+    private $current_status = self::STATUS_NEW;
     private int $executor_id;
     private int $customer_id;
 
-    public static array $status_map = [
+    public static $status_map = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCELED => 'Завершено',
         self::STATUS_IN_WORK => 'В работе',
@@ -30,7 +30,7 @@ class Task {
         self::STATUS_COMPLETED => 'Выполнено'
     ];
 
-    public static array $action_map = [
+    public static $action_map = [
         self::ACTION_CANCEL => 'Завершить',
         self::ACTION_RESPOND => 'Откликнуться',
         self::ACTION_APPROVE => 'Утвердить',
@@ -38,20 +38,12 @@ class Task {
         self::ACTION_COMPLETE => 'Завершить'
     ];
 
-    public static array $status_action_map = [
+public static $status_action_map = [
         self::STATUS_NEW => [
-            self::EXECUTOR_ROLE => [
-                self::ACTION_RESPOND => null,
-                self::ACTION_REFUSE => null
-            ],
             self::CUSTOMER_ROLE => [
                 self::ACTION_CANCEL => self::STATUS_CANCELED,
                 self::ACTION_APPROVE => self::STATUS_IN_WORK
             ]
-        ],
-        self::STATUS_CANCELED => [
-            self::EXECUTOR_ROLE => [],
-            self::CUSTOMER_ROLE => []
         ],
         self::STATUS_IN_WORK => [
             self::EXECUTOR_ROLE => [
@@ -61,14 +53,6 @@ class Task {
                 self::ACTION_COMPLETE => self::STATUS_COMPLETED
             ]
         ],
-        self::STATUS_PERFORMED => [
-            self::EXECUTOR_ROLE => [],
-            self::CUSTOMER_ROLE => []
-        ],
-        self::STATUS_FAILED => [
-            self::EXECUTOR_ROLE => [],
-            self::CUSTOMER_ROLE => []
-        ]
     ];
 
     public static $role_map = [
@@ -91,16 +75,12 @@ class Task {
         }
     }
 
-    private function getAvailableActions(string $status, string $role): array {
-        $actionsArray = self::$status_action_map[$status][$role];
-        $result = [];
-        if(!empty($actionsArray)) {
-            foreach($actionsArray as $action => $status) {
-                $result[] = $action;
-            }
-        }
+private function getAvailableActions(string $status, string $role): array
+{
+        $actionsArray = self::$status_action_map[$status][$role] ?? [];
+        $result = array_keys($actionsArray);
         return $result;
-    }
+}
 
 
     public function getAvailableExecutorActions(string $status): ?array {
