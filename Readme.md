@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Artem2J](https://up.htmlacademy.ru/php/12/user/1251513).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Петров](https://up.htmlacademy.ru/php/12/user/1231631).
 
 ---
 
