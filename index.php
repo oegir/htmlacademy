@@ -49,9 +49,11 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
             <!--заполните этот список из массива категорий-->
+            <? foreach ($categories_arr as $category): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html">Имя категории</a>
+                <a class="promo__link" href="pages/all-lots.html"><?=$category ;?>></a>
             </li>
+            <? endforeach;?>
         </ul>
     </section>
     <section class="lots">
@@ -87,9 +89,11 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
     <nav class="nav">
         <ul class="nav__list container">
             <!--заполните этот список из массива категорий-->
+            <? foreach ($categories_arr as $category): ?>
             <li class="nav__item">
-                <a href="pages/all-lots.html">Название категории</a>
+                <a href="pages/all-lots.html"><?=$category; ?></a>
             </li>
+            <?endforeach;?>
         </ul>
     </nav>
     <div class="main-footer__bottom container">
