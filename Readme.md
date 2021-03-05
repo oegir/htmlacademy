@@ -1,7 +1,8 @@
 # Личный проект «TaskForce»
 
 * Студент: [Ilya Loopashko](https://up.htmlacademy.ru/yii/1/user/492247).
-* Наставник: `Дмитрий Крутько`.
+* Наставник: [Алексей Петров](https://htmlacademy.ru/profile/id1231631).
+
 
 ---
 
