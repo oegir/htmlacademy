@@ -1,8 +1,6 @@
 <?php
 $is_auth = rand(0, 1);
 
-$user_name = ''; // укажите здесь ваше имя
-
 $categories_arr = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
 
 $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => 'Доски и лыжи', 'price' => 10999, 'url' => 'img/lot-1.jpg'],
@@ -11,6 +9,8 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
                 ['name' => 'Ботинки для сноуборда DC Mutiny Charocal', 'category' => 'Ботинки', 'price' => 10999, 'url' => 'img/lot-4.jpg'],
                 ['name' => 'Куртка для сноуборда DC Mutiny Charocal', 'category' => 'Одежда', 'price' => 7500, 'url' => 'img/lot-5.jpg'],
                 ['name' => 'Маска Oakley Canopy', 'category' => 'Разное', 'price' => 5400, 'url' => 'img/lot-6.jpg']];
+
+$user_name = 'Artem2J'; // укажите здесь ваше имя
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -38,7 +38,22 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
         <nav class="user-menu">
 
         <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
-
+            <?if ($is_auth == 1): ?>
+                <div class="user-menu__logged">
+                    <p><? print($user_name) ?></p>
+                    <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
+                    <a class="user-menu__logout" href="#">Выход</a>
+                </div>
+            <?else: ?>
+                <ul class="user-menu__list">
+                    <li class="user-menu__item">
+                    <a href="#">Регистрация</a>
+                    </li>
+                    <li class="user-menu__item">
+                    <a href="#">Вход</a>
+                    </li>
+                </ul>
+            <?endif; ?> 
         </nav>
     </div>
 </header>
