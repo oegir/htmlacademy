@@ -11,6 +11,11 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
                 ['name' => 'Маска Oakley Canopy', 'category' => 'Разное', 'price' => 5400, 'url' => 'img/lot-6.jpg']];
 
 $user_name = 'Artem2J'; // укажите здесь ваше имя
+
+function price_format($price){
+    $result = number_format(ceil($price),0, '.',' ').' ₽';
+    return $result;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -53,7 +58,7 @@ $user_name = 'Artem2J'; // укажите здесь ваше имя
                     <a href="#">Вход</a>
                     </li>
                 </ul>
-            <?endif; ?> 
+            <?endif; ?>
         </nav>
     </div>
 </header>
@@ -88,7 +93,7 @@ $user_name = 'Artem2J'; // укажите здесь ваше имя
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=$item['price']; ?><b class="rub">р</b></span>
+                            <span class="lot__cost"><?=price_format($item['price']); ?></span>
                         </div>
                         <div class="lot__timer timer">
                             12:23
