@@ -1,0 +1,15 @@
+{
+    "name": "cyberpunk3351/492247-task-force-3",
+    "authors": [
+        {
+            "name": "Drummer",
+            "email": "36233549+cyberpunk3351@users.noreply.github.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Taskforce\\": "src/"
+        }
+    },
+    "require": {}
+}
