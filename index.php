@@ -1,4 +1,8 @@
 <?php
+
+require_once 'vendor/autoload.php';
+use Taskforce\Task;
+
 // Активация утверждений и отключение вывода ошибок
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 0);
