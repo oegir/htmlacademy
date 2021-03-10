@@ -14,6 +14,12 @@ $items_arr =   [['name' => '2014 Rossignol District Snowboard', 'category' => '�
 
 $user_name = 'Artem2J'; // укажите здесь ваше имя
 
+//Включение фильтра для защиты от XSS
+function xss_protection($string){
+    return htmlspecialchars($string);
+}
+
+
 function price_format($price){
     $result = number_format(ceil($price),0, '.',' ').' ₽';
     return $result;
