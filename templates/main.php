@@ -3,11 +3,11 @@
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
             <!--заполните этот список из массива категорий-->
-            <? foreach ($categories_arr as $category): ?>
+            <?php foreach ($categories_arr as $category): ?>
             <li class="promo__item promo__item--boards">
                 <a class="promo__link" href="pages/all-lots.html"><?=xss_protection($category) ;?>></a>
             </li>
-            <? endforeach;?>
+            <?php endforeach;?>
         </ul>
     </section>
     <section class="lots">
@@ -16,7 +16,7 @@
         </div>
         <ul class="lots__list">
             <!--заполните этот список из массива с товарами-->
-            <?foreach ($items_arr as $item): ?>
+            <?php foreach ($items_arr as $item): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
                     <img src="<?=$item['url']; ?>" width="350" height="260" alt="">
@@ -29,17 +29,16 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=price_format($item['price']); ?></span>
                         </div>
-                        <? $time_arr=get_dt_range($item['expiry_date']);
-                            $red_flag = '';
-                           if($time_arr[0] == '00') $red_flag = 'timer--finishing' ;
-                         ?>
-                        
+                        <?php $time_arr=get_dt_range($item['expiry_date']);
+                            $red_flag = $time_arr[0] == '00'?'timer--finishing':'';
+                            ?>
+
                         <div class="lot__timer timer <?=$red_flag?>">
-                        <? print($time_arr[0].':'.$time_arr[1])?>
+                        <?php print($time_arr[0].':'.$time_arr[1])?>
                         </div>
                     </div>
                 </div>
             </li>
-            <?endforeach; ?>
+            <?php endforeach; ?>
         </ul>
     </section>
