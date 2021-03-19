@@ -1,23 +1,23 @@
 CREATE TABLE `task` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` TEXT NOT NULL,
-  `description` TEXT NOT NULL,
-  `price` int DEFAULT NULL,
-  `category_id` int UNSIGNED NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `finish_at` datetime DEFAULT NULL,
-  `status` enum('new','canceled','in_work','performed','failed','completed') NOT NULL DEFAULT 'new',
-  `latitude` decimal(8,6) DEFAULT NULL,
-  `longitude` DECIMAL(9,6) DEFAULT NULL,
-  `city_id` int UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` TEXT NOT NULL,
+    `description` TEXT NOT NULL,
+    `price` int DEFAULT NULL,
+    `category_id` int UNSIGNED NOT NULL,
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `finish_at` datetime DEFAULT NULL,
+    `status` enum('new','canceled','in_work','performed','failed','completed') NOT NULL DEFAULT 'new',
+    `latitude` decimal(8,6) DEFAULT NULL,
+    `longitude` DECIMAL(9,6) DEFAULT NULL,
+    `city_id` int UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `category` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` TEXT NOT NULL,
-  `code` TEXT NOT NULL,
-  PRIMARY KEY (`id`)
+    `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` TEXT NOT NULL,
+    `code` TEXT NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `user` (
