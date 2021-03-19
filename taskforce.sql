@@ -80,14 +80,14 @@ CREATE TABLE `review` (
 );
 
 CREATE TABLE `user_category` (
-	`user_id` INT NOT NULL,
-	`category_id` INT NOT NULL,
+	`user_id` INT UNSIGNED NOT NULL,
+	`category_id` INT UNSIGNED NOT NULL,
 	PRIMARY KEY (`user_id`,`category_id`)
 );
 
 CREATE TABLE `favorite` (
-	`customer_id` INT NOT NULL,
-	`worker_id` INT NOT NULL,
+	`customer_id` INT UNSIGNED NOT NULL,
+	`worker_id` INT UNSIGNED NOT NULL,
 	PRIMARY KEY (`customer_id`,`worker_id`)
 );
 
