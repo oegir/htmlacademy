@@ -3,7 +3,7 @@
 use taskforce\actions\ApproveAction;
 use taskforce\Task;
 
-require 'src'.DIRECTORY_SEPARATOR.'Task.php';
+require_once 'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
 function dd($data) {
     echo '<pre>' . print_r($data, 1) . '</pre><hr/>';
