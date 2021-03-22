@@ -1,21 +1,33 @@
 <?php
 
+use taskforce\actions\ApproveAction;
+use taskforce\Task;
+
 require_once 'vendor/autoload.php';
-use Taskforce\Task;
 
-// Активация утверждений и отключение вывода ошибок
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 0);
-assert_options(ASSERT_QUIET_EVAL, 1);
-// Создание обработчика
-function my_assert_handler($file, $line, $code, $desc = null) {
-    print_r($desc);
+function dd($data) {
+    echo '<pre>' . print_r($data, 1) . '</pre><hr/>';
 }
-// Подключение callback-функции
-assert_options(ASSERT_CALLBACK, 'my_assert_handler');
-
-// require 'src'.DIRECTORY_SEPARATOR.'Task.php'; 
 
 $task = new Task(1, 2);
 
-assert($task->getNextStatus(Task::ACTION_APPROVE, Task::CUSTOMER_ROLE) == Task::STATUS_IN_WORK, 'Approve action failed');
+$approveAction = new ApproveAction();
+
+if($task->getNextStatus($approveAction) == Task::STATUS_IN_WORK) {
+    echo 'Следующий статус: ' . $task->getNextStatus($approveAction);
+}
+
+echo '<hr/>';
+
+echo 'Доступные действия для заказчика (STATUS_NEW):';
+dd($task->getAvailableActions(Task::STATUS_NEW, 1));
+echo 'Доступные действия для исполнителя (STATUS_NEW):';
+dd($task->getAvailableActions(Task::STATUS_NEW, 2));
+
+echo 'Доступные действия для заказчика (STATUS_IN_WORK):';
+dd($task->getAvailableActions(Task::STATUS_IN_WORK, 1));
+echo 'Доступные действия для исполнителя (STATUS_IN_WORK):';
+dd($task->getAvailableActions(Task::STATUS_IN_WORK, 2));
+
+echo 'Доступные действия для исполнителя (STATUS_CANCELED):';
+dd($task->getAvailableActions(Task::STATUS_CANCELED, 2));
