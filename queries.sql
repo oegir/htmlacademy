@@ -1,115 +1,55 @@
-INSERT INTO category SET name = 'Доски и лыжи',
-                         code = 'boardsandskis';
-
-INSERT INTO category SET name = 'Крепления',
-                         code = 'mounts';
-
-INSERT INTO category SET name = 'Ботинки',
-                         code = 'boots';
-
-INSERT INTO category SET name = 'Одежда',
-                         code = 'clothing';
-
-INSERT INTO category SET name = 'Инструменты',
-                         code = 'tools';
-
-INSERT INTO category SET name = 'Разное',
-                         code = 'other';
+INSERT INTO
+        category (category_name, code)
+VALUES
+       ('Доски и лыжи', 'boardsandskis'),
+       ('Крепления', 'mounts'),
+       ('Ботинки', 'boots'),
+       ('Одежда', 'clothing'),
+       ('Инструменты', 'tools'),
+       ('Разное', 'other');
 
 
-INSERT INTO user SET registration_date = '2021-03-20 10:00:00',
-                     email = '1@eml.ru',
-                     name = 'Alexandra',
-                     password = 'password',
-                     contacts = 'contacts';
+INSERT INTO
+        user (registration_date, email, name, password, contacts)
+VALUES
+       ('2021-03-20 10:00:00', '1@eml.ru', 'Alexandra', 'password', 'contacts'),
+       ('2021-03-20 10:30:00', '2@eml.ru', 'Kristal', 'password', 'contacts');
 
-INSERT INTO user SET registration_date = '2021-03-20 10:30:00',
-                     email = '2@eml.ru',
-                     name = 'Kristal',
-                     password = 'password',
-                     contacts = 'contacts';
 
-INSERT INTO item SET date = '2021-03-20 12:00:00',
-                     name = '2014 Rossignol District Snowboard',
-                     description = '2014 Rossignol District Snowboard',
-                     img_path = 'img/lot-1.jpg',
-                     start_price = 10999,
-                     completion_date = '2021-03-23',
-                     bid_step = 100,
-                     author_id = 1,
-                     category_id = 1;
+INSERT INTO
+    item (date, name, description,img_path, start_price, completion_date,bid_step, author_id, category_id)
+VALUES
+        ('2021-03-20 13:00:00', '2014 Rossignol District Snowboard', '2014 Rossignol District Snowboard',
+        'img/lot-1.jpg', 10999, '2021-03-23', 100, 1, 1),
+        ('2021-03-20 12:00:00', 'DC Ply Mens 2016/2017 Snowboard', 'DC Ply Mens 2016/2017 Snowboard',
+         'img/lot-2.jpg', 159999, '2021-03-24', 100, 1, 1),
+        ('2021-03-20 15:00:00','Крепления Union Contact Pro 2015 года размер L/XL', 'Крепления Union Contact Pro 2015 года размер L/XL',
+         'img/lot-3.jpg', 8000, '2021-03-25', 100, 2, 2),
+        ('2021-03-21 12:00:00', 'Ботинки для сноуборда DC Mutiny Charocal', 'Ботинки для сноуборда DC Mutiny Charocal',
+         'img/lot-4.jpg', 10999, '2021-03-26', 100, 2, 3),
+        ('2021-03-21 14:00:00', 'Куртка для сноуборда DC Mutiny Charocal', 'Куртка для сноуборда DC Mutiny Charocal',
+         'img/lot-5.jpg', 7500, '2021-03-27', 100, 1, 4),
+        ('2021-03-21 16:00:00', 'Маска Oakley Canopy', 'Маска Oakley Canopy',
+         'img/lot-6.jpg', 5400, '2021-05-12', 100, 2, 6);
 
-INSERT INTO item SET date = '2021-03-20 13:00:00',
-                     name = 'DC Ply Mens 2016/2017 Snowboard',
-                     description = 'DC Ply Mens 2016/2017 Snowboard',
-                     img_path = 'img/lot-2.jpg',
-                     start_price = 159999,
-                     completion_date = '2021-03-24',
-                     bid_step = 100,
-                     author_id = 1,
-                     category_id = 1;
-
-INSERT INTO item SET date = '2021-03-20 15:00:00',
-                     name = 'Крепления Union Contact Pro 2015 года размер L/XL',
-                     description = 'Крепления Union Contact Pro 2015 года размер L/XL',
-                     img_path = 'img/lot-3.jpg',
-                     start_price = 8000,
-                     completion_date = '2021-03-25',
-                     bid_step = 100,
-                     author_id = 2,
-                     category_id = 2;
-
-INSERT INTO item SET date = '2021-03-21 12:00:00',
-                     name = 'Ботинки для сноуборда DC Mutiny Charocal',
-                     description = 'Ботинки для сноуборда DC Mutiny Charocal',
-                     img_path = 'img/lot-4.jpg',
-                     start_price = 10999,
-                     completion_date = '2021-03-26',
-                     bid_step = 100,
-                     author_id = 2,
-                     category_id = 3;
-
-INSERT INTO item SET date = '2021-03-21 14:00:00',
-                     name = 'Куртка для сноуборда DC Mutiny Charocal',
-                     description = 'Куртка для сноуборда DC Mutiny Charocal',
-                     img_path = 'img/lot-5.jpg',
-                     start_price = 7500,
-                     completion_date = '2021-03-27',
-                     bid_step = 100,
-                     author_id = 1,
-                     category_id = 4;
-
-INSERT INTO item SET date = '2021-03-21 16:00:00',
-                     name = 'Маска Oakley Canopy',
-                     description = 'Маска Oakley Canopy',
-                     img_path = 'img/lot-6.jpg',
-                     start_price = 5400,
-                     completion_date = '2021-05-12',
-                     bid_step = 100,
-                     author_id = 2,
-                     category_id = 6;
-
-INSERT INTO bid SET date = '2021-03-23 10:00:00',
-                    price = 6000,
-                    user_id = 1,
-                    item_id = 6;
-
-INSERT INTO bid SET date = '2021-03-23 15:00:00',
-                    price = 6500,
-                    user_id = 1,
-                    item_id = 6;
+INSERT INTO
+    bid (date, price, user_id, item_id)
+VALUES
+       ('2021-03-23 10:00:00', 6000, 1, 6),
+       ('2021-03-23 15:00:00', 6500, 1, 6);
 
 
 # получить все категории
-SELECT name FROM category;
+SELECT category_name FROM category;
 
 # получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение,
 # текущую цену, название категории;
-SELECT i.name, start_price, img_path, c.name FROM item i JOIN category c on c.id = i.category_id WHERE winner_id
-    IS NULL ORDER BY date DESC LIMIT 3;
+SELECT i.name, i.start_price, img_path, MAX(d.start_price), category_name FROM item i LEFT JOIN category c on c.id = i.category_id
+    JOIN (SELECT id, start_price FROM item UNION SELECT item_id, price FROM bid) d ON d.id = i.id WHERE i.winner_id IS NULL
+    GROUP BY i.id, i.date ORDER BY i.date DESC LIMIT 3;
 
 # показать лот по его id. Получите также название категории, к которой принадлежит лот;
-SELECT i.name, start_price, img_path, c.name FROM item i JOIN category c on c.id = i.category_id WHERE i.id = 2;
+SELECT i.name, start_price, img_path, category_name FROM item i JOIN category c on c.id = i.category_id WHERE i.id = 2;
 
 # обновить название лота по его идентификатору;
 UPDATE item SET name = 'DC Ply Mens 2016/2017 Snowboard' WHERE id = 2;
