@@ -1,5 +1,5 @@
 INSERT INTO
-        category (category_name, code)
+        category (name, code)
 VALUES
        ('Доски и лыжи', 'boardsandskis'),
        ('Крепления', 'mounts'),
@@ -40,16 +40,16 @@ VALUES
 
 
 # получить все категории
-SELECT category_name FROM category;
+SELECT name FROM category;
 
 # получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение,
 # текущую цену, название категории;
-SELECT i.name, i.start_price, img_path, MAX(d.start_price), category_name FROM item i LEFT JOIN category c on c.id = i.category_id
+SELECT i.name, i.start_price, img_path, MAX(d.start_price), c.name category_name FROM item i LEFT JOIN category c on c.id = i.category_id
     JOIN (SELECT id, start_price FROM item UNION SELECT item_id, price FROM bid) d ON d.id = i.id WHERE i.winner_id IS NULL
     GROUP BY i.id, i.date ORDER BY i.date DESC LIMIT 3;
 
 # показать лот по его id. Получите также название категории, к которой принадлежит лот;
-SELECT i.name, start_price, img_path, category_name FROM item i JOIN category c on c.id = i.category_id WHERE i.id = 2;
+SELECT i.name, start_price, img_path, c.name category_name FROM item i JOIN category c on c.id = i.category_id WHERE i.id = 2;
 
 # обновить название лота по его идентификатору;
 UPDATE item SET name = 'DC Ply Mens 2016/2017 Snowboard' WHERE id = 2;
