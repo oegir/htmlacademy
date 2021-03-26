@@ -1,12 +1,6 @@
-CREATE DATABASE yeticave
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_general_ci;
-
-USE yeticave;
-
 CREATE TABLE category(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR (128),
+    name VARCHAR (128),
     code VARCHAR (128)
 );
 
