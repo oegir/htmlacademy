@@ -27,7 +27,7 @@ $categories_arr = getCategories($con);
 
 function getItems (mysqli $con): array{
     $sql = "SELECT
-                i.name, c.name category, IFNULL(b.price,start_price) price, img_path url, completion_date expiry_date
+                i.id id, i.name, c.name category, IFNULL(b.price,start_price) price, img_path url, completion_date expiry_date
              FROM  item i
             LEFT JOIN category c on c.id = i.category_id
             LEFT JOIN
