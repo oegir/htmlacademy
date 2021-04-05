@@ -5,7 +5,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($categories_arr as $category): ?>
             <li class="promo__item promo__item--<?=$category['code']?>>">
-                <a class="promo__link" href="pages/all-lots.html"><?=xss_protection($category['name']) ;?>></a>
+                <a class="promo__link" href="pages/all-lots.html"><?=xss_protection($category['name']) ;?></a>
             </li>
             <?php endforeach;?>
         </ul>
@@ -22,7 +22,7 @@
                     <img src="<?=$item['url']; ?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?=xss_protection($item['category']); ?>></span>
+                    <span class="lot__category"><?=xss_protection($item['category']); ?></span>
                     <h3 class="lot__title"><a class="text-link" href="lot.php?id=<?=$item['id']?>"><?=xss_protection($item['name']); ?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
