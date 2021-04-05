@@ -1,17 +1,13 @@
 <?php
 require_once('helpers.php');
+require_once('db_connection.php');
 
 $is_auth = rand(0, 1);
 
 $categories_arr = [];
 $items_arr = [];
 
-$con = mysqli_connect('localhost', 'root', 'root', 'yeticave');
-if ($con == false){
-    print ("Ошибка подключения" . mysqli_connect_error());
-    die();
-}
-mysqli_set_charset($con, "utf8");
+$con = db_connect();
 
 function getCategories(mysqli $con): array{
     $sql = "SELECT name, code FROM category";
