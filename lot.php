@@ -5,14 +5,22 @@ require_once('service_functions.php');
 
 $is_auth = rand(0,1);
 $user_name = 'Artem2J';
-$id = $_GET['id'];
+
+if(!isset($_GET['id'])){
+    header('Location: pages/404.html');
+    die();
+}
+
+$id = (int)$_GET['id'];
 $categories_arr =[];
 
 $con = db_connect();
 
 function checkId( mysqli $con, $id){
-    $sql = "SELECT id FROM item WHERE id = ".$id;
-    $res = mysqli_query($con, $sql);
+    $sql = "SELECT id FROM item WHERE id = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
     if (mysqli_num_rows($res) == 0){
         header('Location: pages/404.html');
     }
