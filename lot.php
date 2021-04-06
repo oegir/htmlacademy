@@ -58,9 +58,6 @@ function getCategories(mysqli $con): array{
     return $categories;
 }
 
-
-
-
 $categories_arr = getCategories($con);
 
 $item = getItem($con, $id);
