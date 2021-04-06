@@ -37,14 +37,17 @@ function getItem(mysqli $con, $id): array{
                 item_id, MAX(price) price
             FROM bid b2
             GROUP BY item_id) b ON i.id = b.item_id
-            WHERE i.id =".$id;
+            WHERE i.id = ?";
     $item = [];
-    $res = mysqli_query($con, $sql);
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
     if ($res && $row = $res->fetch_assoc()){
         $item = $row;
     }
     return $item;
 }
+
 function getCategories(mysqli $con): array{
     $sql = "SELECT name, code FROM category";
     $categories = [];
