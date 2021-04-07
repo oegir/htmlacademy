@@ -8,7 +8,7 @@
         <?php endforeach; ?>
     </ul>
 </nav>
-<form class="form form--add-lot container form--invalid" action="https://echo.htmlacademy.ru" method="post"> <!-- form--invalid -->
+<form class="form form--add-lot container form--invalid" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
     <h2>Добавление лота</h2>
     <div class="form__container-two">
         <div class="form__item form__item--invalid"> <!-- form__item--invalid -->
@@ -18,16 +18,13 @@
         </div>
         <div class="form__item">
             <label for="category">Категория <sup>*</sup></label>
-            <select id="category" name="category">
-            <option>Выберите категорию</option>
-            <option>Доски и лыжи</option>
-            <option>Крепления</option>
-            <option>Ботинки</option>
-            <option>Одежда</option>
-            <option>Инструменты</option>
-            <option>Разное</option>
-          </select>
-          <span class="form__error">Выберите категорию</span>
+              <select id="category" name="category">
+                <option>Выберите категорию</option>
+                <?php foreach ($categories_arr as $category): ?>
+                  <option><?=xss_protection($category['name']); ?></option>
+                <?php endforeach; ?>
+              </select>
+            <span class="form__error">Выберите категорию</span>
         </div>
       </div>
       <div class="form__item form__item--wide">
@@ -38,7 +35,7 @@
       <div class="form__item form__item--file">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
-          <input class="visually-hidden" type="file" id="lot-img" value="">
+          <input class="visually-hidden" name="lot-img" type="file" id="lot-img" value="">
           <label for="lot-img">
             Добавить
           </label>
@@ -62,6 +59,6 @@
         </div>
     </div>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
-    <button type="submit" class="button">Добавить лот</button>
+    <button type="submit" name="submit" class="button">Добавить лот</button>
 </form>  
 </main>  
