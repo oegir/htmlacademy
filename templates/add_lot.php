@@ -11,28 +11,28 @@
 <form class="form form--add-lot container form--invalid" action="add.php" method="post" enctype="multipart/form-data"> <!-- form--invalid -->
     <h2>Добавление лота</h2>
     <div class="form__container-two">
-        <div class="form__item form__item--invalid"> <!-- form__item--invalid -->
+        <div class="form__item <?php if (isset($form_errors['lot-name'])): ?>form__item--invalid<?php endif;?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
             <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=xss_protection($incoming_data['lot-name']); ?>">
             <span class="form__error">Введите наименование лота</span>
         </div>
-        <div class="form__item">
+        <div class="form__item <?php if (isset($form_errors['category'])): ?>form__item--invalid<?php endif;?>">
             <label for="category">Категория <sup>*</sup></label>
               <select id="category" name="category">
                 <option>Выберите категорию</option>
                 <?php foreach ($categories_arr as $category): ?>
-                  <option><?=xss_protection($category['name']); ?></option>
+                  <option <?php if($category['name'] == $incoming_data['category']): ?> selected<?php endif;?>><?=xss_protection($category['name']); ?></option>
                 <?php endforeach; ?>
               </select>
             <span class="form__error">Выберите категорию</span>
         </div>
       </div>
-      <div class="form__item form__item--wide">
+      <div class="form__item form__item--wide <?php if (isset($form_errors['message'])): ?>form__item--invalid<?php endif;?>">
         <label for="message">Описание <sup>*</sup></label>
         <textarea id="message" name="message" placeholder="Напишите описание лота"><?=xss_protection($incoming_data['message']); ?></textarea>
         <span class="form__error">Напишите описание лота</span>
       </div>
-      <div class="form__item form__item--file">
+      <div class="form__item form__item--file <?php if (isset($form_errors['lot-img'])): ?>form__item--invalid<?php endif;?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
           <input class="visually-hidden" name="lot-img" type="file" id="lot-img" value="">
@@ -40,19 +40,20 @@
             Добавить
           </label>
         </div>
+        <span class="form__error">Загрузите изображение</span>
       </div>
       <div class="form__container-three">
-        <div class="form__item form__item--small">
+        <div class="form__item form__item--small <?php if (isset($form_errors['lot-rate'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-rate">Начальная цена <sup>*</sup></label>
           <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?=xss_protection($incoming_data['lot-rate']); ?>">
           <span class="form__error">Введите начальную цену</span>
         </div>
-        <div class="form__item form__item--small">
+        <div class="form__item form__item--small <?php if (isset($form_errors['lot-step'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-step">Шаг ставки <sup>*</sup></label>
           <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?=xss_protection($incoming_data['lot-step']); ?>">
           <span class="form__error">Введите шаг ставки</span>
         </div>
-        <div class="form__item">
+        <div class="form__item <?php if (isset($form_errors['lot-date'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
           <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?=xss_protection($incoming_data['lot-date']); ?>">
           <span class="form__error">Введите дату завершения торгов</span>
