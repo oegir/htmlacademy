@@ -11,6 +11,8 @@ $incoming_data = ['lot-name' => '', 'category' => '', 'message' => '',
 $form_errors = [];
 if(isset($_POST['submit'])){
     $incoming_data = $_POST;
+    $incoming_data['lot-rate'] = (int)$_POST['lot-rate'];
+    $incoming_data['lot-step'] = (int)$_POST['lot-step'];
     $form_errors = checkForErrors($incoming_data, $_FILES);
 }
 
@@ -33,6 +35,26 @@ function checkForErrors($incoming_data, $files_data): array{
     }
     if($_FILES['lot-img']['error'] == 4){
         $result['lot-img'] = 'Загрузите изображение';
+    }
+    elseif(!in_array(mime_content_type($_FILES['lot-img']['tmp_name']) ,['image/png', 'image/jpeg'])){
+        $result['lot-img'] = 'Загрузите изоброжение в формате JPEG или PNG';
+    }
+    if($incoming_data['lot-date'] == ''){
+        $result['lot-date'] = 'Выберите дату';
+    }elseif(!checkLotDate($incoming_data['lot-date'])){
+        $result['lot-date'] = 'Выберите дату из будущего';
+    }
+
+    return $result;
+}
+
+function checkLotDate($date): bool{
+    $endDate = DateTime::createFromFormat('Y-m-d', $date);
+    $currentDate = new DateTime();
+    $range = $currentDate -> diff($endDate);
+    $result = true;
+    if($range->invert){
+        $result = false;
     }
     return $result;
 }

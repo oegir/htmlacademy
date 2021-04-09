@@ -14,7 +14,7 @@
         <div class="form__item <?php if (isset($form_errors['lot-name'])): ?>form__item--invalid<?php endif;?>"> <!-- form__item--invalid -->
             <label for="lot-name">Наименование <sup>*</sup></label>
             <input id="lot-name" type="text" name="lot-name" placeholder="Введите наименование лота" value="<?=xss_protection($incoming_data['lot-name']); ?>">
-            <span class="form__error">Введите наименование лота</span>
+            <span class="form__error"><?php if(isset($form_errors['lot-name'])):?><?=$form_errors['lot-name'];?><?php endif; ?></span>
         </div>
         <div class="form__item <?php if (isset($form_errors['category'])): ?>form__item--invalid<?php endif;?>">
             <label for="category">Категория <sup>*</sup></label>
@@ -24,13 +24,13 @@
                   <option <?php if($category['name'] == $incoming_data['category']): ?> selected<?php endif;?>><?=xss_protection($category['name']); ?></option>
                 <?php endforeach; ?>
               </select>
-            <span class="form__error">Выберите категорию</span>
+            <span class="form__error"><?php if(isset($form_errors['category'])):?><?=$form_errors['category'];?><?php endif; ?></span>
         </div>
       </div>
       <div class="form__item form__item--wide <?php if (isset($form_errors['message'])): ?>form__item--invalid<?php endif;?>">
         <label for="message">Описание <sup>*</sup></label>
         <textarea id="message" name="message" placeholder="Напишите описание лота"><?=xss_protection($incoming_data['message']); ?></textarea>
-        <span class="form__error">Напишите описание лота</span>
+        <span class="form__error"><?php if(isset($form_errors['message'])):?><?=$form_errors['message'];?><?php endif; ?></span>
       </div>
       <div class="form__item form__item--file <?php if (isset($form_errors['lot-img'])): ?>form__item--invalid<?php endif;?>">
         <label>Изображение <sup>*</sup></label>
@@ -40,26 +40,26 @@
             Добавить
           </label>
         </div>
-        <span class="form__error">Загрузите изображение</span>
+        <span class="form__error"><?php if(isset($form_errors['lot-img'])):?><?=$form_errors['lot-img'];?><?php endif; ?></span>
       </div>
       <div class="form__container-three">
         <div class="form__item form__item--small <?php if (isset($form_errors['lot-rate'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-rate">Начальная цена <sup>*</sup></label>
           <input id="lot-rate" type="text" name="lot-rate" placeholder="0" value="<?=xss_protection($incoming_data['lot-rate']); ?>">
-          <span class="form__error">Введите начальную цену</span>
+          <span class="form__error"><?php if (isset($form_errors['lot-rate'])): ?><?=$form_errors['lot-rate']?><?php endif;?></span>
         </div>
         <div class="form__item form__item--small <?php if (isset($form_errors['lot-step'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-step">Шаг ставки <sup>*</sup></label>
           <input id="lot-step" type="text" name="lot-step" placeholder="0" value="<?=xss_protection($incoming_data['lot-step']); ?>">
-          <span class="form__error">Введите шаг ставки</span>
+          <span class="form__error"><?php if (isset($form_errors['lot-step'])): ?><?=$form_errors['lot-step']?><?php endif;?></span>
         </div>
         <div class="form__item <?php if (isset($form_errors['lot-date'])): ?>form__item--invalid<?php endif;?>">
           <label for="lot-date">Дата окончания торгов <sup>*</sup></label>
           <input class="form__input-date" id="lot-date" type="text" name="lot-date" placeholder="Введите дату в формате ГГГГ-ММ-ДД" value="<?=xss_protection($incoming_data['lot-date']); ?>">
-          <span class="form__error">Введите дату завершения торгов</span>
+          <span class="form__error"><?php if (isset($form_errors['lot-date'])): ?><?=$form_errors['lot-date']?><?php endif;?></span>
         </div>
     </div>
-    <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
+    <span class="form__error form__error--bottom"><?php if(count($form_errors) > 0):?>Пожалуйста, исправьте ошибки в форме.<?php endif; ?></span>
     <button type="submit" name="submit" class="button">Добавить лот</button>
 </form>  
 </main>  
