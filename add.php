@@ -107,7 +107,7 @@ function getCategoryId($con, $str) : int{
     $stmt = db_get_prepare_stmt($con, $sql, [$str]);
     mysqli_stmt_execute($stmt);
     $result =  mysqli_stmt_get_result($stmt);
-    $res;
+    $res = [];
     if ($result && $row = $result->fetch_assoc()){
         $res = $row;
     }
