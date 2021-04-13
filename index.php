@@ -10,16 +10,6 @@ $items_arr = [];
 
 $con = db_connect();
 
-function getCategories(mysqli $con): array{
-    $sql = "SELECT name, code FROM category";
-    $categories = [];
-    $res = mysqli_query($con, $sql);
-    while ($res && $row = $res->fetch_assoc()){
-        $categories[] = $row;
-    }
-    return $categories;
-}
-
 $categories_arr = getCategories($con);
 
 function getItems (mysqli $con): array{

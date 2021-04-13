@@ -28,3 +28,13 @@ function xss_protection($string): string{
 function price_format($price): string{
     return number_format(ceil($price),0, '.',' ').' ₽';
 }
+
+function getCategories(mysqli $con): array{
+    $sql = "SELECT name, code FROM category";
+    $categories = [];
+    $res = mysqli_query($con, $sql);
+    while ($res && $row = $res->fetch_assoc()){
+        $categories[] = $row;
+    }
+    return $categories;
+}
