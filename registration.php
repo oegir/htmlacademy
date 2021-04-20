@@ -10,6 +10,12 @@ $form_errors = [];
 if(isset($_POST['submit'])){
     $incoming_data = $_POST;
     $form_errors = checkRegistrationErrors($con, $incoming_data);
+
+    if (count($form_errors) == 0){
+        setUserOnDb ($con, $incoming_data);
+        header('Location:login.php');
+        die();
+    }
 }
 
 $categories_arr = [];
@@ -49,4 +55,19 @@ function checkEmail($con, $email): bool{
     $result = mysqli_num_rows($res) == 0 ? false: true; 
     
     return $result;
+}
+
+function setUserOnDb ($con, $incoming_data){
+    $password = password_hash($incoming_data['password'], PASSWORD_DEFAULT);
+    $sql = "INSERT INTO user (registration_date, email, name, password, contacts) 
+        VALUE (?, ?, ?, ?, ?)";
+    $stmt = db_get_prepare_stmt($con, $sql, [date('Y-m-d H:i:s', time()), $incoming_data['email'], $incoming_data['name'], 
+    $password, $incoming_data['message']]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+
+    if(mysqli_errno($con)){
+        printf("Connect failed: %s\n", mysqli_connect_error()); 
+        die();
+    }
 }
