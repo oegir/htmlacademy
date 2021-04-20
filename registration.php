@@ -23,18 +23,30 @@ print($layout_content);
 
 function checkRegistrationErrors($con, $data): array{
     $result = [];
-    $result['email'] = checkEmail($con, $data['email']);
+    if ($data['email'] == ''){
+        $result['email'] = 'Введите e-mail';
+    }elseif (checkEmail($con, $data['email'])){
+        $result['email'] = 'Данный email занят';
+    }
+    if ($data['password'] == ''){
+        $result['password'] = 'Введите пароль';
+    }
+    if ($data['name'] == ''){
+        $result['name'] = 'Введите имя';
+    }
+    if ($data['message'] == ''){
+        $result['message'] = 'Введите контактные данные';
+    }
 
     return $result;
 }
 
-function checkEmail($con, $email): string{
-    $result = '';
+function checkEmail($con, $email): bool{
     $sql = "SELECT * FROM user WHERE email = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
-    $result = mysqli_num_rows($res) == 0 ? '': 'Указаный e-mail уже используется'; 
+    $result = mysqli_num_rows($res) == 0 ? false: true; 
     
     return $result;
 }
