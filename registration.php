@@ -29,10 +29,8 @@ print($layout_content);
 
 function checkRegistrationErrors($con, $data): array{
     $result = [];
-    if ($data['email'] == ''){
-        $result['email'] = 'Введите e-mail';
-    }elseif (checkEmail($con, $data['email'])){
-        $result['email'] = 'Данный email занят';
+    if($email_error = checkEmail($con, $data['email'])){
+        $result['email'] = $email_error;
     }
     if ($data['password'] == ''){
         $result['password'] = 'Введите пароль';
@@ -47,14 +45,25 @@ function checkRegistrationErrors($con, $data): array{
     return $result;
 }
 
-function checkEmail($con, $email): bool{
+function checkEmail($con, $email): string{
+    if($email == ''){
+        return 'Введите e-mail';
+    }
+
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        return 'Введен некорректный e-mail';
+    }
+
     $sql = "SELECT * FROM user WHERE email = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_num_rows($res) == 0 ? false: true; 
     
-    return $result;
+    if ($result){
+        return 'Данный email занят';
+    }
+    return '';
 }
 
 function setUserOnDb ($con, $incoming_data){
