@@ -8,17 +8,17 @@
         <?php endforeach; ?>
       </ul>
     </nav>
-    <form class="form container" action="login.php" method="post"> <!-- form--invalid -->
+    <form class="form container <?php if(count($form_errors) > 0):?>form--invalid<?php endif; ?>" action="login.php" method="post"> 
       <h2>Вход</h2>
-      <div class="form__item"> <!-- form__item--invalid -->
+      <div class="form__item <?php if(isset($form_errors['email'])):?>form__item--invalid<?php endif; ?>">
         <label for="email">E-mail <sup>*</sup></label>
-        <input id="email" type="text" name="email" placeholder="Введите e-mail">
-        <span class="form__error">Введите e-mail</span>
+        <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=xss_protection($incoming_data['email']); ?>">
+        <span class="form__error"><?=$form_errors['email'];?></span>
       </div>
-      <div class="form__item form__item--last">
+      <div class="form__item form__item--last <?php if(isset($form_errors['password'])):?>form__item--invalid<?php endif; ?>">
         <label for="password">Пароль <sup>*</sup></label>
-        <input id="password" type="password" name="password" placeholder="Введите пароль">
-        <span class="form__error">Введите пароль</span>
+        <input id="password" type="password" name="password" placeholder="Введите пароль" value="<?=xss_protection($incoming_data['password']); ?>">
+        <span class="form__error"><?=$form_errors['password'];?></span>
       </div>
       <button type="submit" class="button" name="submit">Войти</button>
   </form>
