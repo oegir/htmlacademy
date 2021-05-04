@@ -3,9 +3,6 @@ require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
 
-$is_auth = rand(0,1);
-$user_name = 'Artem2J';
-
 if(!isset($_GET['id'])){
     header('Location: pages/404.html');
     die();
@@ -16,6 +13,25 @@ $categories_arr =[];
 
 $con = db_connect();
 
+session_start();
+$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+
+
+checkId($con, $id);
+
+$categories_arr = getCategories($con);
+
+$item = getItem($con, $id);
+
+$page_content = include_template('item.php', [ 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
+    'category_name' => $item['category_name'], 'description' => $item['description'],
+    'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
+    'min_bid' => $item['min_bid']]);
+
+$layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => $item['name']]);
+
+print($layout_content);
+
 function checkId( mysqli $con, $id){
     $sql = "SELECT id FROM item WHERE id = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
@@ -25,8 +41,6 @@ function checkId( mysqli $con, $id){
         header('Location: pages/404.html');
     }
 }
-
-checkId($con, $id);
 
 function getItem(mysqli $con, $id): array{
     $sql = "SELECT i.name, img_path, c.name category_name,description, completion_date, IFNULL(b.price,start_price) current_price,
@@ -47,16 +61,3 @@ function getItem(mysqli $con, $id): array{
     }
     return $item;
 }
-
-$categories_arr = getCategories($con);
-
-$item = getItem($con, $id);
-
-$page_content = include_template('item.php', [ 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
-    'category_name' => $item['category_name'], 'description' => $item['description'],
-    'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
-    'min_bid' => $item['min_bid']]);
-
-$layout_content = include_template('layout.php', ['is_auth' => $is_auth, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => $item['name']]);
-
-print($layout_content);

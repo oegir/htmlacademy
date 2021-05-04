@@ -4,6 +4,14 @@ require_once('db_connection.php');
 require_once('service_functions.php');
 
 $con = db_connect();
+session_start();
+if(isset($_SESSION['id'])){
+    header('HTTP/1.0 403 Forbidden');
+    die();
+}
+
+$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+
 $incoming_data = ['email' => '', 'password' => '', 'name' => '', 'message' => ''];
 $form_errors = [];
 

@@ -3,12 +3,13 @@ require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
 
-$is_auth = rand(0, 1);
-
 $categories_arr = [];
 $items_arr = [];
 
 $con = db_connect();
+
+session_start();
+$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
 
 $categories_arr = getCategories($con);
 
@@ -34,10 +35,8 @@ function getItems (mysqli $con): array{
 
 $items_arr = getItems($con);
 
-$user_name = 'Artem2J'; // укажите здесь ваше имя
-
 $page_content = include_template('main.php', [ 'items_arr' => $items_arr, 'categories_arr' => $categories_arr]);
 
-$layout_content = include_template('layout.php', ['is_auth' => $is_auth, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Главная']);
+$layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Главная']);
 
 print($layout_content);

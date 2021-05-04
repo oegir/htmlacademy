@@ -38,3 +38,27 @@ function getCategories(mysqli $con): array{
     }
     return $categories;
 }
+
+function getUserNameById (mysqli $con, int $id): string{
+    $sql = "SELECT name FROM user WHERE id = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $name = '';
+    if ($result && $row = $result->fetch_assoc()){
+        $name = $row['name'];
+    }
+    return $name;
+}
+
+function getUserIdByEmail(mysqli $con, string $email):int{
+    $sql = "SELECT id FROM user WHERE email = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$email]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $id = 0;
+    if ($result && $row = $result->fetch_assoc()){
+        $id = $row['id'];
+    }
+    return $id;
+}

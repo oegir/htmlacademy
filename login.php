@@ -2,7 +2,6 @@
 require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
-session_start();
 
 $categories_arr = [];
 $items_arr = [];
@@ -12,14 +11,14 @@ $con = db_connect();
 $categories_arr = getCategories($con);
 
 $form_errors =[];
-$incoming_data = ['email' => '', 'password' => '', 'name' => '', 'message' => ''];
+$incoming_data = ['email' => '', 'password' => ''];
 
 if(isset($_POST['submit'])){
     $incoming_data = $_POST;
     $form_errors = checkLoginErrors($con, $incoming_data);
     if(count($form_errors) == 0){
         session_start();
-        $_SESSION['user_email'] = $incoming_data['email'];
+        $_SESSION['id'] = getUserIdByEmail($con, $incoming_data['email']);
         header('Location:index.php');
         die();
     }
