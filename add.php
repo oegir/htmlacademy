@@ -10,6 +10,7 @@ if(!isset($_SESSION['id'])){
     die();
 }
 $user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+$user_id = $_SESSION['id'];
 $incoming_data = ['lot-name' => '', 'category' => '', 'message' => '',
                   'lot-rate' => 0, 'lot-step' => 0, 'lot-date' => ''];
 
@@ -22,7 +23,7 @@ if(isset($_POST['submit'])){
     $form_errors = checkForErrors($incoming_data, $_FILES);
     
     if(count($form_errors) == 0) {
-        $id = sentDataToDB($con, $incoming_data, $_FILES);
+        $id = sentDataToDB($con, $incoming_data, $_FILES, $user_id);
         header('Location:lot.php?id='.$id);
         die();
     }
@@ -81,7 +82,7 @@ function checkLotDate($date): bool{
     return $result;
 }
 
-function sentDataToDB($con, $incoming_data, $img_file): int{
+function sentDataToDB(mysqli $con, array $incoming_data, array $img_file, int $user_id): int{
     $category_id = getCategoryId($con, $incoming_data['category']);
     $incoming_data['lot-img'] = 'test_path';
     $sql = "INSERT INTO
@@ -89,7 +90,7 @@ function sentDataToDB($con, $incoming_data, $img_file): int{
     VALUE
         (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = db_get_prepare_stmt($con, $sql, [date('Y-m-d H:i:s', time()), $incoming_data['lot-name'], $incoming_data['message'],
-    $incoming_data['lot-rate'], $incoming_data['lot-date'], $incoming_data['lot-step'], 1, $category_id]);
+    $incoming_data['lot-rate'], $incoming_data['lot-date'], $incoming_data['lot-step'], $user_id, $category_id]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     
