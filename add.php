@@ -5,7 +5,7 @@ require_once('service_functions.php');
 
 $con = db_connect();
 session_start();
-if(isset($_SESSION['id'])){
+if(!isset($_SESSION['id'])){
     header('HTTP/1.0 403 Forbidden');
     die();
 }
