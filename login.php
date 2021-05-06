@@ -25,7 +25,7 @@ if(isset($_POST['submit'])){
 }
 $page_content = include_template('login_form.php', ['categories_arr' => $categories_arr, 'incoming_data' => $incoming_data, 'form_errors' => $form_errors]);
 
-$layout_content = include_template('layout.php', ['categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Вход']);
+$layout_content = include_template('layout.php', ['user_name' => '', 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Вход']);
 
 print($layout_content);
 
