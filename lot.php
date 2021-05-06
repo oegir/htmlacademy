@@ -23,7 +23,7 @@ $categories_arr = getCategories($con);
 
 $item = getItem($con, $id);
 
-$page_content = include_template('item.php', [ 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
+$page_content = include_template('item.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
     'category_name' => $item['category_name'], 'description' => $item['description'],
     'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
     'min_bid' => $item['min_bid']]);
