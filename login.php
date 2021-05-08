@@ -44,7 +44,7 @@ function checkEmail(mysqli $con, string $email): string{
         return 'Введите e-mail';
     }
 
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){ 
         return 'Введен некорректный e-mail';
     }
 
@@ -61,6 +61,9 @@ function checkEmail(mysqli $con, string $email): string{
 }
 
 function checkPassword(mysqli $con, string $email, string $password): string{
+    if ($password == '') {
+        return 'Введите пароль';
+    }
     $sql = "SELECT password FROM user WHERE email = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$email]);
     mysqli_stmt_execute($stmt);

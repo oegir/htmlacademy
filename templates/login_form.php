@@ -10,7 +10,8 @@
     </nav>
     <form class="form container <?php if(count($form_errors) > 0):?>form--invalid<?php endif; ?>" action="login.php" method="post"> 
       <h2>Вход</h2>
-      <div class="form__item <?php if(isset($form_errors['email'])):?>form__item--invalid<?php endif; ?>">
+        <div class="form__item <?php if(isset($form_errors['email'])):?>form__item--invalid<?php endif; ?>">
+          <span class="form__error form__error--bottom">Вы ввели неверный email/пароль</span>
         <label for="email">E-mail <sup>*</sup></label>
         <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=xss_protection($incoming_data['email']); ?>">
         <span class="form__error"><?=$form_errors['email'];?></span>
