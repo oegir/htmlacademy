@@ -29,6 +29,13 @@ $layout_content = include_template('layout.php', ['user_name' => '', 'categories
 
 print($layout_content);
 
+/**
+ * Проверяет переданные данные из формы.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  array $data Массив переданых из формы данных
+ * @return array Массив ошибок или пустой массив в случае их отсутствия.
+ */
 function checkLoginErrors(mysqli $con, array $data): array{
     $result = [];
     if($email_error = checkEmail($con, $data['email'])){
@@ -39,6 +46,13 @@ function checkLoginErrors(mysqli $con, array $data): array{
     }
     return $result;
 }
+/**
+ * Проверяет введенный емайл.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  string $email Введенный емайл
+ * @return string Возвращает ошибку.
+ */
 function checkEmail(mysqli $con, string $email): string{
     if($email == ''){
         return 'Введите e-mail';
@@ -60,6 +74,14 @@ function checkEmail(mysqli $con, string $email): string{
     return '';
 }
 
+/**
+ * Проверяет введенный пароль
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  string $email Введенный емайл
+ * @param  string $password Введенный пароль.
+ * @return string Возвращает ошибку.
+ */
 function checkPassword(mysqli $con, string $email, string $password): string{
     if ($password == '') {
         return 'Введите пароль';

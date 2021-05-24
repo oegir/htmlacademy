@@ -32,7 +32,14 @@ $layout_content = include_template('layout.php', ['user_name' => $user_name, 'ca
 
 print($layout_content);
 
-function checkId( mysqli $con, $id){
+/**
+ * Проверяет наличие лота с заданным id. В случае отсутствия перенаправляет на страницу 404
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @return void 
+ */
+function checkId( mysqli $con, int $id){
     $sql = "SELECT id FROM item WHERE id = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
     mysqli_stmt_execute($stmt);
@@ -42,7 +49,14 @@ function checkId( mysqli $con, $id){
     }
 }
 
-function getItem(mysqli $con, $id): array{
+/**
+ * Возвращает лот по id.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  mixed $id id лота.
+ * @return array Массив с данными лота.
+ */
+function getItem(mysqli $con, int $id): array{
     $sql = "SELECT i.name, img_path, c.name category_name,description, completion_date, IFNULL(b.price,start_price) current_price,
                 IFNULL(b.price + i.bid_step, start_price) min_bid
             FROM item i
