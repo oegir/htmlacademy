@@ -3,15 +3,30 @@ require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
 
-$is_auth = rand(0, 1);
-
 $categories_arr = [];
 $items_arr = [];
 
 $con = db_connect();
 
+session_start();
+$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+
 $categories_arr = getCategories($con);
 
+$items_arr = getItems($con);
+
+$page_content = include_template('main.php', [ 'items_arr' => $items_arr, 'categories_arr' => $categories_arr]);
+
+$layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Главная']);
+
+print($layout_content);
+
+/**
+ * Возвращает массив открытых лотов в порядке от нового к старому.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @return array Массив лотов.
+ */
 function getItems (mysqli $con): array{
     $sql = "SELECT
                 i.id id, i.name, c.name category, IFNULL(b.price,start_price) price, img_path url, completion_date expiry_date
@@ -31,13 +46,3 @@ function getItems (mysqli $con): array{
     }
     return $items;
 }
-
-$items_arr = getItems($con);
-
-$user_name = 'Artem2J'; // укажите здесь ваше имя
-
-$page_content = include_template('main.php', [ 'items_arr' => $items_arr, 'categories_arr' => $categories_arr]);
-
-$layout_content = include_template('layout.php', ['is_auth' => $is_auth, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Главная']);
-
-print($layout_content);

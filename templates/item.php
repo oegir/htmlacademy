@@ -19,6 +19,7 @@
             <p class="lot-item__description"><?=$description?></p>
         </div>
         <div class="lot-item__right">
+            <?php if($user_name != ''): ?>
             <div class="lot-item__state">
                 <?php $time_arr=get_dt_range($completion_date);
                 $red_flag = $time_arr[0] == '00'?'timer--finishing':'';
@@ -36,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>

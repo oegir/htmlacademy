@@ -4,6 +4,14 @@ require_once('db_connection.php');
 require_once('service_functions.php');
 
 $con = db_connect();
+session_start();
+if(isset($_SESSION['id'])){
+    header('HTTP/1.0 403 Forbidden');
+    die();
+}
+
+$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+
 $incoming_data = ['email' => '', 'password' => '', 'name' => '', 'message' => ''];
 $form_errors = [];
 
@@ -27,7 +35,14 @@ $layout_content = include_template('layout.php', ['is_auth' => 0 ,'categories_ar
 
 print($layout_content);
 
-function checkRegistrationErrors($con, $data): array{
+/**
+ * Проверка данных формы на наличие ошибок.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  array $data Данные из формы.
+ * @return array Массив ошибок.
+ */
+function checkRegistrationErrors(mysqli $con, array $data): array{
     $result = [];
     if($email_error = checkEmail($con, $data['email'])){
         $result['email'] = $email_error;
@@ -45,7 +60,14 @@ function checkRegistrationErrors($con, $data): array{
     return $result;
 }
 
-function checkEmail($con, $email): string{
+/**
+ * Проверка емайла
+ *
+ *@param  mysqli $con Подключение к БД.
+ * @param  string $email Введенный емайл.
+ * @return string Текст ошибки.
+ */
+function checkEmail(mysqli $con, string $email): string{
     if($email == ''){
         return 'Введите e-mail';
     }
@@ -66,7 +88,14 @@ function checkEmail($con, $email): string{
     return '';
 }
 
-function setUserOnDb ($con, $incoming_data){
+/**
+ * Запись пользователя в БД.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param  mixed $incoming_data Введенные в форму данные.
+ * @return void
+ */
+function setUserOnDb (mysqli $con, array $incoming_data){
     $password = password_hash($incoming_data['password'], PASSWORD_DEFAULT);
     $sql = "INSERT INTO user (registration_date, email, name, password, contacts) 
         VALUE (?, ?, ?, ?, ?)";
