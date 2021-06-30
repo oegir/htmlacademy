@@ -1,9 +1,0 @@
-{
-    "name": "asus/1806383-task-force-1",
-    "autoload": {
-        "psr-4": {
-            "myClass\\": "src/Classes/"
-        }
-    },
-    "require": {}
-}

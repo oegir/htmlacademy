@@ -1,8 +1,8 @@
 <?php
-require_once("vendor/autoload.php");
+require_once("Tasks/task3.php");
 function isTaskCorrect()
 {
-    $task = new myClass\Logic\Task("Client", "Worker");
+    $task = new Task("Client", "Worker");
     if (assert($task->status() == "Новая", 'new task') &&
         assert($task->actions("Response", "Client") === "Недоступная команда", 'Client not allowed to take his job') &&
         assert($task->actions("Response", "Worker") == $task::STATUS_IN_WORK, 'Worker accepted task') &&
