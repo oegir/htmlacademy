@@ -10,11 +10,11 @@ function isTaskCorrect()
         assert($task->actions("Failure", "Client") === "Недоступная команда", 'Client can`t fail task') &&
         assert($task->actions("Abort", "Worker") === "Недоступная команда", 'Worker can`t abort task') &&
         assert($task->actions("Failure", "Worker") == $task::STATUS_FAILED, 'Worker fail task') &&
-        assert($task->actions("Complete", "Client") === "Задание не в работе!", 'Client can`t accept failed task'))
-        {
+        assert($task->actions("Complete", "Client") === "Задание не в работе!", 'Client can`t accept failed task')) {
         return "Corrected Task!";
     } else {
         return "Uncorrected Task!";
     }
 }
+
 ?>
