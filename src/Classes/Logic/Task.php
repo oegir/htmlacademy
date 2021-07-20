@@ -1,4 +1,5 @@
 <?php
+namespace myClass\Logic;
 
 class Task
 {
@@ -13,21 +14,18 @@ class Task
     const ACTION_ABORT = "Abort";
     const ACTION_FAILURE = "Failure";
     const ACTION_COMPLETE = "Complete";
-    //свойства-идентификаторы
-    private $clientId, $workerId;//исправлено:убран blacklist, Client вместо User
+    private $clientId, $workerId;
     private $status = self::STATUS_NEW;
-    //исправлены карты статуса -в качеcтве ключа теперь константа
     private $statusMap = [self::STATUS_NEW => "Новая", self::STATUS_ABORTED => "Отменена", self::STATUS_IN_WORK => "В работе", self::STATUS_COMPLETED => "Выполнено", self::STATUS_FAILED => "Не выполнено"];
-    //исправлены карты действий-в качестве ключа теперь константа
     private $actionMap = [self::STATUS_NEW => "Откликнуться,Отменить", self::STATUS_ABORTED => "Отменено, нет доступных действий", self::STATUS_IN_WORK => "Отказаться,Выполнить", self::STATUS_COMPLETED => "Выполнено, нет доступных действий", self::STATUS_FAILED => "Отменить,Откликнуться"];
 
-    public function __construct($clientId, $workerId)
+    public function __construct($clientId,$workerId)
     {
         $this->clientId = $clientId;
         $this->workerId = $workerId;
-    }//исправление конструктора-при создании новой функции задается исполнитель
+    }
 
-    // Переработаны действия-функции заказчика и исполнителя объединены
+    //Доступные действия заказчика
     public function actions($action, $id)
     {
         //Доступные действия заказчика
@@ -37,16 +35,12 @@ class Task
                     if ($this->status == self::STATUS_NEW) {
                         $this->status = self::STATUS_ABORTED;
                         return $this->status;
-                    } else {
-                        return "Можно отменить только новое задание!";
-                    }
+                    }else{return "Можно отменить только новое задание!";}
                 case self::ACTION_COMPLETE:
                     if ($this->status == self::STATUS_IN_WORK) {
                         $this->status = self::STATUS_COMPLETED;
                         return $this->status;
-                    } else {
-                        return "Задание не в работе!";
-                    }
+                    }else{return "Задание не в работе!";}
                 default:
                     return "Недоступная команда";
             }
@@ -58,16 +52,12 @@ class Task
                     if ($this->status == self::STATUS_NEW || $this->status == self::STATUS_FAILED) {
                         $this->status = self::STATUS_IN_WORK;;
                         return $this->status;
-                    } else {
-                        return "Исполнитель не требуется";
-                    }
+                    }else{return "Исполнитель не требуется";}
                 case self::ACTION_FAILURE:
                     if ($this->status == self::STATUS_IN_WORK) {
                         $this->status = self::STATUS_FAILED;
                         return $this->status;
-                    } else {
-                        return "Нельзя отказаться";
-                    }
+                    }else{return "Нельзя отказаться";}
                 default:
                     return "Недоступная команда";
             }
@@ -77,7 +67,6 @@ class Task
     public function actionMap()
     {
         return $this->actionMap[$this->status];
-        //исправил карту действий-теперь она показывает текущие доступные действия
     }
 
     public function status()
@@ -85,5 +74,4 @@ class Task
         return $this->statusMap[$this->status];
     }
 }
-
 ?>
