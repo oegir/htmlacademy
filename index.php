@@ -1,6 +1,6 @@
 <?php
 $is_auth = rand(0, 1);
-$user_name = 'Андрей'; // укажите здесь ваше имя
+$user_name = 'Андрей';
 $first_post = [
     'heading' => 'Цитата',
     'type' => 'post-quote',
@@ -75,7 +75,6 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
             </div>
         </form>
         <div class="header__nav-wrapper">
-            <!-- здесь должен быть PHP код, который показывает следующий тег по условию -->
             <?php if ($is_auth == 1): ?>
             <nav class="header__nav">
                 <ul class="header__my-nav">
@@ -104,7 +103,6 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
                             </div>
                             <div class="header__profile-name">
                                 <span>
-                                    <!--здесь должно быть имя пользователя-->
                                     <?= $user_name ?>
 
                                 </span>
@@ -239,14 +237,12 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
             </div>
         </div>
         <div class="popular__posts">
-
                 <?php foreach ($popularCarts as $key => $val): ?>
             <article class="popular__post post <?=$val['type'] ?>">
                 <header class="post__header">
                     <h2><!--здесь заголовок--></h2>
                 </header>
                 <div class="post__main">
-                    <!--здесь содержимое карточки-->
                     <?php if ($val['type'] == "post-quote"): ?>
                     <div class="post-link__wrapper">
                         <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -255,14 +251,14 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
-                                    <h3><!--здесь заголовок--><?=$val['heading'] ?></h3>
+                                    <h3><?=$val['heading'] ?></h3>
                                 </div>
                             </div>
-                            <span><!--здесь ссылка--><?=$val['content'] ?></span>
+                            <span><?=$val['content'] ?></span>
                         </a>
                     </div>
                     <?php elseif($val['type'] == "post-text"): ?>
-                    <p><!--здесь текст--><?=$val['content'] ?></p>
+                    <p><?=$val['content'] ?></p>
                     <?php elseif($val['type'] == "post-photo"): ?>
                     <div class="post-photo__image-wrapper">
                         <img src="<?=$val['content'] ?>" alt="Фото от пользователя" width="360" height="240">
@@ -275,10 +271,10 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
-                                    <h3><!--здесь заголовок--><?=$val['heading'] ?></h3>
+                                    <h3><?=$val['heading'] ?></h3>
                                 </div>
                             </div>
-                            <span><!--здесь ссылка--><?=$val['content'] ?></span>
+                            <span><?=$val['content'] ?></span>
                         </a>
                     </div>
                     <?php endif ?>
@@ -288,11 +284,10 @@ $popularCarts = array($first_post, $second_post, $third_post, $fourth_post, $fif
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <!--укажите путь к файлу аватара-->
                                 <img class="post__author-avatar" src="<?=$val['avatar'] ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><!--здесь имя пользоателя--><?=$val['user-name'] ?></b>
+                                <b class="post__author-name"><?=$val['user-name']?></b>
                                 <time class="post__time" datetime="">дата</time>
                             </div>
                         </a>
