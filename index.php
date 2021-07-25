@@ -43,13 +43,13 @@ $items = [
         'img' => 'img/lot-6.jpg'
         ]
 ];
-$price = 4659978;
-function auction_price($price) {
-$format_price = ceil($price);
-if ($format_price > 1000) {
-$format_price = number_format($format_price, 0, ' ', ' ');
-}
-return $format_price . " ₽";
+
+function auction_price(int $price): string
+{
+    $format_price = ceil($price);
+    $format_price = number_format($format_price, 0, ' ', ' ');
+    
+    return $format_price . " ₽";
 }
 ?>
 <!DOCTYPE html>
@@ -137,7 +137,7 @@ return $format_price . " ₽";
                             <div class="lot__state">
                                 <div class="lot__rate">
                                     <span class="lot__amount"><?=$val['price']; ?></span>
-                                    <span class="lot__cost"><?=auction_price($price); ?></span>
+                                    <span class="lot__cost"><?= auction_price($val['price']); ?></span>
                                 </div>
                                 <div class="lot__timer timer">
                                     12:23
