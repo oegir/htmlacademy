@@ -52,6 +52,6 @@ function auction_price($price) {
 }
 
 $main_content = include_template ('main.php', ['categories' => $categories, 'items' => $items]);
-$page_content = include_template ('layout.php', ['title' => 'Главная', 'is_auth' => $is_auth, 'user_name' => $user_name, 'main_content' => $main_content]);
+$page_content = include_template ('layout.php', ['title' => 'Главная', 'is_auth' => $is_auth, 'user_name' => $user_name, 'main_content' => $main_content, 'categories' => $categories]);
 
 print($page_content);

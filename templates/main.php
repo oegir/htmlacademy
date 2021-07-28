@@ -10,7 +10,7 @@
                         $num = count($categories);
                         while ($index < $num): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?=$categories[$index];?></a>
+                <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($categories[$index]);?></a>
             </li>
             <?php $index++; ?>
             <?php endwhile; ?>
