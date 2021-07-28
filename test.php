@@ -1,5 +1,5 @@
 <?php
-require_once("Tasks\Task.php");
+require_once("Tasks/Task.php");
 // настройка assert
 assert_options(ASSERT_ACTIVE, 1);
 function assertMessage($file, $line, $code = null, $desc = null)
