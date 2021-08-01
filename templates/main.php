@@ -37,8 +37,8 @@
                             <span class="lot__amount"><?=htmlspecialchars($val['price']); ?></span>
                             <span class="lot__cost"><?=auction_price(htmlspecialchars($val['price'])); ?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <div class="lot__timer timer <?php if(date_finishing(htmlspecialchars($val['finishing'])) < 1): ?>timer--finishing<?php endif; ?>">
+                        <?=date_finishing(htmlspecialchars($val['finishing'])); ?>
                         </div>
                     </div>
                 </div>
