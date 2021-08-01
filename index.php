@@ -57,14 +57,26 @@ function auction_price($price) {
     return $format_price . " ₽";
 }
 
-function date_finishing($finishing) {
-    $date1 = date_create('now');
-    $date2 = date_create($finishing);
-    $diff = date_diff($date1, $date2);
-    $time_count = date_interval_format($diff, '%d %H %i');
-    $time_count_array = explode(' ', $time_count);
-    $time_count_array[1] = $time_count_array[0]*24 + $time_count_array[1];
-    return $time_count_array[1] . ":" . $time_count_array[2];
+/**
+ * Рассчет разницы во времени между текущей и переданной датой
+ * 
+ * @param string $finishing дата в формате ГГГГ-ММ-ДД
+ * @return array ['hour' => string часы, 'minute' => int string]
+ */
+function date_finishing(string $finishing): array
+{
+    $now = date_create('now');
+    $final = date_create($finishing);
+    $final->setTime(23, 59, 59);
+    $diff = date_diff($now, $final);
+    
+    $hour = str_pad($diff->days * 24 + $diff->h, 2, '0', STR_PAD_LEFT);
+    $minute = str_pad($diff->i, 2, '0', STR_PAD_LEFT);
+    
+    return [
+        'hour' => $hour,
+        'minute' => $minute
+    ];
 }
 
 

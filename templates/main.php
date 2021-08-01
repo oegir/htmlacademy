@@ -34,11 +34,12 @@
                     </h3>
                     <div class="lot__state">
                         <div class="lot__rate">
-                            <span class="lot__amount"><?=htmlspecialchars($val['price']); ?></span>
+                            <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=auction_price(htmlspecialchars($val['price'])); ?></span>
                         </div>
-                        <div class="lot__timer timer <?php if(date_finishing(htmlspecialchars($val['finishing'])) < 1): ?>timer--finishing<?php endif; ?>">
-                        <?=date_finishing(htmlspecialchars($val['finishing'])); ?>
+                        <?php $diff = date_finishing(htmlspecialchars($val['finishing'])); ?>
+                        <div class="lot__timer timer <?= ($diff['hour'] === '00' ? 'timer--finishing' : '') ?>">
+                        <?= $diff['hour'] ?> : <?= $diff['minute'] ?>
                         </div>
                     </div>
                 </div>
