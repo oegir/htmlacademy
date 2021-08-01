@@ -38,83 +38,37 @@ $popularCarts = [
         'avatar' => 'img/userpic.jpg'
     ],
 ];
-function cutText($text, $limit){
-    $firstLength = mb_strlen($text);
-    if ($firstLength> $limit){
-        $spaceText = explode(" ", $text);
-        $intLimit =  0;
-        $newArr = [];
-        for ($i = 0; $i < count($spaceText); $i++) {
-            $value = $spaceText[$i];
-            $lengthString = mb_strlen($value);
-            $intLimit += $lengthString;
-            if ($intLimit < $limit) {
-                $newArr[] = $value;
-                continue;
+function cutText(string $text, int $limit = 300, string $url = '#'): string
+{
+    // превращаем исходный текст в массив слов
+    $words = explode(' ', $text);
+    // результат работы выводим в новый массив
+    $result = [];
+    //изначально ссылка будет пустой
+    $link = '';
+    // если длина текста больше лимита
+    if (mb_strlen($text) > $limit) {
+        $symbols = 0;
+        foreach ($words as $word) {
+            //подсчитываем сколько слов в каждом элементе массива + пробел
+            $symbols += mb_strlen($word) + 1;
+            //многоточие тоже символ, берем расчет и на них
+            if ($symbols + 3 < $limit) {
+                $result[] = $word;
             } else {
                 break;
             }
         }
-        $union = implode(" ", $newArr);
-        $mathSpace = substr_count($union, ' ', 0, -1);
-        $spaceTextForSpace =  explode(" ", $union);
-        $newIntLimit = $mathSpace + 0;
-        $finalArray = [];
-        for ($l = 0; $l < count($spaceTextForSpace); $l++){
-            $value = $spaceTextForSpace[$l];
-            $newLengthString = mb_strlen($value);
-            $newIntLimit += $newLengthString;
-            if ($newIntLimit < $limit) {
-                $finalArray[] = $value;
-                continue;
-            } else {
-                break;
-            }
-        }
-        $finalUnion = implode(" ", $finalArray);
+        //добавляем многоточия в массив
         $ellipsis = ('...');
-        print ("$finalUnion$ellipsis");
-
-    }else{
-        print ($text);
+        $result[] = $ellipsis;
+        //добавляем ссылку
+        $link = '<a class="post-text__more-link" href="#">Читать далее</a>';
+        //если слов меньше лимита
+    } else {
+        $result = $words;
     }
-}
-function cutLink($text, $limit){
-    $firstLength = mb_strlen($text);
-    if ($firstLength> $limit){
-        $spaceText = explode(" ", $text);
-        $intLimit =  0;
-        $newArr = [];
-        for ($i = 0; $i < count($spaceText); $i++) {
-            $value = $spaceText[$i];
-            $lengthString = mb_strlen($value);
-            $intLimit += $lengthString;
-            if ($intLimit < $limit) {
-                $newArr[] = $value;
-                continue;
-            } else {
-                break;
-            }
-        }
-        $union = implode(" ", $newArr);
-        $mathSpace = substr_count($union, ' ', 0, -1);
-        $spaceTextForSpace =  explode(" ", $union);
-        $newIntLimit = $mathSpace + 0;
-        $finalArray = [];
-        for ($l = 0; $l < count($spaceTextForSpace); $l++){
-            $value = $spaceTextForSpace[$l];
-            $newLengthString = mb_strlen($value);
-            $newIntLimit += $newLengthString;
-            if ($newIntLimit < $limit) {
-                $finalArray[] = $value;
-                continue;
-            } else {
-                break;
-            }
-        }
-        print ('<a class="post-text__more-link" href="#">Читать далее</a>');
-
-    }
+    return '<p>' . implode(' ', $result) . '</p>' . $link;
 }
 
 
@@ -435,15 +389,10 @@ function cutLink($text, $limit){
                                     </span>
                             </a>
                         </div>
-
-
                     <?php elseif ($val['type'] == "post-text"): ?>
                         <p>
-                            <?= cutText($val['content'], 300) ?>
+                            <?= cutText($val['content']) ?>
                         </p>
-                        <?= cutLink($val['content'], 300) ?>
-
-
 
 
                     <?php elseif ($val['type'] == "post-photo"): ?>
