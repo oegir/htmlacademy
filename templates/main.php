@@ -38,7 +38,7 @@
                         <span class="lot__cost"><?=auction_price(htmlspecialchars($val['price'])); ?></span>
                     </div>
                     <?php $time_rest = date_finishing(htmlspecialchars($val['finishing'])); ?>
-                    <div class="lot__timer timer <?=($time_rest['hours'] < 1) ? 'timer--finishing' : ' ' ?>">
+                    <div class="lot__timer timer <?=($time_rest['hours'] === '00') ? 'timer--finishing' : ' ' ?>">
                         <?=$time_rest['hours']; ?> : <?=$time_rest['minutes']; ?>
                     </div>
                 </div>
