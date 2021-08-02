@@ -2,8 +2,14 @@
     "name": "asus/1806383-task-force-1",
     "autoload": {
         "psr-4": {
-            "myClass\\": "src/Classes/"
+            "Classes\\": "src/Classes/"
         }
     },
+    "authors": [
+        {
+            "name": "sovius23",
+            "email": "sovius5@mail.ru"
+        }
+    ],
     "require": {}
 }
