@@ -33,7 +33,7 @@ $items = [
         'category' => 'Ботинки',
         'price' => '10999',
         'img' => 'img/lot-4.jpg',
-        'finishing' => '2021-08-02'
+        'finishing' => '2021-08-09'
     ],
     [
         'title' => 'Куртка для сноуборда DC Mutiny Charocal',
@@ -50,21 +50,32 @@ $items = [
         'finishing' => '2021-08-07'
         ]
 ];
-
+/**
+ * Форматирует цену по шаблону
+ *
+ * @param string $price целое число
+ * @return $format_price . " ₽" отформатированная сумма вместе со знаком рубля
+ */
 function auction_price($price) {
     $format_price = ceil($price);
     $format_price = number_format($format_price, 0, ' ', ' ');
     return $format_price . " ₽";
 }
-
+/**
+ * Выводит разницу во времени в формате 'ЧЧ:ММ'
+ *
+ * @param string $finishing дата в формате 'ГГГГ-ММ-ДД'
+ * @return array $diff_array массив, где первый элемент — целое количество часов до даты, а второй — остаток в минутах
+ */
 function date_finishing($finishing) {
-    $date1 = date_create('now');
-    $date2 = date_create($finishing);
-    $diff = date_diff($date1, $date2);
-    $time_count = date_interval_format($diff, '%d %H %i');
-    $time_count_array = explode(' ', $time_count);
-    $time_count_array[1] = $time_count_array[0]*24 + $time_count_array[1];
-    return $time_count_array[1] . ":" . $time_count_array[2];
+    $date_now = date_create('now');
+    $date_finishing = date_create($finishing);
+    $diff = (array) date_diff($date_now, $date_finishing);
+    $diff_array = [
+        'hours' => str_pad(($diff['d']*24 + $diff['h']), 2, "0", STR_PAD_LEFT),
+        'minutes' => str_pad($diff['i'], 2, "0", STR_PAD_LEFT)
+    ];
+    return($diff_array);
 }
 
 
