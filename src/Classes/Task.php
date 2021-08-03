@@ -1,6 +1,6 @@
 <?php
 
-namespace Classes;
+namespace Service;
 class Task
 {
     //Возможные статусы
