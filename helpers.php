@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
  *
@@ -35,7 +36,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
-        $errorMsg = 'Не удалось инициализировать подготовленное выражение: ' . mysqli_error($link);
+        $errorMsg = 'Не удалось инициализировать подготовленное выражение: '.mysqli_error($link);
         die($errorMsg);
     }
 
@@ -70,7 +71,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
         $func(...$values);
 
         if (mysqli_errno($link) > 0) {
-            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
+            $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: '.mysqli_error($link);
             die($errorMsg);
         }
     }
@@ -132,7 +133,7 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  */
 function include_template($name, array $data = [])
 {
-    $name = 'templates/' . $name;
+    $name = 'templates/'.$name;
     $result = '';
 
     if (!is_readable($name)) {
@@ -158,8 +159,9 @@ function check_youtube_url($url)
 {
     $id = extract_youtube_id($url);
 
-    set_error_handler(function () {}, E_WARNING);
-    $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $id);
+    set_error_handler(function () {
+    }, E_WARNING);
+    $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v='.$id);
     restore_error_handler();
 
     if (!is_array($headers)) {
@@ -186,8 +188,8 @@ function embed_youtube_video($youtube_url)
     $id = extract_youtube_id($youtube_url);
 
     if ($id) {
-        $src = "https://www.youtube.com/embed/" . $id;
-        $res = '<iframe width="760" height="400" src="' . $src . '" frameborder="0"></iframe>';
+        $src = "https://www.youtube.com/embed/".$id;
+        $res = '<iframe width="760" height="400" src="'.$src.'" frameborder="0"></iframe>';
     }
 
     return $res;
@@ -205,7 +207,7 @@ function embed_youtube_cover($youtube_url)
 
     if ($id) {
         $src = sprintf("https://img.youtube.com/vi/%s/mqdefault.jpg", $id);
-        $res = '<img alt="youtube cover" width="320" height="120" src="' . $src . '" />';
+        $res = '<img alt="youtube cover" width="320" height="120" src="'.$src.'" />';
     }
 
     return $res;
