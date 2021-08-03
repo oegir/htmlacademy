@@ -28,8 +28,8 @@ CREATE TABLE `task` (
   `term` data
 );
 
-CREATE TABLE `adress` (
-  `Id` int PRIMARY KEY,
+CREATE TABLE `adressC` (
+  `clientId` int PRIMARY KEY,
   `country` char,
   `city` char,
   `street` varchar(255),
@@ -38,8 +38,25 @@ CREATE TABLE `adress` (
   `coordinatesLongitude` int
 );
 
-CREATE TABLE `contacts` (
-  `Id` int,
+CREATE TABLE `contactsC` (
+  `clientId` int,
+  `facebook` char,
+  `email` char,
+  `number` int
+);
+
+CREATE TABLE `adressW` (
+  `workerId` int PRIMARY KEY,
+  `country` char,
+  `city` char,
+  `street` varchar(255),
+  `home` varchar(255),
+  `coordinatesLatitude` int,
+  `coordinatesLongitude` int
+);
+
+CREATE TABLE `contactsW` (
+  `workerId` int,
   `facebook` char,
   `email` char,
   `number` int
@@ -50,6 +67,16 @@ CREATE TABLE `evaluations` (
   `rate` decimal,
   `completeTask` int,
   `failedTask` int
+);
+
+CREATE TABLE `adressT` (
+  `taskId` int PRIMARY KEY,
+  `country` char,
+  `city` char,
+  `street` varchar(255),
+  `home` varchar(255),
+  `coordinatesLatitude` int,
+  `coordinatesLongitude` int
 );
 
 CREATE TABLE `comment` (
@@ -71,19 +98,23 @@ CREATE TABLE `cityTable` (
 
 ALTER TABLE `task` ADD FOREIGN KEY (`clientId`) REFERENCES `client` (`id`);
 
-ALTER TABLE `adress` ADD FOREIGN KEY (`Id`) REFERENCES `task` (`taskId`);
+ALTER TABLE `adressC` ADD FOREIGN KEY (`clientId`) REFERENCES `client` (`id`);
 
-ALTER TABLE `adress` ADD FOREIGN KEY (`Id`) REFERENCES `client` (`id`);
+ALTER TABLE `adressC` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
 
-ALTER TABLE `adress` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
+ALTER TABLE `client` ADD FOREIGN KEY (`id`) REFERENCES `contactsC` (`clientId`);
 
-ALTER TABLE `client` ADD FOREIGN KEY (`id`) REFERENCES `contacts` (`Id`);
+ALTER TABLE `adressW` ADD FOREIGN KEY (`workerId`) REFERENCES `worker` (`id`);
 
-ALTER TABLE `adress` ADD FOREIGN KEY (`Id`) REFERENCES `worker` (`id`);
+ALTER TABLE `adressW` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
 
-ALTER TABLE `worker` ADD FOREIGN KEY (`id`) REFERENCES `contacts` (`Id`);
+ALTER TABLE `worker` ADD FOREIGN KEY (`id`) REFERENCES `contactsW` (`workerId`);
 
 ALTER TABLE `worker` ADD FOREIGN KEY (`id`) REFERENCES `evaluations` (`workerId`);
+
+ALTER TABLE `adressT` ADD FOREIGN KEY (`taskId`) REFERENCES `task` (`taskId`);
+
+ALTER TABLE `adressT` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
 
 ALTER TABLE `comment` ADD FOREIGN KEY (`workerId`) REFERENCES `worker` (`id`);
 
