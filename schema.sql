@@ -8,6 +8,7 @@ CREATE TABLE categories (
     category_name VARCHAR(64) NOT NULL,
     symbol_code VARCHAR(64) NOT NULL
 );
+CREATE INDEX category_name_index ON categories (category_name);
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     user_email VARCHAR(255) UNIQUE NOT NULL,
@@ -20,15 +21,16 @@ CREATE TABLE lots (
     lot_date_create  DATETIME DEFAULT CURRENT_TIMESTAMP,
     lot_name VARCHAR(255) NOT NULL,
     lot_description TEXT(500) NOT NULL,
-    lot_image BLOB NOT NULL, 
+    lot_image VARCHAR(255) NOT NULL, 
     lot_first_price INT NOT NULL,
     lot_date_finish  DATETIME,
     lot_price_step INT NOT NULL,
     lot_category INT NOT NULL,
     lot_user INT NOT NULL,
-    FOREIGN KEY (lot_category) REFERENCES categories(category_id),
+    FOREIGN KEY (lot_category) REFERENCES categories (category_id),
     FOREIGN KEY (lot_user) REFERENCES users(user_id)
 );
+CREATE INDEX lot_name_index ON lots (lot_name);
 CREATE TABLE bets (
     bet_id INT AUTO_INCREMENT PRIMARY KEY,
     bet_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
