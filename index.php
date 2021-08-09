@@ -1,5 +1,6 @@
 <?php
 
+require_once('helpers.php');
 $is_auth = rand(0, 1);
 $user_name = 'Андрей';
 $popularCarts = [
@@ -82,46 +83,46 @@ function cutText(string $text, int $limit = 300, string $url = '#'): string
     return '<p>'.implode(' ', $result).'</p>'.$link;
 }
 
-require_once('helpers.php');
+
+/**
+ * Генерация случайных дат постов
+ */
 for ($i = 0; $i < count($popularCarts); $i++) {
     //с помощью функции генерируем случайные даты постов
-    $postDate = generate_random_date($popularCarts[$i]);
-    //добавляем дату в массив для отображения даты для тега
-    $popularCarts[$i]['fulldate'] = $postDate;
-    //добавляем дату в массив для отображения даты при наведении
-    $cutdate = substr($postDate, 0, 16);
-    $popularCarts[$i]['cutdate'] = $cutdate;
-    //превращаем случайные даты постов в unix
-    $postUnixDate = strtotime($postDate);
-    //определяем время сервера
-    $nowDate = date('Y-m-d H:i:s');
-    //превращаем время сервера в unix
-    $nowUnixDate = strtotime($nowDate);
+    $randomInit = rand(0, 4);
+    $randomDate = generate_random_date($randomInit);
+    $postDate = new DateTimeImmutable($randomDate);
+
+    //добавляем даты в массив для вывода в теги
+    $popularCarts[$i]['cutdate'] = $postDate->format('Y-m-d H:i');
+    $popularCarts[$i]['fulldate'] = $postDate->format('Y-m-d H:i:s');
+
     //вычисляем разницу между серверным временем и датой поста
-    $difference = $nowUnixDate - $postUnixDate;
-    if ($difference < 3600) {
-        $result = floor($difference / 60);
-        $resultForPost = get_noun_plural_form($result, 'минута', 'минуты', 'минут');
-        $popularCarts[$i]['date'] = "$result $resultForPost назад";
-    } elseif ($difference < 86400) {
-        $result = floor($difference / 3600);
-        $resultForPost = get_noun_plural_form($result, 'час', 'часа', 'часов');
-        $popularCarts[$i]['date'] = "$result $resultForPost назад";
-    } elseif ($difference < 604800) {
-        $result = floor($difference / 86400);
-        $resultForPost = get_noun_plural_form($result, 'день', 'дня', 'дней');
-        $popularCarts[$i]['date'] = "$result $resultForPost назад";
-    } elseif ($difference < 3024000) {
-        $result = floor($difference / 604800);
-        $resultForPost = get_noun_plural_form($result, 'неделя', 'недели', 'недель');
-        $popularCarts[$i]['date'] = "$result $resultForPost назад";
-    } elseif ($difference > 3024000) {
-        $result = floor($difference / 3024000);
-        $resultForPost = get_noun_plural_form($result, 'месяц', 'месяца', 'месяцев');
-        $popularCarts[$i]['date'] = "$result $resultForPost назад";
+    $nowDate = new DateTimeImmutable();
+    $difference = $nowDate->diff($postDate);
+
+    // Форматируем разницу дат для вывода в шаблоне
+    if ($difference->m > 0) {
+        $resultForPost = get_noun_plural_form($difference->m, 'месяц', 'месяца', 'месяцев');
+        $popularCarts[$i]['date'] = "$difference->m $resultForPost назад";
+    } elseif (intdiv($difference->d, 7) > 0) {
+        $weeks = intdiv($difference->d, 7);
+        $resultForPost = get_noun_plural_form($weeks, 'неделя', 'недели', 'недель');
+        $popularCarts[$i]['date'] = "$weeks $resultForPost назад";
+    } elseif ($difference->d > 0) {
+        $resultForPost = get_noun_plural_form($difference->d, 'день', 'дня', 'дней');
+        $popularCarts[$i]['date'] = "$difference->d $resultForPost назад";
+    } elseif ($difference->h > 0) {
+        $resultForPost = get_noun_plural_form($difference->h, 'час', 'часа', 'часов');
+        $popularCarts[$i]['date'] = "$difference->h $resultForPost назад";
+    } else {
+        $resultForPost = get_noun_plural_form($difference->i, 'минута', 'минуты', 'минут');
+        $popularCarts[$i]['date'] = "$difference->i $resultForPost назад";
     }
 }
-
+/**
+ * Подключаем шаблоны
+ */
 $page_content = include_template('main.php', ['popularCarts' => $popularCarts]);
 $layout_content = include_template(
     'layout.php',
