@@ -1,4 +1,6 @@
+SET foreign_key_checks = 0;
 -- добавляю категории
+TRUNCATE TABLE category;
 INSERT INTO category (`title`, `symbol`)
 VALUES 
 ('Доски и лыжи', 'boards'), 
@@ -9,12 +11,14 @@ VALUES
 ('Разное', 'other');
 
 -- добавляю пользователей
+TRUNCATE TABLE users;
 INSERT INTO users (`email`, `username`, `pass`, `contact`)
 VALUES 
 ('ya1@ya.ru', 'Оля', 'pass1', 'Москва'), 
 ('ya2@ya.ru', 'Ваня', 'pass2', 'Москва');
 
 -- добавляю лоты
+TRUNCATE TABLE lot;
 INSERT INTO lot (`heading`, `description`, `image`, `first_price`, `finish`, `price_step`, `category_id`, `user_id`)
 VALUES 
 ('2014 Rossignol District Snowboard', 'Сноуборд', 'img/lot-1.jpg', 10999, '2021-08-24', 1, 1, 1),
@@ -25,6 +29,7 @@ VALUES
 ('Маска Oakley Canopy', 'Маска', 'img/lot-6.jpg', 5400, '2021-08-24', 100, 6, 2);
 
 -- добавляю ставки
+TRUNCATE TABLE bet;
 INSERT INTO bet (`price`, `bet_lot_id`, `bet_user_id`)
 VALUES 
 (11000, 1, 1), 
@@ -32,16 +37,17 @@ VALUES
 (5500, 6, 2),
 (5600, 6, 2);
 
+SET foreign_key_checks = 1;
 -- получаю все категории
-SELECT `title` FROM category;
+SELECT `id`, `title`, `symbol` FROM category;
 
 -- получаю самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории
-SELECT l.`heading`, l.`first_price`, l.`image`, c.`title` FROM lot l
+SELECT l.`id`, l.`create` ,l.`heading`, l.`first_price`, l.`image`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
 WHERE l.`finish` > CURDATE();
 
 -- показываю лот по его ID. Получаю также название категории, к которой принадлежит лот
-SELECT l.`heading`, c.`title` FROM lot l
+SELECT l.`heading`, c.`id`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
 WHERE l.`id` = 6;
 
@@ -50,6 +56,6 @@ SELECT `price` FROM bet WHERE `bet_lot_id` = 1 ORDER BY `date` ASC;
 
 -- обновляю название лота по его идентификатору
 UPDATE lot
-SET `name` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
+SET `heading` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
 WHERE `id` = 4;
 
