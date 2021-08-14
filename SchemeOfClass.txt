@@ -1,0 +1,93 @@
+﻿процессы:
+        Публикация задания;
+        Добавление отклика на задание;
+        Поиск заданий по категориям и городу;
+        Переписка заказчика и исполнителя во внутреннем чате;
+        Ведение всего процесса исполнения задания;
+        Выбор исполнителя и назначение его на задание;
+        Получение email уведомлений;
+        Обслуживание функций мобильного приложения.
+классы:
+
+	Класс Task:
+Поля:
+string:title,clientId,workerId,description,term(срок выполнения),createdAt;
+float:price;
+
+Cathegory:cathegory;
+
+Конструктор:Публикация задания(Процессы для сохранения данных);
+
+Методы:
+cancel();((Отмена задания)
+chooseWorker();(Выбор исполнителя и назначение его на задание-проверка статуса,проверка исполнителя, его добавление)
+switchStatus():string;(Непосредственно переключает статусы,проверяет есть ли на это право,возвращает статус)
+completeStatus();(выполнение задания-проверка статуса,отправка отзыва о качестве работы в БД;)
+failedStatus();(отказ от задания-проверка статуса,занесение исполнителя в черный список,увеличение у исполнителя счётчика проваленных заданий;)
+
+	Класс User
+
+свойства-
+string:name,fullname,age,about,adress[],coordinates[],contacts[],cathegory[];
+
+конструктор-создание нового клиента;
+
+autentification()-поиск по БД,проверка логина/пароля;
+myTask():string-информация о заданиях
+userInfo():string-информация о пользователе
+cathegory()-добавляет/убирает специализации
+
+	Класс Сriteries
+свойства-Cathegory:cathegory;
+switchСriteries()-переключение критериев поиска;
+searchTask()(выводит задания под критерии поиска);
+filterTask()(фильтры заданий);
+filterClient()(фильтры пользовтелей)
+
+	Класс Show extends Сriteries
+
+showSuitableTask():string(показ одного задания)
+showTask():string(выводит из БД информацию для исполнителя);
+showWorker():string(показ страницы исполнителя)
+showClient():string(показ страницы заказчика)
+lastTasks():string(Показ 4 последних заданий)
+
+	Класс Validation
+
+свойства-formData[],requiredFields[],errors[];
+baseValidation():string
+advancedValidation():string
+
+	Класс Utility
+
+свойства- settings[]
+mailing()для рассылки email уведомлений
+settings():string(для настроек пользователя)
+	
+	Класс messenger
+свойства-message[]
+методы-
+messenger()(отвечает за переписку)
+
+	Класс comments
+свойства-
+string:commentsValue(содержимое комментария),time
+integer:price
+методы-
+comments()для возможности оставить комментарий
+
+	Класс Cathegory
+свойства-cathegory
+методы-
+cathegoryToId():string(возвращает специализации в виде ИД)
+idToCathegory():string(возвращает ИД в виде специализаций)
+
+	Класс Evaluation
+свойства-
+integer:rate,failedTask
+sttring:comment
+методы-
+showEvaluations():string(показ оценок за работу)
+
+	
+			

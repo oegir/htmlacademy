@@ -1,123 +1,75 @@
-CREATE TABLE `client` (
+CREATE TABLE `user` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `full_name` varchar(255),
+  `fullName` varchar(255),
   `password` varchar(255),
-  `created_at` timestamp,
+  `createdAt` timestamp,
   `about` varchar(255),
-  `age` date
-);
-
-CREATE TABLE `worker` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `full_name` varchar(255),
-  `password` varchar(255),
-  `created_at` timestamp,
-  `about` varchar(255),
-  `age` date
+  `age` date,
+  `city` char,
+  `street` varchar(255),
+  `home` varchar(255),
+  `coordinatesLatitude` int,
+  `coordinatesLongitude` int,
+  `facebook` char,
+  `email` char,
+  `number` int,
+  `cathegory` varchar(255)
 );
 
 CREATE TABLE `task` (
-  `taskId` int,
+  `id` int PRIMARY KEY AUTO_INCREMENT,
   `clientId` int,
   `workerId` int,
-  `name` char,
+  `title` char,
   `cathegory` char,
-  `created_at` timestamp,
+  `createdAt` timestamp,
   `description` varchar(255),
   `price` int,
-  `term` data
-);
-
-CREATE TABLE `adressC` (
-  `clientId` int PRIMARY KEY,
-  `country` char,
-  `city` char,
-  `street` varchar(255),
-  `home` varchar(255),
-  `coordinatesLatitude` int,
-  `coordinatesLongitude` int
-);
-
-CREATE TABLE `contactsC` (
-  `clientId` int,
-  `facebook` char,
-  `email` char,
-  `number` int
-);
-
-CREATE TABLE `adressW` (
-  `workerId` int PRIMARY KEY,
-  `country` char,
-  `city` char,
-  `street` varchar(255),
-  `home` varchar(255),
-  `coordinatesLatitude` int,
-  `coordinatesLongitude` int
-);
-
-CREATE TABLE `contactsW` (
-  `workerId` int,
-  `facebook` char,
-  `email` char,
-  `number` int
+  `term` date
 );
 
 CREATE TABLE `evaluations` (
-  `workerId` int,
+  `id` int PRIMARY KEY,
   `rate` decimal,
-  `completeTask` int,
-  `failedTask` int
+  `isTaskComplete` int,
+  `failedTask` int,
+  `comment` varchar(255)
 );
 
-CREATE TABLE `adressT` (
-  `taskId` int PRIMARY KEY,
-  `country` char,
-  `city` char,
-  `street` varchar(255),
-  `home` varchar(255),
+CREATE TABLE `comment` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `comment` varchar(255),
+  `time` timestamp,
+  `price` int,
+  `userId` int
+);
+
+CREATE TABLE `include` (
+  `id` int PRIMARY KEY,
+  `attachment` MEDIUMBLOB
+);
+
+CREATE TABLE `cityTable` (
+  `city` varchar(255) PRIMARY KEY,
   `coordinatesLatitude` int,
   `coordinatesLongitude` int
 );
 
-CREATE TABLE `comment` (
-  `taskId` int,
-  `comment` varchar(255),
-  `time` timestamp,
-  `price` int,
-  `workerId` int
+CREATE TABLE `cathegory` (
+  `id` int PRIMARY KEY,
+  `cathegories` varchar(255)
 );
 
-CREATE TABLE `include` (
-  `taskId` int,
-  `attachment` varchar(255)
-);
+ALTER TABLE `task` ADD FOREIGN KEY (`clientId`) REFERENCES `user` (`id`);
 
-CREATE TABLE `cityTable` (
-  `city` int
-);
+ALTER TABLE `user` ADD FOREIGN KEY (`id`) REFERENCES `evaluations` (`id`);
 
-ALTER TABLE `task` ADD FOREIGN KEY (`clientId`) REFERENCES `client` (`id`);
+ALTER TABLE `comment` ADD FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
 
-ALTER TABLE `adressC` ADD FOREIGN KEY (`clientId`) REFERENCES `client` (`id`);
+ALTER TABLE `comment` ADD FOREIGN KEY (`id`) REFERENCES `task` (`id`);
 
-ALTER TABLE `adressC` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
+ALTER TABLE `include` ADD FOREIGN KEY (`id`) REFERENCES `task` (`id`);
 
-ALTER TABLE `client` ADD FOREIGN KEY (`id`) REFERENCES `contactsC` (`clientId`);
+ALTER TABLE `cathegory` ADD FOREIGN KEY (`id`) REFERENCES `task` (`cathegory`);
 
-ALTER TABLE `adressW` ADD FOREIGN KEY (`workerId`) REFERENCES `worker` (`id`);
-
-ALTER TABLE `adressW` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
-
-ALTER TABLE `worker` ADD FOREIGN KEY (`id`) REFERENCES `contactsW` (`workerId`);
-
-ALTER TABLE `worker` ADD FOREIGN KEY (`id`) REFERENCES `evaluations` (`workerId`);
-
-ALTER TABLE `adressT` ADD FOREIGN KEY (`taskId`) REFERENCES `task` (`taskId`);
-
-ALTER TABLE `adressT` ADD FOREIGN KEY (`city`) REFERENCES `cityTable` (`city`);
-
-ALTER TABLE `comment` ADD FOREIGN KEY (`workerId`) REFERENCES `worker` (`id`);
-
-ALTER TABLE `comment` ADD FOREIGN KEY (`taskId`) REFERENCES `task` (`taskId`);
-
-ALTER TABLE `include` ADD FOREIGN KEY (`taskId`) REFERENCES `task` (`taskId`);
+ALTER TABLE `cathegory` ADD FOREIGN KEY (`id`) REFERENCES `user` (`cathegory`);
