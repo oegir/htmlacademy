@@ -1,34 +1,43 @@
 <?php
 namespace TaskForce;
 
-const PHP_EOL = '<br/>';
-
 /**
- * Status - класс содержит и изменяет текущее состояние задания
+ * Task - класс описания задания и работы с ним
  */
-class Status 
+class Task
 {
-    protected const STATUS_NEW = 'new';
-    protected const STATUS_CANCELED = 'canceled';
-    protected const STATUS_WORK = 'work';
-    protected const STATUS_DONE = 'done';
-    protected const STATUS_FAILED = 'failed';
+    private const STATUS_NEW = 'new';
+    private const STATUS_CANCELED = 'canceled';
+    private const STATUS_WORK = 'work';
+    private const STATUS_DONE = 'done';
+    private const STATUS_FAILED = 'failed';
 
+    //id заказчика
+    private $customer;
+    //id исполнителя
+    private $contractor;
+    //статус состояния задачи
     private $status;
 
-    protected function __construct() {
+    /**
+     * Конструктор класса
+     * @param int $customerId - id заказчика задания
+     * @param int $contractorId - id исполнителя задания
+     */
+    public function __construct(int $customerId, int $contractorId) {
+        $this->customer = $customerId;
+        $this->contractor = $contractorId;
         $this->status = self::STATUS_NEW;
+        echo 'construct() новое задание', \PHP_EOL;
+        echo $this->status, \PHP_EOL;
     }
 
     /**
-     * Задать новое состояние задания
-     * @param string $newStatus - новое состояние задания
-     * @throws \LogicException - попытка установить новый статус задания,
-     * который не соответствует текущему статусу
-     * 
-     * @return ничего
+     * Вспомогательная функция проверяет новый статус задания на соответствие логике переходов
+     * из одного состояния в другое и меняет текущий статус задания на новый
+     * @param string $newStatus - новый статус задания
      */
-    protected function setStatus(string $newStatus) {
+    private function setStatus(string $newStatus) {
         switch ($this->status) {
             case self::STATUS_NEW:
                 switch ($newStatus) {
@@ -86,150 +95,54 @@ class Status
     }
 
     /**
-     * Показать текущее состояние задания
-     * @param ничего
-     * 
-     * @return string текушее состояние задания
-     */
-    public function getStatus() : string {
-        return $this->status;
-    }
-}
-
-/**
- * Task - класс описания задания и работы с ним
- */
-class Task extends Status
-{
-    private $customer;
-    private $contractor;
-
-    /**
-     * Конструктор класса
-     * @param int $customerId - id заказчика задания
-     */
-    public function __construct(int $customerId) {
-        parent::__construct();
-        $this->customer = $customerId;
-        $this->contractor = 0;
-        echo 'construct() новое задание', PHP_EOL;
-    }
-
-    /**
-     * Задать исполнителя задания
-     * @param int $contractorId - id исполнителя задания
-     * @throws \LogicException - при текушем статусе задания задать 
-     * исполнителя невозможно
-     * 
-     * @return ничего
-     */
-    public function setContractor(int $contractorId) {
-        if ($this->getStatus() === self::STATUS_NEW) {
-            $this->contractor = $contractorId;
-        } else {
-            throw new \LogicException(
-                'Current status: ' . $this->getStatus() .
-                '. Contractor set not allowed' .
-                '. Allowed by status: ' . self::STATUS_NEW
-            );
-        }
-    }
-
-    /**
-     * Получить id исполнителя задания
-     * @param ничего
-     * 
-     * @return int id исполнителя
-     */
-    public function getContractorId() {
-        return $this->contractor;
-    }
-
-    /**
-     * Получить id заказчика задания
-     * @param ничего
-     * 
-     * @return int id заказчика
-     */
-    public function getCustomerId() {
-        return $this->customer;
-    }
-
-    /**
      * Отказаться от выполнения задания
-     * @param ничего
-     * 
-     * @return ничего
      */
-    public function refuse() {
+    public function refuse() : string {
         try {
             $this->setStatus(self::STATUS_FAILED);
-            echo 'Отказ от выполнения задания выполнен', PHP_EOL;
+            echo 'Отказ от выполнения задания выполнен', \PHP_EOL;
         } catch (\LogicException $e) {
-            echo 'refuse() перехвачено исключение: ',  $e->getMessage(), PHP_EOL;
+            echo 'refuse() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
         }
+        return $this->status;
     }
 
     /**
      * Отменить задание
-     * @param ничего
-     * 
-     * @return ничего
      */
-    public function cancel() {
+    public function cancel() : string {
         try {
             $this->setStatus(self::STATUS_CANCELED);
-            echo 'Задание отменено', PHP_EOL;
+            echo 'Задание отменено', \PHP_EOL;
         } catch (\LogicException $e) {
-            echo 'cancel() перехвачено исключение: ',  $e->getMessage(), PHP_EOL;
+            echo 'cancel() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
         }
+        return $this->status;
     }
 
     /**
      * Стартовать выполнение задания
-     * @param ничего
-     * 
-     * @return ничего
      */
-    public function start() {
-        if ($this->contractor === 0) {
-            throw new \LogicException('Task start not allowed. Contractor not defined');
-        }
+    public function start() : string {
         try {
             $this->setStatus(self::STATUS_WORK);
-            echo 'Задание поставлено на выполнение', PHP_EOL;
+            echo 'Задание поставлено на выполнение', \PHP_EOL;
         } catch (\LogicException $e) {
-            echo 'start() перехвачено исключение: ',  $e->getMessage(), PHP_EOL;
+            echo 'start() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
         }
+        return $this->status;
     }
 
     /**
-     * Обновить задание после отказа от его выполнения
-     * @param ничего
-     * 
-     * @return ничего
-     */
-    public function renew() {
-        try {
-            $this->setStatus(self::STATUS_NEW);
-            $this->setContractor(0);
-            echo 'Задание снова можно стартовать', PHP_EOL;
-        } catch (\LogicException $e) {
-            echo 'renew() перехвачено исключение: ',  $e->getMessage(), PHP_EOL;
-        }
-    }
-    /**
      * Завершить выполнение задания
-     * @param ничего
-     * 
-     * @return ничего
      */
-    public function complete() {
+    public function complete() : string {
         try {
             $this->setStatus(self::STATUS_DONE);
-            echo 'Задание выполнено', PHP_EOL;
+            echo 'Задание выполнено', \PHP_EOL;
         } catch (\LogicException $e) {
-            echo 'complete() перехвачено исключение: ',  $e->getMessage(), PHP_EOL;
+            echo 'complete() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
         }
+        return $this->status;
     }
 }
