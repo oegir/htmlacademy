@@ -4,52 +4,24 @@ $is_auth = rand(0, 1);
 
 $user_name = 'Olga'; // укажите здесь ваше имя
 
-$categories = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
+$base = mysqli_connect('localhost', 'root', '', 'yeticave'); 
+   mysqli_set_charset($base, "utf8"); 
+    if (!$base) {
+        echo "Ошибка подключения к БД. Код ошибки: " . mysqli_connect_error();
+        exit();
+    }
 
-$items = [
-    [
-        'title' => '2014 Rossignol District Snowboard',
-        'category' => 'Доски и лыжи',
-        'price' => '10999',
-        'img' => 'img/lot-1.jpg',
-        'finishing' => '2021-08-04'
-    ],
-    [
-        'title' => 'DC Ply Mens 2016/2017 Snowboard',
-        'category' => 'Доски и лыжи',
-        'price' => '159999',
-        'img' => 'img/lot-2.jpg',
-        'finishing' => '2021-08-03'
-    ],
-    [
-        'title' => 'Крепления Union Contact Pro 2015 года размер L/XL',
-        'category' => 'Крепления',
-        'price' => '8000',
-        'img' => 'img/lot-3.jpg',
-        'finishing' => '2021-08-04'
-    ],
-    [
-        'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
-        'category' => 'Ботинки',
-        'price' => '10999',
-        'img' => 'img/lot-4.jpg',
-        'finishing' => '2021-08-09'
-    ],
-    [
-        'title' => 'Куртка для сноуборда DC Mutiny Charocal',
-        'category' => 'Одежда',
-        'price' => '7500',
-        'img' => 'img/lot-5.jpg',
-        'finishing' => '2021-08-06'
-    ],
-    [
-        'title' => 'Маска Oakley Canopy',
-        'category' => 'Разное',
-        'price' => '5400',
-        'img' => 'img/lot-6.jpg',
-        'finishing' => '2021-08-07'
-        ]
-];
+$sql_categories = "SELECT `id`, `title`, `symbol` FROM category";
+$result_categories = mysqli_query($base, $sql_categories); 
+$categories = mysqli_fetch_all($result_categories, MYSQLI_ASSOC);
+
+$sql_items = "SELECT l.`id`, l.`create`, l.`heading`, l.`first_price`, l.`price_step`, l.`finish`, l.`image`, c.`title` FROM lot l
+JOIN category c ON l.`category_id` = c.`id`
+WHERE l.`finish` > CURDATE()
+ORDER BY `create` DESC";
+$result_items = mysqli_query($base, $sql_items);
+$items = mysqli_fetch_all($result_items, MYSQLI_ASSOC);
+
 /**
  * Форматирует цену по шаблону
  *

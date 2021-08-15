@@ -56,15 +56,11 @@
         <nav class="nav">
             <ul class="nav__list container">
                 <!--заполните этот список из массива категорий-->
-                <?php
-                        $index = 0;
-                        $num = count($categories);
-                        while ($index < $num): ?>
+                <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?=htmlspecialchars($categories[$index]);?></a>
+                    <a href="pages/<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
                 </li>
-                <?php $index++; ?>
-            <?php endwhile; ?>
+                <?php endforeach; ?>
             </ul>
         </nav>
         <div class="main-footer__bottom container">

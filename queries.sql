@@ -50,6 +50,6 @@ SELECT `price` FROM bet WHERE `bet_lot_id` = 1 ORDER BY `date` ASC;
 
 -- обновляю название лота по его идентификатору
 UPDATE lot
-SET `name` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
+SET `heading` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
 WHERE `id` = 4;
 
