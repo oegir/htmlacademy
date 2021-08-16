@@ -11,12 +11,47 @@ class Task
     private const STATUS_WORK = 'work';
     private const STATUS_DONE = 'done';
     private const STATUS_FAILED = 'failed';
+    
+    private const ACTION_START = 'start';
+    private const ACTION_COMPLETE = 'complete';
+    private const ACTION_REFUSE = 'refuse';
+    private const ACTION_CANCEL = 'cancel';
+
+    private $statusMap = [
+        self::STATUS_NEW => 'новое задание',
+        self::STATUS_CANCELED => 'задание отменено',
+        self::STATUS_DONE => 'задание завершено',
+        self::STATUS_FAILED => 'задание провалено',
+        self::STATUS_WORK => 'задание в работе'
+    ];
+
+    private $actionMap = [
+        self::ACTION_START => 'стартовать задание',
+        self::ACTION_COMPLETE => 'завершить задание',
+        self::ACTION_REFUSE => 'отказаться от задания',
+        self::ACTION_CANCEL => 'отменить задание'
+    ];
+
+    private $actionStatusMap = [
+        self::ACTION_START => self::STATUS_WORK,
+        self::ACTION_COMPLETE => self::STATUS_DONE,
+        self::ACTION_REFUSE => self::STATUS_FAILED,
+        self::ACTION_CANCEL => self::STATUS_CANCELED
+    ];
+
+    private $allowedActions = [
+        self::STATUS_NEW => [self::ACTION_START, self::ACTION_CANCEL],
+        self::STATUS_WORK => [self::ACTION_COMPLETE, self::ACTION_REFUSE],
+        self::STATUS_CANCELED => [],
+        self::STATUS_DONE => [],
+        self::STATUS_FAILED => []
+    ];
 
     //id заказчика
     private $customer;
     //id исполнителя
     private $contractor;
-    //статус состояния задачи
+    //текущий статус состояния задания
     private $status;
 
     /**
@@ -33,116 +68,49 @@ class Task
     }
 
     /**
-     * Вспомогательная функция проверяет новый статус задания на соответствие логике переходов
-     * из одного состояния в другое и меняет текущий статус задания на новый
-     * @param string $newStatus - новый статус задания
+     * Возаращает карту статусов
      */
-    private function setStatus(string $newStatus) {
-        switch ($this->status) {
-            case self::STATUS_NEW:
-                switch ($newStatus) {
-                    case self::STATUS_CANCELED:
-                    case self::STATUS_WORK:
-                        $this->status = $newStatus;
-                        break;
-                    default:
-                        throw new \LogicException(
-                            'Current status: ' . $this->status .
-                            '. Wrong new status value: ' . $newStatus .
-                            '. Awaited: ' . self::STATUS_CANCELED . ' or ' . self::STATUS_WORK
-                        );
-                        break;
-                }
-                break;
-            case self::STATUS_FAILED:
-                switch ($newStatus) {
-                    case self::STATUS_NEW:
-                    case self::STATUS_CANCELED:
-                        $this->status = $newStatus;
-                        break;
-                    default:
-                        throw new \LogicException(
-                            'Current status: ' . $this->status .
-                            '. Wrong new status value: ' . $newStatus .
-                            '. Awaited: ' . self::STATUS_CANCELED . ' or ' . self::STATUS_NEW
-                        );
-                        break;
-                }
-                break;
-            case self::STATUS_WORK:
-                switch ($newStatus) {
-                    case self::STATUS_DONE:
-                    case self::STATUS_FAILED:
-                        $this->status = $newStatus;
-                        break;
-                    default:
-                        throw new \LogicException(
-                            'Current status: ' . $this->status .
-                            '. Wrong new status value: '. $newStatus .
-                            '. Awaited: ' . self::STATUS_DONE . ' or ' . self::STATUS_FAILED
-                        );
-                        break;
-                }
-                break;
-            case self::STATUS_DONE:
-            case self::STATUS_CANCELED:
-                throw new \LogicException(
-                    'Current status: ' . $this->status .
-                    '. Any other status value not allowed'
-                );
-                break;
-        }
+    public function getStatusMap() : array {
+        return $this->statusMap;
     }
 
     /**
-     * Отказаться от выполнения задания
+     * Возвращает карту действий
      */
-    public function refuse() : string {
-        try {
-            $this->setStatus(self::STATUS_FAILED);
-            echo 'Отказ от выполнения задания выполнен', \PHP_EOL;
-        } catch (\LogicException $e) {
-            echo 'refuse() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
-        }
-        return $this->status;
+    public function getACtionMap() : array {
+        return $this->actionMap;
     }
 
     /**
-     * Отменить задание
+     * Возвращает значение статуса, в которой перейдёт заданме
+     * после выполнения указанного действия
+     * @param string $action - требуемое действие
+     * 
+     * @return string - значение статуса, соответсвующего действию
+     * или пустая строка, если такого действия нет
      */
-    public function cancel() : string {
-        try {
-            $this->setStatus(self::STATUS_CANCELED);
-            echo 'Задание отменено', \PHP_EOL;
-        } catch (\LogicException $e) {
-            echo 'cancel() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
+    public function mapActionToStatus(string $action) : string {
+        foreach($this->actionStatusMap as $key => $value) {
+            if ($key === $action) {
+                return $value;
+            }
         }
-        return $this->status;
+        return '';
     }
 
     /**
-     * Стартовать выполнение задания
+     * Возвращает массив доступных действий, соответствующий заданному статусу задания
+     * @param string $status - заданный статус
+     * 
+     * @return array - массив доступных действий
+     * или пустая строка, если такого действия нет
      */
-    public function start() : string {
-        try {
-            $this->setStatus(self::STATUS_WORK);
-            echo 'Задание поставлено на выполнение', \PHP_EOL;
-        } catch (\LogicException $e) {
-            echo 'start() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
+    public function mapStatusToAllowedActions($status) : array {
+        foreach($this->allowedActions as $key => $value) {
+            if ($key === $status) {
+                return $value;
+            }
         }
-        return $this->status;
-    }
-
-    /**
-     * Завершить выполнение задания
-     */
-    public function complete() : string {
-        try {
-            $this->setStatus(self::STATUS_DONE);
-            echo 'Задание выполнено', \PHP_EOL;
-        } catch (\LogicException $e) {
-            echo 'complete() перехвачено исключение: ',  $e->getMessage(), \PHP_EOL;
-        }
-        return $this->status;
+        return [];
     }
 }
