@@ -87,7 +87,7 @@ class Task
      * @param string $action - требуемое действие
      * 
      * @return string - значение статуса, соответсвующего действию
-     * или пустая строка, если такого действия нет
+     * или пустая строка, если такого статуса нет
      */
     public function mapActionToStatus(string $action) : string {
         foreach($this->actionStatusMap as $key => $value) {
@@ -103,7 +103,7 @@ class Task
      * @param string $status - заданный статус
      * 
      * @return array - массив доступных действий
-     * или пустая строка, если такого действия нет
+     * или пустой массив, если доступных действий нет
      */
     public function mapStatusToAllowedActions($status) : array {
         foreach($this->allowedActions as $key => $value) {
