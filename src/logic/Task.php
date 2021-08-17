@@ -1,5 +1,5 @@
 <?php
-namespace TaskForce;
+namespace TaskForce\logic;
 
 /**
  * Task - класс описания задания и работы с ним

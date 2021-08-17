@@ -1,8 +1,10 @@
 <?php
-require_once 'Task.php';
+use TaskForce\logic\Task;
+
+require_once 'vendor/autoload.php';
 
 //Новое задание с id заказяика 1 и id исполнителя 23
-$task = new TaskForce\Task(1, 23);
+$task = new Task(1, 23);
 $statusMap = $task->getStatusMap();
 var_dump($statusMap);
 $actionMap = $task->getActionMap();
