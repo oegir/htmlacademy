@@ -1,4 +1,5 @@
 <?php
+
 namespace TaskForce\logic;
 
 /**
@@ -6,16 +7,16 @@ namespace TaskForce\logic;
  */
 class Task
 {
-    private const STATUS_NEW = 'new';
-    private const STATUS_CANCELED = 'canceled';
-    private const STATUS_WORK = 'work';
-    private const STATUS_DONE = 'done';
-    private const STATUS_FAILED = 'failed';
-    
-    private const ACTION_START = 'start';
-    private const ACTION_COMPLETE = 'complete';
-    private const ACTION_REFUSE = 'refuse';
-    private const ACTION_CANCEL = 'cancel';
+    public const STATUS_NEW = 'new';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_WORK = 'work';
+    public const STATUS_DONE = 'done';
+    public const STATUS_FAILED = 'failed';
+
+    public const ACTION_START = 'start';
+    public const ACTION_COMPLETE = 'complete';
+    public const ACTION_REFUSE = 'refuse';
+    public const ACTION_CANCEL = 'cancel';
 
     private $statusMap = [
         self::STATUS_NEW => 'новое задание',
@@ -59,25 +60,26 @@ class Task
      * @param int $customerId - id заказчика задания
      * @param int $contractorId - id исполнителя задания
      */
-    public function __construct(int $customerId, int $contractorId) {
+    public function __construct(int $customerId, int $contractorId)
+    {
         $this->customer = $customerId;
         $this->contractor = $contractorId;
         $this->status = self::STATUS_NEW;
-        echo 'construct() новое задание', \PHP_EOL;
-        echo $this->status, \PHP_EOL;
     }
 
     /**
      * Возаращает карту статусов
      */
-    public function getStatusMap() : array {
+    public function getStatusMap(): array
+    {
         return $this->statusMap;
     }
 
     /**
      * Возвращает карту действий
      */
-    public function getACtionMap() : array {
+    public function getACtionMap(): array
+    {
         return $this->actionMap;
     }
 
@@ -85,32 +87,24 @@ class Task
      * Возвращает значение статуса, в которой перейдёт заданме
      * после выполнения указанного действия
      * @param string $action - требуемое действие
-     * 
+     *
      * @return string - значение статуса, соответсвующего действию
      * или пустая строка, если такого статуса нет
      */
-    public function mapActionToStatus(string $action) : string {
-        foreach($this->actionStatusMap as $key => $value) {
-            if ($key === $action) {
-                return $value;
-            }
-        }
-        return '';
+    public function mapActionToStatus(string $action): ?string
+    {
+        return $this->actionStatusMap[$action] ?? null;
     }
 
     /**
      * Возвращает массив доступных действий, соответствующий заданному статусу задания
      * @param string $status - заданный статус
-     * 
+     *
      * @return array - массив доступных действий
      * или пустой массив, если доступных действий нет
      */
-    public function mapStatusToAllowedActions($status) : array {
-        foreach($this->allowedActions as $key => $value) {
-            if ($key === $status) {
-                return $value;
-            }
-        }
-        return [];
+    public function mapStatusToAllowedActions($status): array
+    {
+        return $this->allowedActions[$status] ?? [];
     }
 }
