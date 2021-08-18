@@ -5,15 +5,13 @@ CREATE TABLE `user` (
   `createdAt` timestamp,
   `about` varchar(255),
   `age` date,
-  `city` char,
+  `cityId` char,
   `street` varchar(255),
   `home` varchar(255),
-  `coordinatesLatitude` int,
-  `coordinatesLongitude` int,
   `facebook` char,
   `email` char,
   `number` int,
-  `cathegory` varchar(255)
+  `cathegoryId` varchar(255)
 );
 
 CREATE TABLE `task` (
@@ -21,7 +19,7 @@ CREATE TABLE `task` (
   `clientId` int,
   `workerId` int,
   `title` char,
-  `cathegory` char,
+  `cathegoryId` char,
   `createdAt` timestamp,
   `description` varchar(255),
   `price` int,
@@ -50,14 +48,23 @@ CREATE TABLE `include` (
 );
 
 CREATE TABLE `cityTable` (
-  `city` varchar(255) PRIMARY KEY,
-  `coordinatesLatitude` int,
-  `coordinatesLongitude` int
+  `id` int,
+  `city` varchar(255),
+  `coordinatesLatitude` decimal(10,8) DEFAULT NULL,
+  `coordinatesLongitude` decimal(11,8) DEFAULT NULL,
+  PRIMARY KEY (`id`, `city`)
 );
 
 CREATE TABLE `cathegory` (
   `id` int PRIMARY KEY,
   `cathegories` varchar(255)
+);
+
+CREATE TABLE `userCathegory` (
+  `userId` INT NOT NULL,
+  `cathegoryId` INT NOT NULL,
+  CONSTRAINT `userCathegory_PK` PRIMARY KEY (`userId`,`cathegoryId`)
+
 );
 
 ALTER TABLE `task` ADD FOREIGN KEY (`clientId`) REFERENCES `user` (`id`);
@@ -70,6 +77,12 @@ ALTER TABLE `comment` ADD FOREIGN KEY (`id`) REFERENCES `task` (`id`);
 
 ALTER TABLE `include` ADD FOREIGN KEY (`id`) REFERENCES `task` (`id`);
 
-ALTER TABLE `cathegory` ADD FOREIGN KEY (`id`) REFERENCES `task` (`cathegory`);
+ALTER TABLE `task` ADD CONSTRAINT task_FK FOREIGN KEY (`cathegoryId`) REFERENCES `cathegory`(`id`);
 
-ALTER TABLE `cathegory` ADD FOREIGN KEY (`id`) REFERENCES `user` (`cathegory`);
+
+ALTER TABLE `userCathegory` ADD CONSTRAINT `userCathegory_FK` FOREIGN KEY (`cathegoryId`) REFERENCES `cathegory`(`id`);
+ALTER TABLE `userCathegory` ADD CONSTRAINT `userCathegory_FK_1` FOREIGN KEY (`userId`) REFERENCES `user`(`id`);
+
+
+ALTER TABLE `cityTable` ADD FOREIGN KEY (`id`) REFERENCES `user` (`cityId`);
+
