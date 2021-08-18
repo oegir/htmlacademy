@@ -89,7 +89,7 @@ class Task
      * @param string $action - требуемое действие
      *
      * @return string - значение статуса, соответсвующего действию
-     * или пустая строка, если такого статуса нет
+     * или null, если такого статуса нет
      */
     public function mapActionToStatus(string $action): ?string
     {
