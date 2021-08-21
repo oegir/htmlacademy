@@ -1,6 +1,6 @@
 <?php
-require_once('p/helpers.php');
-require_once('p/database.php');
+require_once('src/helpers.php');
+require_once('src/database.php');
 
 $is_auth = rand(0, 1);
 $user_name = 'Olga'; // укажите здесь ваше имя
