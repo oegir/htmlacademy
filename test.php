@@ -4,6 +4,16 @@ use TaskForce\logic\Task;
 
 require_once 'vendor/autoload.php';
 
+/**
+ * Проверка ожидаемого результата
+ * @param mixed $result некоторое значение переменной
+ * @param mixed $expected ожидаемое значение переменной
+ * @param string $msg сообщение в случае неовпадения значений
+ */
+function assertTest($result, $expected, $msg) {
+    assert($result === $expected, $msg);
+}
+
 // настройка assert
 assert_options(\ASSERT_ACTIVE, 1);
 function assertMessage($file, $line, $code = null, $desc = null)
@@ -22,7 +32,7 @@ try {
         'failed' => 'задание провалено',
         'work' => 'задание в работе'
     ];
-    assert($result === $statusMap, 'Unexpected statuses map');
+    assertTest($result, $statusMap, 'Unexpected statuses map 1');
 } catch (AssertionError $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -35,7 +45,7 @@ try {
         'refuse' => 'отказаться от задания',
         'cancel' => 'отменить задание'
     ];
-    assert($result === $actionMap, 'Unexpected actions map');
+    assertTest($result, $actionMap, 'Unexpected actions map 2');
 } catch (AssertionError $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -43,7 +53,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapActionToStatus(Task::ACTION_START);
     $expected = Task::STATUS_WORK;
-    assert($result === $expected, 'Unexpected status');
+    assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_START);
 } catch (AssertionError $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -51,7 +61,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapActionToStatus(Task::ACTION_COMPLETE);
     $expected = Task::STATUS_DONE;
-    assert($result === $expected, 'Unexpected status');
+    assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_COMPLETE);
 } catch (AssertionError $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -59,7 +69,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapActionToStatus(Task::ACTION_REFUSE);
     $expected = Task::STATUS_FAILED;
-    assert($result === $expected, 'Unexpected status');
+    assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_REFUSE);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -67,7 +77,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapActionToStatus(Task::ACTION_CANCEL);
     $expected = Task::STATUS_CANCELED;
-    assert($result === $expected, 'Unexpected status');
+    assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_CANCEL);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -75,7 +85,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapStatusToAllowedActions(Task::STATUS_NEW);
     $expected = [Task::ACTION_START, Task::ACTION_CANCEL];
-    assert($result === $expected, 'Unexpected map of actions');
+    assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_NEW);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -83,7 +93,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapStatusToAllowedActions(Task::STATUS_WORK);
     $expected = [Task::ACTION_COMPLETE, Task::ACTION_REFUSE];
-    assert($result === $expected, 'Unexpected map of actions');
+    assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_WORK);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -91,7 +101,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapStatusToAllowedActions(Task::STATUS_CANCELED);
     $expected = [];
-    assert($result === $expected, 'Unexpected map of actions');
+    assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_CANCELED);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -99,7 +109,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapStatusToAllowedActions(Task::STATUS_DONE);
     $expected = [];
-    assert($result === $expected, 'Unexpected map of actions');
+    assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_DONE);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
@@ -107,7 +117,7 @@ try {
     $task = new Task(1, 23);
     $result = $task->mapStatusToAllowedActions(Task::STATUS_FAILED);
     $expected = [];
-    assert($result === $expected, 'Unexpected map of actions');
+    assertTest($result, $expected, 'Unexpected map of actions' . Task::STATUS_FAILED);
 } catch (AssertionError  $e) {
     echo $e->getMessage(), \PHP_EOL;
 }
