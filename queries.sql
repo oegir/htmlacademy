@@ -33,15 +33,15 @@ VALUES
 (5600, 6, 2);
 
 -- получаю все категории
-SELECT `title` FROM category;
+SELECT `id`, `title`, `symbol` FROM category;
 
 -- получаю самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории
-SELECT l.`heading`, l.`first_price`, l.`image`, c.`title` FROM lot l
+SELECT l.`id`, l.`create`, l.`heading`, l.`first_price`, l.`image`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
 WHERE l.`finish` > CURDATE();
 
 -- показываю лот по его ID. Получаю также название категории, к которой принадлежит лот
-SELECT l.`heading`, c.`title` FROM lot l
+SELECT l.`heading`, c.`id`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
 WHERE l.`id` = 6;
 

@@ -30,8 +30,8 @@
                 </h3>
                 <div class="lot__state">
                     <div class="lot__rate">
-                        <span class="lot__amount"><?=htmlspecialchars($val['price_step']); ?></span>
-                        <span class="lot__cost"><?=auction_price(htmlspecialchars($val['first_price'])); ?></span>
+                    <span class="lot__amount"><?= get_bid_text($val['count_bets']); ?></span>
+                        <span class="lot__cost"><?=auction_price($val['price']); ?></span>
                     </div>
                     <?php $time_rest = date_finishing(htmlspecialchars($val['finish'])); ?>
                     <div class="lot__timer timer <?=($time_rest['hours'] === '00') ? 'timer--finishing' : ' ' ?>">
