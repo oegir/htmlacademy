@@ -83,12 +83,24 @@ LEFT JOIN
 l.`id` = b.`bet_lot_id`
 WHERE
 	l.`finish` > CURDATE()
+    AND l.id < 0
 ORDER BY
 	`create` DESC";
 
     $result_items = mysqli_query($connection, $sql_items);
-    $items = $result_items ? mysqli_fetch_all($result_items, MYSQLI_ASSOC) : [];
-
+    $items = [];
+    
+    do {
+        $row = mysqli_fetch_array($result_items, MYSQLI_ASSOC) ?? [];
+        
+        if (empty($row)) {
+            break;
+        }
+        
+        $items[] = $row;
+        
+    } while (! empty($row)); 
+    
     return $items;
 }
 
