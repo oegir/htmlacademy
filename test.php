@@ -6,11 +6,13 @@ require_once 'vendor/autoload.php';
 
 /**
  * Проверка ожидаемого результата
- * @param mixed $result некоторое значение переменной
- * @param mixed $expected ожидаемое значение переменной
- * @param string $msg сообщение в случае неовпадения значений
+ *
+ * @param mixed  $result   некоторое значение переменной
+ * @param mixed  $expected ожидаемое значение переменной
+ * @param string $msg      сообщение в случае неовпадения значений
  */
-function assertTest($result, $expected, $msg) {
+function assertTest($result, $expected, $msg)
+{
     assert($result === $expected, $msg);
 }
 
