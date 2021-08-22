@@ -4,15 +4,11 @@
         горнолыжное снаряжение.</p>
     <ul class="promo__list">
         <!--заполните этот список из массива категорий-->
-        <?php
-                        $index = 0;
-                        $num = count($categories);
-                        while ($index < $num): ?>
-        <li class="promo__item promo__item--boards">
-            <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($categories[$index]);?></a>
+        <?php foreach ($categories as $category): ?>
+        <li class="promo__item promo__item--<?=htmlspecialchars($category['symbol']);?>">
+            <a class="promo__link" href="pages/<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
         </li>
-        <?php $index++; ?>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
 
     </ul>
 </section>
@@ -25,19 +21,19 @@
         <?php foreach ($items as $key => $val): ?>
         <li class="lots__item lot">
             <div class="lot__image">
-                <img src="<?=$val['img']; ?>" width="350" height="260" alt="">
+                <img src="<?=$val['image']; ?>" width="350" height="260" alt="">
             </div>
             <div class="lot__info">
-                <span class="lot__category"><?=htmlspecialchars($val['category']); ?></span>
+                <span class="lot__category"><?=htmlspecialchars($val['title']); ?></span>
                 <h3 class="lot__title"><a class="text-link"
-                        href="pages/lot.html"><?=htmlspecialchars($val['title']); ?></a>
+                        href="pages/lot.html"><?=htmlspecialchars($val['heading']); ?></a>
                 </h3>
                 <div class="lot__state">
                     <div class="lot__rate">
-                        <span class="lot__amount"><?=htmlspecialchars($val['price']); ?></span>
-                        <span class="lot__cost"><?=auction_price(htmlspecialchars($val['price'])); ?></span>
+                    <span class="lot__amount"><?= get_bid_text($val['count_bets']); ?></span>
+                        <span class="lot__cost"><?=auction_price($val['price']); ?></span>
                     </div>
-                    <?php $time_rest = date_finishing(htmlspecialchars($val['finishing'])); ?>
+                    <?php $time_rest = date_finishing(htmlspecialchars($val['finish'])); ?>
                     <div class="lot__timer timer <?=($time_rest['hours'] === '00') ? 'timer--finishing' : ' ' ?>">
                         <?=$time_rest['hours']; ?> : <?=$time_rest['minutes']; ?>
                     </div>
