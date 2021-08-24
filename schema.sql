@@ -6,27 +6,25 @@ CREATE TABLE user
 (
   id       int AUTO_INCREMENT PRIMARY KEY,
   reg_date datetime,
-  email    char(128),
-  login    char(128),
-  password char(64),
+  email    varchar(128),
+  login    varchar(128),
+  password varchar(64),
   avatar   text
 );
 CREATE TABLE content_type
 (
   id        int AUTO_INCREMENT PRIMARY KEY,
-  type_name char,
-  icon_name char
+  type_name varchar(32),
+  icon_name varchar(32)
 );
 CREATE TABLE post
 (
   id                int AUTO_INCREMENT PRIMARY KEY,
   create_date       datetime,
-  header            char,
+  header            varchar(255),
   text_content      text,
-  author_copy_right char,
-  img               text,
-  video             text,
-  link              text,
+  author_copy_right varchar(255),
+  media             text,
   views_number      int,
   user_id           int,
   content_type_id   int,
@@ -77,7 +75,7 @@ CREATE TABLE massage
 CREATE TABLE hashtag
 (
   id           int AUTO_INCREMENT PRIMARY KEY,
-  hashtag_name char(64)
+  hashtag_name varchar(64)
 );
 
 CREATE TABLE hashtag_post
