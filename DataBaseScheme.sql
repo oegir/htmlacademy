@@ -5,13 +5,13 @@ CREATE TABLE `user` (
   `createdAt` timestamp,
   `about` varchar(255),
   `age` date,
-  `cityId` char,
+  `cityId` int,
   `street` varchar(255),
   `home` varchar(255),
   `facebook` char,
   `email` char,
   `number` int,
-  `cathegoryId` varchar(255)
+  `cathegoryId` int
 );
 
 CREATE TABLE `task` (
@@ -19,7 +19,7 @@ CREATE TABLE `task` (
   `clientId` int,
   `workerId` int,
   `title` char,
-  `cathegoryId` char,
+  `cathegoryId` int,
   `createdAt` timestamp,
   `description` varchar(255),
   `price` int,
@@ -52,7 +52,7 @@ CREATE TABLE `cityTable` (
   `city` varchar(255),
   `coordinatesLatitude` decimal(10,8) DEFAULT NULL,
   `coordinatesLongitude` decimal(11,8) DEFAULT NULL,
-  PRIMARY KEY (`id`, `city`)
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `cathegory` (
@@ -84,5 +84,5 @@ ALTER TABLE `userCathegory` ADD CONSTRAINT `userCathegory_FK` FOREIGN KEY (`cath
 ALTER TABLE `userCathegory` ADD CONSTRAINT `userCathegory_FK_1` FOREIGN KEY (`userId`) REFERENCES `user`(`id`);
 
 
-ALTER TABLE `cityTable` ADD FOREIGN KEY (`id`) REFERENCES `user` (`cityId`);
+ALTER TABLE `user` ADD CONSTRAINT `user_FK` FOREIGN KEY (`cityId`) REFERENCES `cityTable`(`id`);
 
