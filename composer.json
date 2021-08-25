@@ -1,0 +1,16 @@
+{
+    "name": "a_zobnin/taskforce",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Holerik",
+            "email": "a_zobnin@mail.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    },
+    "require": {}
+}
