@@ -8,7 +8,7 @@ function assertMessage($file, $line, $code = null, $desc = null)
 }
 
 assert_options(ASSERT_CALLBACK, 'assertMessage');
-$task = new Classes\Task("Client", "Worker");
+$task = new Service\Task("Client", "Worker");
 
 //проверка статуса
 try {

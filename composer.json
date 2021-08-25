@@ -1,8 +1,8 @@
 {
-    "name": "asus/1806383-task-force-1",
+    "name": "keks/1806383-task-force-1",
     "autoload": {
         "psr-4": {
-            "Classes\\": "src/Classes/"
+            "Service\\": "src/Classes/"
         }
     },
     "authors": [
