@@ -19,7 +19,7 @@ try {
 //проверка работы actions()
 try {
     $actions = $task->actions("Worker");
-    $expected = $task->response->getInnerName();
+    $expected = $task->actions->getInnerName();
     assert($actions[0] == $expected, 'Wrong task actions. Expected "' . print_r($expected, true) . '", got "' . print_r($actions[0], true) . '"');
 
 } catch (Error $e) {
@@ -45,7 +45,7 @@ try {
     $status = $task->getStatus();
     assert($status == $task::STATUS_IN_WORK, 'Wrong task status. Expected "' . $task::STATUS_IN_WORK . '", got "' . $status . '"');
     $actions = $task->actions("Client");
-    $expected = $task->complete->getInnerName();
+    $expected = $task->actions->getInnerName();
     assert($actions[0] == $expected, 'Wrong $ask actions. Expected "' . print_r($expected, true) . '", got "' . print_r($actions[0], true) . '"');
 } catch (Error $e) {
 };
