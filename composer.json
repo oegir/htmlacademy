@@ -2,7 +2,8 @@
     "name": "keks/1806383-task-force-1",
     "autoload": {
         "psr-4": {
-            "Service\\": "src/Classes/"
+            "Service\\": "src/Classes/",
+            "Secondary\\": "src/Classes/SecondaryClass/"
         }
     },
     "authors": [

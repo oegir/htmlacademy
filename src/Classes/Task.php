@@ -1,64 +1,81 @@
 <?php
 
 namespace Service;
+require_once "vendor/autoload.php";
+
+
 class Task
 {
-    //Возможные статусы
+    public $response, $abort, $fail, $complete;
+//Возможные статусы
     const STATUS_NEW = "New";
     const STATUS_ABORTED = "Aborted";
     const STATUS_IN_WORK = "In work";
     const STATUS_COMPLETED = "Completed";
     const STATUS_FAILED = "Failed";
-    //Возможные действия
-    const ACTION_RESPONSE = "Response";
-    const ACTION_ABORT = "Abort";
-    const ACTION_FAILURE = "Failure";
-    const ACTION_COMPLETE = "Complete";
+//Возможные действия
     const ACTION_WRONG = "Wrong Action!";
-    //свойства-идентификаторы
-    private $clientId, $workerId;//исправлено:убран blacklist, Client вместо User
+//свойства-идентификаторы
+    private $clientId, $workerId;
     private $status = self::STATUS_NEW;
-    //исправлены карты статуса -в качеcтве ключа теперь константа
+
     private $statusMap = [self::STATUS_NEW => "Новая", self::STATUS_ABORTED => "Отменена", self::STATUS_IN_WORK => "В работе", self::STATUS_COMPLETED => "Выполнено", self::STATUS_FAILED => "Не выполнено"];
-    //исправлены карты действий-в качестве ключа теперь константа + упрощение карты
-    private $actionMap = [self::ACTION_RESPONSE => "Откликнуться", self::ACTION_ABORT => "Отмененить", self::ACTION_FAILURE => "Отказаться", self::ACTION_COMPLETE => "Выполненить"];
+
+    private $actionMap = [];
 
     public function __construct($clientId, $workerId)
     {
         $this->clientId = $clientId;
         $this->workerId = $workerId;
-    }//исправление конструктора-при создании новой функции задается исполнитель
+        $this->response = new ResponseAction("actResponse", "Откликнуться");
+        $this->abort = new AbortAction("actAbort", "Отменить задание");
+        $this->fail = new FailAction("actFail", "Отказаться");
+        $this->complete = new CompleteAction("actComplete", "Выполнить");
+        $this->actionMap = [$this->response, $this->abort, $this->fail, $this->complete];
+    }
 
-    // Переработаны действия-функции заказчика и исполнителя объединены
-    public function nextStatus($action)
+// Переработаны действия-функции заказчика и исполнителя объединены
+    public function nextStatus($action, $requestId)
     {
-        $result = null;
+        $newStatus = null;
         switch ($action) {
-            case self::ACTION_ABORT:
-                if ($this->status == self::STATUS_NEW) {
-                    $result = self::STATUS_ABORTED;
+            case $this->abort->getInnerName():
+                if ($this->abort->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)) {
+                    $newStatus = self::STATUS_ABORTED;
+                } else {
+                    $newStatus = self::ACTION_WRONG;
+                    return $newStatus;
                 }
                 break;
-            case self::ACTION_COMPLETE:
-                if ($this->status == self::STATUS_IN_WORK) {
-                    $result = self::STATUS_COMPLETED;
+            case $this->complete->getInnerName():
+                if ($this->complete->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)) {
+                    $newStatus = self::STATUS_COMPLETED;
+                } else {
+                    $newStatus = self::ACTION_WRONG;
+                    return $newStatus;
                 }
                 break;
-            case self::ACTION_RESPONSE:
-                if ($this->status == self::STATUS_NEW || $this->status == self::STATUS_FAILED) {
-                    $result = self::STATUS_IN_WORK;
+            case $this->response->getInnerName():
+                if ($this->response->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)) {
+                    $newStatus = self::STATUS_IN_WORK;
+                } else {
+                    $newStatus = self::ACTION_WRONG;
+                    return $newStatus;
                 }
                 break;
-            case self::ACTION_FAILURE:
-                if ($this->status == self::STATUS_IN_WORK) {
-                    $result = self::STATUS_FAILED;
+            case $this->fail->getInnerName():
+                if ($this->fail->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)) {
+                    $newStatus = self::STATUS_FAILED;
+                } else {
+                    $newStatus = self::ACTION_WRONG;
+                    return $newStatus;
                 }
                 break;
             default:
-                return self::ACTION_WRONG;
+                $newStatus = self::ACTION_WRONG;
         }
-        if ($result != null) {
-            $this->status = $result;
+        if ($newStatus != self::ACTION_WRONG) {
+            $this->status = $newStatus;
             return $this->status;
         } else {
             return self::ACTION_WRONG;
@@ -68,13 +85,12 @@ class Task
     public function getActionMap()
     {
         return $this->actionMap;
-        //исправил карту действий-теперь она возвращает список действий в виде простого массива
+
     }
 
     public function getStatusMap()
     {
         return $this->statusMap;
-        //добавил метод,возвращающий просто массив статусов
     }
 
     public function getStatus()
@@ -82,28 +98,10 @@ class Task
         return $this->status;
     }
 
-    public function actions()//метод который возвращает доступные действия
+    public function actions($requestId)//метод который возвращает доступные действия
     {
         $result = [];
-        switch ($this->status) {
-            case "New":
-                $result[] = self::ACTION_ABORT;
-                $result[] = self::ACTION_RESPONSE;
-                break;
-            case "In work":
-                $result[] = self::ACTION_FAILURE;
-                $result[] = self::ACTION_COMPLETE;
-                break;
-            case "Failed":
-                $result[] = self::ACTION_RESPONSE;
-                break;
-            case "Aborted":
-                $result = null;
-                break;
-            case "Completed":
-                $result = null;
-                break;
-        }
+        foreach($this->actionMap as $action){if($action->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)){$result[]=$action->getInnerName();};}
         return $result;
     }
 }
