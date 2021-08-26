@@ -6,7 +6,7 @@ INSERT INTO `content_type` (type_name, icon_name) VALUES ('текст', 'text'),
 /*
  Пара пользователей
  */
-INSERT INTO `user` (reg_date, email, login, password, avatar) VALUES ('2015.05.05', 'firstemail@mail.ru', 'Вася', 'qwerty', 'somelink.ru'), ('2015.05.06', 'secondemail@mail.ru', 'Петр', 'somehardpass', 'somelink.ru'), ('2015.05.05', 'larisa@mail.ru', 'Лариса', 'qwerty', 'somelink.ru'), ('2015.05.05', 'Vladikemail@mail.ru', 'Владик', 'qwerty', 'somelink.ru'), ('2015.05.05', 'Victoremail@mail.ru', 'Виктор', 'qwerty', 'somelink.ru');
+INSERT INTO `user` (reg_date, email, login, password, name , avatar) VALUES ('2015.05.05', 'firstemail@mail.ru', 'Вася', 'qwerty', 'Вася', 'somelink.ru'), ('2015.05.06', 'secondemail@mail.ru', 'Петр', 'somehardpass', 'Петр', 'somelink.ru'), ('2015.05.05', 'larisa@mail.ru', 'Лариса', 'qwerty', 'Лариса', 'somelink.ru'), ('2015.05.05', 'Vladikemail@mail.ru', 'Владик', 'qwerty', 'Владик', 'somelink.ru'), ('2015.05.05', 'Victoremail@mail.ru', 'Виктор', 'qwerty', 'Виктор', 'somelink.ru');
 /*
  Все посты
  */
@@ -18,7 +18,7 @@ INSERT INTO `comment` (create_date, content, user_id, post_id) VALUES ('2020.08.
 /*
  получаем список постов с сортировкой по популярности и вместе с именами авторов и типом контента
  */
-SELECT `views_number`, `user_id`, `content_type_id` FROM `post`  ORDER BY `views_number` DESC;
+SELECT `views_number`, `name`,`content_type_id` FROM `post` LEFT JOIN `user` ON post.user_id = user.id ORDER BY `views_number` DESC;
 /*
  получить список постов для конкретного пользователя
  */

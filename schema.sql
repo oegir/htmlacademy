@@ -9,6 +9,7 @@ CREATE TABLE user
   email    varchar(128),
   login    varchar(128),
   password varchar(64),
+  name varchar(32),
   avatar   text
 );
 CREATE TABLE content_type
@@ -96,5 +97,6 @@ CREATE INDEX create_date ON post(create_date);
 CREATE INDEX header ON post(header);
 CREATE INDEX create_date ON massage(create_date);
 CREATE INDEX hashtag_name ON hashtag(hashtag_name);
+
 
 
