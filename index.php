@@ -9,7 +9,10 @@ $connection = database_get_connection();
 $categories = get_categories($connection);
 $items = get_lots($connection);
 
+$header = include_template ('header.php', ['title' => 'YetiCave', 'is_auth' => $is_auth, 'user_name' => $user_name, 'categories' => $categories]);
 $main_content = include_template ('main.php', ['categories' => $categories, 'items' => $items]);
-$page_content = include_template ('layout.php', ['title' => 'Главная', 'is_auth' => $is_auth, 'user_name' => $user_name, 'main_content' => $main_content, 'categories' => $categories]);
+$footer = include_template ('footer.php', ['categories' => $categories]);
+
+$page_content = include_template ('layout.php', ['title' => 'Главная', 'main_content' => $main_content, 'header' => $header, 'footer' => $footer, 'categories' => $categories]);
 
 print($page_content);
