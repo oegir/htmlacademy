@@ -1,10 +1,10 @@
 <?php 
+require_once('sess.php');
 require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
 
 $categories_arr = [];
-$items_arr = [];
 
 $con = db_connect();
 
@@ -17,8 +17,7 @@ if(isset($_POST['submit'])){
     $incoming_data = $_POST;
     $form_errors = checkLoginErrors($con, $incoming_data);
     if(count($form_errors) == 0){
-        session_start();
-        $_SESSION['id'] = getUserIdByEmail($con, $incoming_data['email']);
+        sess_store_user_id(getUserIdByEmail($con, $incoming_data['email']));
         header('Location:index.php');
         die();
     }
@@ -38,14 +37,20 @@ print($layout_content);
  */
 function checkLoginErrors(mysqli $con, array $data): array{
     $result = [];
-    if($email_error = checkEmail($con, $data['email'])){
+    $email_error = checkEmail($con, $data['email']);
+    
+    if(!empty($email_error)){
         $result['email'] = $email_error;
     }
-    if($password_error = checkPassword($con, $data['email'], $data['password'])){
+    
+    $password_error = checkPassword($con, $data['email'], $data['password']);
+    if(!empty($password_error)){
         $result['password'] = $password_error;
     }
+    
     return $result;
 }
+
 /**
  * Проверяет введенный емайл.
  *

@@ -25,7 +25,7 @@
         <nav class="user-menu">
 
         <!-- здесь должен быть PHP код для показа меню и данных пользователя -->
-            <?php if ($user_name != ''): ?>
+            <?php if ($user_name != null): ?>
                 <div class="user-menu__logged">
                     <p><?=xss_protection($user_name); ?></p>
                     <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>

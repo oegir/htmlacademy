@@ -1,5 +1,6 @@
 <?php
-session_start();
-$_SESSION = [];
+require_once('sess.php');
+
+sess_logout();
 header('location: index.php');
 die();

@@ -64,12 +64,17 @@ function getCategories(mysqli $con): array{
  * @param int $id id пользователя.
  * @return string Имя пользователя.
  */
-function getUserNameById (mysqli $con, int $id): string{
+function getUserNameById (mysqli $con, ?int $id): string{
+    if (is_null($id)){
+        return '';
+    }
+
     $sql = "SELECT name FROM user WHERE id = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $name = '';
+
     if ($result && $row = $result->fetch_assoc()){
         $name = $row['name'];
     }
