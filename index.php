@@ -2,9 +2,6 @@
 require_once('src/helpers.php');
 require_once('src/database.php');
 
-$is_auth = rand(0, 1);
-$user_name = 'Olga'; // укажите здесь ваше имя
-
 $connection = database_get_connection();
 $categories = get_categories($connection);
 $items = get_lots($connection);
@@ -13,6 +10,6 @@ $header = include_template ('header.php', ['title' => 'YetiCave', 'is_auth' => $
 $main_content = include_template ('main.php', ['categories' => $categories, 'items' => $items]);
 $footer = include_template ('footer.php', ['categories' => $categories]);
 
-$page_content = include_template ('layout.php', ['title' => 'Главная', 'main_content' => $main_content, 'header' => $header, 'footer' => $footer, 'categories' => $categories]);
 
+$page_content = include_template ('layout.php', ['title' => 'YetiCave', 'categories' => $categories, 'header' => $header, 'error' => ' ', 'footer' => $footer, 'main_content' => $main_content, 'single_lot' => ' ']);
 print($page_content);

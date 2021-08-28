@@ -1,10 +1,11 @@
+</div>
 <footer class="main-footer">
         <nav class="nav">
             <ul class="nav__list container">
                 <!--заполните этот список из массива категорий-->
                 <?php foreach ($categories as $category): ?>
                 <li class="nav__item">
-                    <a href="pages/<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
+                    <a href="<?=htmlspecialchars($category['symbol']);?>"><?=htmlspecialchars($category['title']);?></a>
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -66,3 +67,8 @@
             </div>
         </div>
     </footer>
+    <script src="flatpickr.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
