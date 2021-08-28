@@ -85,16 +85,17 @@
         </div>
     </div>
     <div class="popular__posts">
+
         <?php
-        foreach ($popularCarts
+        foreach ($postListRows
 
         as $key => $val): ?>
 
-        <article class="popular__post post <?= $val['type'] ?>">
+        <article class="popular__post post <?= $val['icon_name'] ?>">
             <header class="post__header">
                 <h2>
                     <a href="#">
-                        <?= htmlspecialchars($val['heading']) ?>
+                        <?= htmlspecialchars($val['header']) ?>
 
                     </a>
                 </h2>
@@ -102,7 +103,7 @@
 
             <div class="post__main">
                 <?php
-                if ($val['type'] == "post-quote"): ?>
+                if ($val['icon_name'] == "post-quote"): ?>
 
                     <div class="post-link__wrapper">
                         <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -113,36 +114,36 @@
                                 </div>
                                 <div class="post-link__info">
                                     <h3>
-                                        <?= htmlspecialchars($val['heading']) ?>
+                                        <?= htmlspecialchars($val['header']) ?>
 
                                     </h3>
                                 </div>
                             </div>
                             <span>
-                                <?= htmlspecialchars($val['content']) ?>
+                                <?= htmlspecialchars($val['text_content']) ?>
 
                             </span>
                         </a>
                     </div>
                 <?php
-                elseif ($val['type'] == "post-text"): ?>
+                elseif ($val['icon_name'] == "post-text"): ?>
 
                     <p>
-                        <?= cutText(htmlspecialchars($val['content'])) ?>
+                        <?= cutText(htmlspecialchars($val['text_content'])) ?>
 
                     </p>
 
 
                 <?php
-                elseif ($val['type'] == "post-photo"): ?>
+                elseif ($val['icon_name'] == "post-photo"): ?>
 
                     <div class="post-photo__image-wrapper">
-                        <img src="<?= htmlspecialchars($val['content']) ?>" alt="Фото от пользователя" width="360"
+                        <img src="<?= htmlspecialchars($val['media']) ?>" alt="Фото от пользователя" width="360"
                              height="240">
                     </div>
 
                 <?php
-                elseif ($val['type'] == "post-link"): ?>
+                elseif ($val['icon_name'] == "post-link"): ?>
 
                     <div class="post-link__wrapper">
                         <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -153,22 +154,22 @@
                                 </div>
                                 <div class="post-link__info">
                                     <h3>
-                                        <?= htmlspecialchars($val['heading']) ?>
+                                        <?= htmlspecialchars($val['header']) ?>
 
                                     </h3>
                                 </div>
                             </div>
                             <span>
-                                        <?= htmlspecialchars($val['content']) ?>
+                                        <?= htmlspecialchars($val['text_content']) ?>
 
                             </span>
                         </a>
                     </div>
                 <?php
-                elseif ($val['type'] == "post-video-block"): ?>
+                elseif ($val['icon_name'] == "post-video"): ?>
 
                 <div class="post-video__preview">
-                    <?= embed_youtube_cover($val['content']); ?>
+                    <?= embed_youtube_cover($val['media']); ?>
 
                     <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                 </div>
@@ -192,11 +193,11 @@
                 </div>
                 <div class="post__info">
                     <b class="post__author-name">
-                        <?= htmlspecialchars($val['user-name']) ?>
+                        <?= htmlspecialchars($val['name']) ?>
 
                     </b>
-                    <time title="<?= $val['cutdate'] ?>" class="post__time"
-                          datetime="<?= $val['fulldate'] ?>"><?= $val['date'] ?></time>
+                    <time title="<?= cutdate($val['create_date']) ?>" class="post__time"
+                          datetime="<?= fullDate($val['create_date']) ?>"><?= smallDate($val['create_date']) ?></time>
                 </div>
             </a>
         </div>

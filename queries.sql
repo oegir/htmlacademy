@@ -2,15 +2,15 @@ USE readme;
 /*
  Список типов контента для поста
  */
-INSERT INTO `content_type` (type_name, icon_name) VALUES ('текст', 'text'), ('Цитата', 'quote'), ('Картинка', 'photo'), ('Видео', 'video'), ('Ссылка', 'link');
+INSERT INTO `content_type` (type_name, icon_name) VALUES ('text', 'post-text'), ('quote', 'post-quote'), ('photo', 'post-photo'), ('video', 'post-video'), ('link', 'post-link');
 /*
  Пара пользователей
  */
-INSERT INTO `user` (reg_date, email, login, password, name , avatar) VALUES ('2015.05.05', 'firstemail@mail.ru', 'Вася', 'qwerty', 'Вася', 'somelink.ru'), ('2015.05.06', 'secondemail@mail.ru', 'Петр', 'somehardpass', 'Петр', 'somelink.ru'), ('2015.05.05', 'larisa@mail.ru', 'Лариса', 'qwerty', 'Лариса', 'somelink.ru'), ('2015.05.05', 'Vladikemail@mail.ru', 'Владик', 'qwerty', 'Владик', 'somelink.ru'), ('2015.05.05', 'Victoremail@mail.ru', 'Виктор', 'qwerty', 'Виктор', 'somelink.ru');
+INSERT INTO `user` (reg_date, email, login, password, name , avatar) VALUES ('2015.05.05', 'firstemail@mail.ru', 'Вася', 'qwerty', 'Вася', 'somelink.ru'), ('2015.05.06', 'secondemail@mail.ru', 'Петр', 'somehardpass', 'Петр', 'somelink.ru'), ('2015.05.05', 'larisa@mail.ru', 'Лариса', 'qwerty', 'Лариса', 'img/userpic-larisa-small.jpg'), ('2015.05.05', 'Vladikemail@mail.ru', 'Владик', 'qwerty', 'Владик', 'img/userpic.jpg'), ('2015.05.05', 'Victoremail@mail.ru', 'Виктор', 'qwerty', 'Виктор', 'img/userpic-mark.jpg');
 /*
  Все посты
  */
-INSERT INTO `post` (create_date, header, text_content, author_copy_right, media, views_number, user_id, content_type_id) VALUES ('2020.08.23', 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих','Сергей Есенин','somelink.com', '5','3', '2'), ('2020.07.23', 'Игра престолов', 'Не могу дождаться начала финального сезона своего любимого сериала!', '', '', '10', '4', '1'), ('2020.07.28', 'Наконец, обработал фотки!', '','','img.link', '15','5','3'), ('2020.08.20', 'Моя мечта', '','','img1.link', '25','3','3'), ('2020.08.23', 'Лучшие курсы', 'Лучшие курсы','','www.htmlacademy.ru','25','3','2');
+INSERT INTO `post` (create_date, header, text_content, author_copy_right, media, views_number, user_id, content_type_id) VALUES ('2020.08.23', 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих','Сергей Есенин','somelink.com', '5','3', '2'), ('2020.07.23', 'Игра престолов', 'Не могу дождаться начала финального сезона своего любимого сериала!', '', '', '10', '4', '1'), ('2020.07.28', 'Наконец, обработал фотки!', '','','img/rock-medium.jpg', '15','5','3'), ('2020.08.20', 'Моя мечта', '','','img/coast-medium.jpg', '25','3','3'), ('2020.08.23', 'Лучшие курсы', 'Лучшие курсы','','www.htmlacademy.ru','25','3','2');
 /*
  Пара комментариев
  */
@@ -35,3 +35,5 @@ INSERT INTO `like_count`  (user_id, post_id) VALUES ('1', '2');
  подписаться на пользователя
  */
 INSERT INTO `subscribe` (user_subscribe_id, user_author_id) VALUES ('1', '3');
+
+SELECT `type_name`, `icon_name` FROM `content_type`;
