@@ -40,4 +40,4 @@ CREATE TABLE bid(
     CONSTRAINT fk_BidItem FOREIGN KEY (item_id) REFERENCES item(id)
 );
 
-
+CREATE FULLTEXT INDEX item_ft_search ON item(name, description);
