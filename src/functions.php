@@ -16,7 +16,6 @@ function get_categories(mysqli $connection): array
     return $categories;
 }
 
-
 /**
  * @param mysqli $connection
  * @return array [
@@ -63,38 +62,6 @@ ORDER BY
 
     return $items;
 }
-$error = [];
-/**
- * Функция для вывода содержимого лота по номеру id из url
- * @param mysqli $connection
- * @return array [
- *  [
- *      'heading' => string,
- *      'description' => string,
- *      'image' => string,
- *      'title' => string
- *  ],
- *  ...
- * ]
- */
-function get_single_lot(mysqli $connection): array
-{
-   
-    $item_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-    if(filter_var($item_id, FILTER_VALIDATE_INT)) {
-    $sql_single_lot = "
-    SELECT l.`heading`, l.`description`, l.`image`, l.`finish`, c.`title` FROM lot l
-JOIN category c ON l.`category_id` = c.`id`
-WHERE l.`id` LIKE " . $item_id;
-    
-    $result_items = mysqli_query($connection, $sql_single_lot);
-    $single_lot = mysqli_fetch_array($result_items, MYSQLI_ASSOC) ?? [];
-
-    return $single_lot;
-    } 
-
-}
-
 
 /**
  * @param int $count number of bids

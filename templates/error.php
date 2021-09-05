@@ -10,10 +10,6 @@
     </nav>
     <section class="lot-item container">
         <h2>404 Страница не найдена</h2>
-        <?php if (isset($errors)): ?>
-             <?php foreach ($errors as $val): ?>
-                <p><?= $val; ?></p>
-             <?php endforeach; ?>
-     <?php endif; ?>
+        <p><?= $error_note; ?></p>
     </section>
 </main>
