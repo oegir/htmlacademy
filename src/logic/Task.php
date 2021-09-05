@@ -2,6 +2,11 @@
 
 namespace TaskForce\logic;
 
+use TaskForce\logic\ActionStart;
+use TaskForce\logic\ActionComplete;
+use TaskForce\logic\ActionCancel;
+use TaskForce\logic\ActionRefuse;
+
 /**
  * Task - класс описания задания и работы с ним
  */
@@ -13,51 +18,29 @@ class Task
     public const STATUS_DONE = 'done';
     public const STATUS_FAILED = 'failed';
 
-    public const ACTION_START = 'start';
-    public const ACTION_COMPLETE = 'complete';
-    public const ACTION_REFUSE = 'refuse';
-    public const ACTION_CANCEL = 'cancel';
+    public $actStart;
+    public $actCancel;
+    public $actComplete;
+    public $actRefuse;
 
-    private $statusMap = [
-        self::STATUS_NEW => 'новое задание',
-        self::STATUS_CANCELED => 'задание отменено',
-        self::STATUS_DONE => 'задание завершено',
-        self::STATUS_FAILED => 'задание провалено',
-        self::STATUS_WORK => 'задание в работе'
-    ];
-
-    private $actionMap = [
-        self::ACTION_START => 'стартовать задание',
-        self::ACTION_COMPLETE => 'завершить задание',
-        self::ACTION_REFUSE => 'отказаться от задания',
-        self::ACTION_CANCEL => 'отменить задание'
-    ];
-
-    private $actionStatusMap = [
-        self::ACTION_START => self::STATUS_WORK,
-        self::ACTION_COMPLETE => self::STATUS_DONE,
-        self::ACTION_REFUSE => self::STATUS_FAILED,
-        self::ACTION_CANCEL => self::STATUS_CANCELED
-    ];
-
-    private $allowedActions = [
-        self::STATUS_NEW => [self::ACTION_START, self::ACTION_CANCEL],
-        self::STATUS_WORK => [self::ACTION_COMPLETE, self::ACTION_REFUSE],
-        self::STATUS_CANCELED => [],
-        self::STATUS_DONE => [],
-        self::STATUS_FAILED => []
-    ];
+    private $statusMap;
+    private $actionMap;
+    private $actionStatusMap;
+    private $allowedActions;
 
     //id заказчика
     private $customer;
     //id исполнителя
     private $contractor;
+    //id юзера
+    private $user;
     //текущий статус состояния задания
     private $status;
 
     /**
      * Конструктор класса
-     * @param int $customerId - id заказчика задания
+     *
+     * @param int $customerId   - id заказчика задания
      * @param int $contractorId - id исполнителя задания
      */
     public function __construct(int $customerId, int $contractorId)
@@ -65,6 +48,38 @@ class Task
         $this->customer = $customerId;
         $this->contractor = $contractorId;
         $this->status = self::STATUS_NEW;
+
+        $this->actStart = new ActionStart();
+        $this->actCancel = new ActionCancel();
+        $this->actComplete = new ActionComplete();
+        $this->actRefuse = new ActionRefuse();
+
+        $this->actionMap = [
+            $this->actStart->getName() => $this->actStart->getTitle(),
+            $this->actComplete->getName() => $this->actComplete->getTitle(),
+            $this->actRefuse->getName() => $this->actRefuse->getTitle(),
+            $this->actCancel->getName() => $this->actCancel->getTitle()
+        ];
+        $this->statusMap = [
+            self::STATUS_NEW => 'новое задание',
+            self::STATUS_CANCELED => 'задание отменено',
+            self::STATUS_DONE => 'задание завершено',
+            self::STATUS_FAILED => 'задание провалено',
+            self::STATUS_WORK => 'задание в работе'
+        ];
+        $this->actionStatusMap = [
+            $this->actStart->getName() => self::STATUS_WORK,
+            $this->actComplete->getName() => self::STATUS_DONE,
+            $this->actRefuse->getName() => self::STATUS_FAILED,
+            $this->actCancel->getName() => self::STATUS_CANCELED
+        ];
+        $this->allowedActions = [
+            self::STATUS_NEW => [$this->actStart, $this->actCancel],
+            self::STATUS_WORK => [$this->actComplete, $this->actRefuse],
+            self::STATUS_CANCELED => [],
+            self::STATUS_DONE => [],
+            self::STATUS_FAILED => []
+        ];
     }
 
     /**
@@ -86,25 +101,31 @@ class Task
     /**
      * Возвращает значение статуса, в которой перейдёт заданме
      * после выполнения указанного действия
+     *
      * @param string $action - требуемое действие
      *
      * @return string - значение статуса, соответсвующего действию
      * или null, если такого статуса нет
      */
-    public function mapActionToStatus(string $action): ?string
+    public function mapActionToStatus(Action $action): ?string
     {
-        return $this->actionStatusMap[$action] ?? null;
+        return $this->actionStatusMap[$action->getName()] ?? null;
     }
 
     /**
      * Возвращает массив доступных действий, соответствующий заданному статусу задания
+     *
      * @param string $status - заданный статус
+     * @param int    $userId - id пользователя (заказчика или исполнителя)
      *
      * @return array - массив доступных действий
      * или пустой массив, если доступных действий нет
      */
-    public function mapStatusToAllowedActions($status): array
+    public function mapStatusToAllowedActions($status, $userId): array
     {
-        return $this->allowedActions[$status] ?? [];
+        $this->user = $userId;
+        return array_values(array_filter($this->allowedActions[$status] ?? [], function ($action) {
+            return $action->checkActionRights($this->customer, $this->contractor, $this->user);
+        }));
     }
 }
