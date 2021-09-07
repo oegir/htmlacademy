@@ -1,31 +1,29 @@
 <?php
 
-ini_set('display_erros', 1);
-ini_set('error_reporing', E_ALL);
+// ; ----------------------------
+// ; Assertion
+// ; ----------------------------
+
+// assert.active                = on
+// assert.bail                  = off
+// assert.callback              = "assert_handler"
+// assert.exception             = off
+// assert.warning               = off
+// zend.assertions              = 1
 
 require_once('classes/Task.php');
+require_once('functions.php');
+require_once('defined.php');
 
 $task = new Task(1, 666);
 
-print('<pre>');
+assert($task->getStatusMap() === TASK_STATUS_MAP);
+assert($task->getActionMap() === TASK_ACTION_MAP);
 
-print("Executor id: {$task->executor_id}<br>");
-print("Customer id: {$task->customer_id}<br>");
-print("Current status: {$task->current_status}<hr>");
+assert($task->getNextStatus('action_cancel') === 'cancel');
+assert($task->getNextStatus('action_respond') === 'work');
+assert($task->getNextStatus('action_done') === 'done');
+assert($task->getNextStatus('action_refuse') === 'failed');
 
-print_r($task->getStatusMap());
-print('<hr>');
-print_r($task->getActionMap());
-print('<hr>');
-
-print("Next status for action \"cancel\": {$task->getNextStatus('action_cancel')}<br>");
-print("Next status for action \"respond\": {$task->getNextStatus('action_respond')}<br>");
-print("Next status for action \"done\": {$task->getNextStatus('action_done')}<br>");
-print("Next status for action \"refuse\": {$task->getNextStatus('action_refuse')}<hr>");
-
-print('Available actions for status "new":<br>');
-print_r($task->getAvailableActions('new'));
-print('Available actions for status "work":<br>');
-print_r($task->getAvailableActions('work'));
-
-print('</pre>');
+assert($task->getAvailableActions('new') === ['action_cancel', 'action_respond']);
+assert($task->getAvailableActions('work') === ['action_done', 'action_refuse']);
