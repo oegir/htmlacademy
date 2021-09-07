@@ -11,7 +11,9 @@ $sql_single_lot = "
  SELECT l.`heading`, l.`description`, l.`image`, l.`finish`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
 WHERE l.`id` LIKE ?";
+
 if (isset($_GET['id'])) {
+    
     $single_lot_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
     $stmt = db_get_prepare_stmt($connection, $sql_single_lot, $data = [$single_lot_id]);
     mysqli_stmt_execute($stmt);
