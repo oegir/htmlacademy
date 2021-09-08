@@ -53,3 +53,5 @@ UPDATE lot
 SET `heading` = '2020 Ботинки для сноуборда DC Mutiny Charocal'
 WHERE `id` = 4;
 
+-- увеличить время закрытия лота на неделю
+UPDATE lot SET finish = DATE_ADD(finish, INTERVAL 7 DAY);
