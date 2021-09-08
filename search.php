@@ -43,6 +43,15 @@ $layout_content = include_template('layout.php', ['user_name' => $user_name, 'ca
 
 print($layout_content);
 
+/**
+ * Получаем массив данных по поисковому запросу.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param string $query Поисковый запрос.
+ * @param int $page Номер страницы, для которой ищутся лоты
+ * @return array Массив лотов.
+ */
+
 function getSearchItems(mysqli $con, string $query, int $page) : array{
     $sql = "SELECT    
     i.id id, i.name, c.name category, IFNULL(b.price,start_price) price, img_path url, completion_date expiry_date
@@ -69,6 +78,14 @@ function getSearchItems(mysqli $con, string $query, int $page) : array{
     return $items;
 }
 
+
+/**
+ * Получаем число результатов поискового запроса.
+ *
+ * @param  mysqli $con Подключение к БД.
+ * @param string $query Поисковый запрос.
+ * @return int Количество найденых лотов.
+ */
 function getResultCount(mysqli $con, string $query): int{
     $count = 0;
 
