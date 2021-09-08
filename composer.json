@@ -1,0 +1,17 @@
+{
+    "name": "anatolev/task-force",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Anatolev\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Anatolev Maksim",
+            "email": "anatolev.web@gmail.com"
+        }
+    ],
+    "require": {}
+}

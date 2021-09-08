@@ -11,11 +11,11 @@
 // assert.warning               = off
 // zend.assertions              = 1
 
-require_once('classes/Task.php');
+require_once('vendor/autoload.php');
 require_once('functions.php');
 require_once('defined.php');
 
-$task = new Task(1, 666);
+$task = new Anatolev\Service\Task(1, 666);
 
 assert($task->getStatusMap() === TASK_STATUS_MAP);
 assert($task->getActionMap() === TASK_ACTION_MAP);

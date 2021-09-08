@@ -1,5 +1,7 @@
 <?php
 
+namespace Anatolev\Service;
+
 class Task
 {
     public const STATUS_NEW = 'new';
