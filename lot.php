@@ -14,7 +14,6 @@ $categories_arr =[];
 
 $con = db_connect();
 
-session_start();
 $user_name = getUserNameById($con, sess_get_user_id());
 
 
