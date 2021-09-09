@@ -9,6 +9,10 @@ function assertMessage($file, $line, $code = null, $desc = null)
 
 assert_options(ASSERT_CALLBACK, 'assertMessage');
 $task = new Service\Task("Client", "Worker");
+$task->addAction(new Service\CompleteAction());
+$task->addAction(new Service\FailAction());
+$task->addAction(new Service\AbortAction());
+$task->addAction(new Service\ResponseAction());
 
 //проверка статуса
 try {
@@ -26,14 +30,13 @@ try {
 };
 //проверка реакции на неверные команды
 try {
-    $actions = $task->nextStatus("actFail", "Client");
+    $actions = $task->nextStatus("Failure", "Client");
     assert($actions == $task::ACTION_WRONG, 'This change not allowed');
 } catch (Error $e) {
 }
 //проверка работы nextStatus() и переходов между статусами
-echo $task->getStatus() . "</br>";
 try {
-    $task->nextStatus("actResponse", "Worker");
+    $task->nextStatus("Response", "Worker");
     $status = $task->getStatus();
     assert($status == $task::STATUS_IN_WORK, 'Wrong task status. Expected "' . $task::STATUS_IN_WORK . '", got "' . $task->getStatus() . '"');
 
@@ -41,6 +44,7 @@ try {
 
 } catch (Error $e) {
 };
+
 try {
     $status = $task->getStatus();
     assert($status == $task::STATUS_IN_WORK, 'Wrong task status. Expected "' . $task::STATUS_IN_WORK . '", got "' . $status . '"');
@@ -51,14 +55,14 @@ try {
 };
 // проверка работы actions()
 try {
-    $actions = $task->nextStatus("actComplete", "Client");
+    $actions = $task->nextStatus("Complete", "Client");
     assert($actions == $task::STATUS_COMPLETED, 'Wrong task status. Expected "' . $task::STATUS_COMPLETED . '", got "' . $actions . '"');
 
 } catch (Error $e) {
 };
 //проверка реакции на неверные команды
 try {
-    $actions = $task->nextStatus("actFail", "Client");
+    $actions = $task->nextStatus("Failure", "Client");
     assert($actions == $task::ACTION_WRONG, 'This change not allowed');
 
 } catch (Error $e) {

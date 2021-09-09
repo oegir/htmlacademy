@@ -21,7 +21,7 @@ class Task
 
     private $statusMap = [self::STATUS_NEW => "Новая", self::STATUS_ABORTED => "Отменена", self::STATUS_IN_WORK => "В работе", self::STATUS_COMPLETED => "Выполнено", self::STATUS_FAILED => "Не выполнено"];
 
-    //private $actionMap = [];
+    private $actionMap = [AbortAction::ACTION_ABORT=>AbortAction::ACTION_ABORT_READABLE,ResponseAction::ACTION_RESPONSE=>ResponseAction::ACTION_RESPONSE_READABLE,CompleteAction::ACTION_COMPLETE=>CompleteAction::ACTION_COMPLETE_READABLE,FailAction::ACTION_FAILURE=>FailAction::ACTION_FAILURE_READABLE];
 
     public function __construct($clientId, $workerId)
     {
@@ -38,21 +38,17 @@ class Task
     public function nextStatus($action, $requestId)
     {
         $newStatus = null;
-        $statusSwitch = ["Выполнить" => self::STATUS_COMPLETED, "Отказаться" => self::STATUS_FAILED, "Отменить задание" => self::STATUS_ABORTED, "Откликнуться" => self::STATUS_IN_WORK];
+        $statusSwitch = ["Завершить задание" => self::STATUS_COMPLETED, "Отказаться" => self::STATUS_FAILED, "Отменить задание" => self::STATUS_ABORTED, "Откликнуться" => self::STATUS_IN_WORK];
         foreach ($this->actions as $key) {
 
             if ($key->getInnerName() == $action) {
                 if ($key->rightsCheck($this->clientId, $this->workerId, $this->status, $requestId)) {
-                    $newStatus = $statusSwitch[$key->getExternalName()];
+                    $this->status = $statusSwitch[$key->getReadableName()];
+                    return $this->status;
                 }
             }
         }
-        if ($newStatus) {
-            $this->status = $newStatus;
-            return $this->status;
-        } else {
             return self::ACTION_WRONG;
-        }
     }
 
     public function getActionMap()
