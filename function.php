@@ -118,4 +118,55 @@ function smallDate($date)
     return $smallDate;
 }
 
+/**
+ * @param string $date дата регистрации пользователя из бд
+ * @return string Дата в формате был * назад
+ * @throws Exception преобразование строки в дататайм
+ */
+function smallUSerDate($date)
+{
+    $postDate = new DateTimeImmutable($date);
+//вычисляем разницу между серверным временем и датой поста
+    $nowDate = new DateTimeImmutable();
+    $difference = $nowDate->diff($postDate);
+
+    if ($difference->m > 0) {
+        $resultForPost = get_noun_plural_form($difference->m, 'месяц', 'месяца', 'месяцев');
+        $smallDate = "$difference->m $resultForPost на сайте";
+    } elseif (intdiv($difference->d, 7) > 0) {
+        $weeks = intdiv($difference->d, 7);
+        $resultForPost = get_noun_plural_form($weeks, 'неделя', 'недели', 'недель');
+        $smallDate = "$weeks $resultForPost на сайте";
+    } elseif ($difference->d > 0) {
+        $resultForPost = get_noun_plural_form($difference->d, 'день', 'дня', 'дней');
+        $smallDate = "$difference->d $resultForPost на сайте";
+    } elseif ($difference->h > 0) {
+        $resultForPost = get_noun_plural_form($difference->h, 'час', 'часа', 'часов');
+        $smallDate = "$difference->h $resultForPost на сайте";
+    } else {
+        $resultForPost = get_noun_plural_form($difference->i, 'минута', 'минуты', 'минут');
+        $smallDate = "$difference->i $resultForPost на сайте";
+    }
+
+    return $smallDate;
+}
+
 ;
+/**
+ * Валидация формы ГЕТ для строки
+ * @param string $param ключ параметра запроса
+ * @param string|null $default Значение по умолчанию
+ * @return string|null Возвращает параметр запроса в формате строки
+ */
+function retriveGetString(string $param, string $default = null): ?string
+{
+    $result = $_GET[$param] ?? $default;
+    return is_string($result) ? $result : $default;
+}
+
+
+function retriveGetInt(string $param, string $default = null): ?int
+{
+    $result = $_GET[$param] ?? $default;
+    return is_string($result) ? $result : $default;
+}
