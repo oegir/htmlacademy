@@ -6,24 +6,12 @@ namespace Service;
 
 abstract class Actions
 {
-    public $innerName, $externalName;
-
-    function __construct($innerName, $externalName)
-    {
-        $this->innerName = $innerName;
-        $this->externalName = $externalName;
-    }
 
     abstract public function rightsCheck($clientId, $workerId, $status, $requestId);
 
-    public function getExternalName()
-    {
-        return $this->externalName;
-    }
+    abstract public function getReadableName();
 
-    public function getInnerName()
-    {
-        return $this->innerName;
-    }
+    abstract public function getInnerName();
+
 
 }
