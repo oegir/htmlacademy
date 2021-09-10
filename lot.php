@@ -10,12 +10,14 @@ $categories = get_categories($connection);
 $sql_single_lot = "
  SELECT l.`heading`, l.`description`, l.`image`, l.`finish`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
-WHERE l.`id` LIKE ?";
+WHERE l.`id` = ?";
 
-if (isset($_GET['id'])) {
+$set_id = $_GET['id'];
+
+if ($set_id = true) {
     
     $single_lot_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-    $stmt = db_get_prepare_stmt($connection, $sql_single_lot, $data = [$single_lot_id]);
+    $stmt = db_get_prepare_stmt($connection, $sql_single_lot, [$single_lot_id]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $single_item = mysqli_fetch_array($res, MYSQLI_ASSOC) ?? [];
@@ -32,4 +34,7 @@ if (isset($_GET['id'])) {
     $page_content = include_template ('layout.php', ['header' => $header, 'main_content' => ' ', 'single_lot_content' => $content, 'categories' => $categories]);
 
     print($page_content);
+}
+else {
+    header('HTTP/1.1 403 Forbidden');
 }
