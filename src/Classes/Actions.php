@@ -6,12 +6,16 @@ namespace Service;
 
 abstract class Actions
 {
+    /**
+     * @param int $clientId customer user id
+     * @param int $workerId worker user id
+     * @param int $userId current user id
+     */
+    abstract public function rightsCheck(int $clientId, int $workerId, int $userId): bool;
 
-    abstract public function rightsCheck($clientId, $workerId, $status, $requestId);
+    abstract public function getReadableName(): string;
 
-    abstract public function getReadableName();
-
-    abstract public function getInnerName();
+    abstract public function getInnerName(): string;
 
 
 }

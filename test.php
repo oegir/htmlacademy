@@ -1,4 +1,7 @@
 <?php
+use Service\AbortAction;
+use Service\Task;
+
 require_once("vendor/autoload.php");
 // настройка assert
 assert_options(ASSERT_ACTIVE, 1);
@@ -8,7 +11,11 @@ function assertMessage($file, $line, $code = null, $desc = null)
 }
 
 assert_options(ASSERT_CALLBACK, 'assertMessage');
-$task = new Service\Task("Client", "Worker");
+
+$clidentId = 1;
+$worlerId = 2;
+
+$task = new Service\Task($clidentId, $worlerId);
 $task->addAction(new Service\CompleteAction());
 $task->addAction(new Service\FailAction());
 $task->addAction(new Service\AbortAction());
@@ -22,9 +29,14 @@ try {
 };
 //проверка работы actions()
 try {
-    $actions = $task->actions("Worker");
-    $expected = $task->actions->getInnerName();
-    assert($actions[0] == $expected, 'Wrong task actions. Expected "' . print_r($expected, true) . '", got "' . print_r($actions[0], true) . '"');
+    $currentUserId = 2;
+    $task->setStatus(Task::STATUS_NEW);
+    $actions = $task->actions($currentUserId);
+    
+    $count = count($actions);
+    assert($count == 1, 'Wrong task actions number. Expected 1, got "' . count($actions) . '"');
+    $action = array_shift($actions);
+    assert($action instanceof AbortAction, 'Wrong task actions type. Expected `AbortAction`, got "' . gettype($action) . '"');
 
 } catch (Error $e) {
 };

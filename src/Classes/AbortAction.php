@@ -6,21 +6,22 @@ namespace Service;
 
 class AbortAction extends Actions
 {
-    const ACTION_ABORT = "Abort";
-    const ACTION_ABORT_READABLE = "Отменить";
+    const INNER_NAME = "Abort";
+    const READABLE_NAME = "Отменить";
 
-    public function rightsCheck($clientId, $workerId, $status, $requestId)
+    public function rightsCheck(int $clientId, int $workerId, int $userId): bool
     {
-        return $status == Task::STATUS_NEW && $clientId == $requestId;
+        // Only client can interrupt his task 
+        return $userId == $clientId;
     }
 
     public function getInnerName()
     {
-        return self::ACTION_ABORT;
+        return self::INNER_NAME;
     }
 
     public function getReadableName()
     {
-        return self::ACTION_ABORT_READABLE;
+        return self::READABLE_NAME;
     }
 }
