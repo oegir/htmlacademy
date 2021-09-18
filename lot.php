@@ -1,4 +1,5 @@
 <?php
+require_once('sess.php');
 require_once('helpers.php');
 require_once('db_connection.php');
 require_once('service_functions.php');
@@ -13,8 +14,7 @@ $categories_arr =[];
 
 $con = db_connect();
 
-session_start();
-$user_name = isset($_SESSION['id'])? getUserNameById($con, $_SESSION['id']):'';
+$user_name = getUserNameById($con, sess_get_user_id());
 
 
 checkId($con, $id);
