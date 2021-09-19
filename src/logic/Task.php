@@ -121,7 +121,7 @@ class Task
      * @return array - массив доступных действий
      * или пустой массив, если доступных действий нет
      */
-    public function mapStatusToAllowedActions($status, $userId): array
+    public function mapStatusToAllowedActions(string $status, int $userId): array
     {
         $this->user = $userId;
         return array_values(array_filter($this->allowedActions[$status] ?? [], function ($action) {

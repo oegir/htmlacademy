@@ -6,7 +6,7 @@ use TaskForce\logic\Action;
 
 class ActionCancel extends Action
 {
-    public function checkActionRights(int $customerId, int $contractorId, int $userId)
+    public function checkActionRights(int $customerId, int $contractorId, int $userId): bool
     {
         return $customerId == $userId;
     }

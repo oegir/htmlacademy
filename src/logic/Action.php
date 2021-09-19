@@ -28,7 +28,7 @@ abstract class Action
      *
      * @return bool true, если действие пользователю разрешено, false в противном случае
      */
-    abstract public function checkActionRights(int $customerId, int $contractorId, int $userId);
+    abstract public function checkActionRights(int $customerId, int $contractorId, int $userId): bool;
     /**
      * Метод возвращает название действия
      *
