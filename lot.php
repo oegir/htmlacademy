@@ -25,6 +25,7 @@ $categories_arr = getCategories($con);
 
 $item = getItem($con, $id);
 
+$bid_history_arr = getBidHistory($con, $id);
 
 if(isset($_POST['cost'])){
     $bid = $_POST['cost'];
@@ -38,7 +39,7 @@ if(isset($_POST['cost'])){
 $page_content = include_template('item.php', ['id' => $id, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
     'category_name' => $item['category_name'], 'description' => $item['description'],
     'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
-    'min_bid' => $item['min_bid'], 'bid' => $bid ,'error' => $error]);
+    'min_bid' => $item['min_bid'], 'bid' => $bid ,'error' => $error, 'bid_history' => $bid_history_arr]);
 
 $layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => $item['name']]);
 
@@ -128,3 +129,38 @@ function sendBidToDB(mysqli $con, int $item_id, int $bid, int $user_id)
         die();
     }
 }
+
+/**
+ * Возвращает массив с историей ставок для заданного лота.
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @return array Массив ставок для заданного лота.
+ */
+function getBidHistory (mysqli $con, int $id): array
+{
+    $sql = "SELECT u.name, price, date FROM bid b LEFT JOIN user u on b.user_id = u.id  WHERE item_id=? ORDER BY date DESC";
+    $item = [];
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    while ($res && $row = $res->fetch_assoc()){
+        $item[] = $row;
+    }
+    return $item;
+}
+
+function getBidDate($date){
+    date_default_timezone_set('Europe/Moscow');
+    $placement_date = new DateTime($date);
+    $currentDate = new DateTime();
+    $dt_range = $currentDate->diff($placement_date);
+
+    
+    if($dt_range->days > 0){
+        return $placement_date->format("d.m.y в H:i");
+    } elseif($dt_range->h > 0){
+        return $dt_range->format("%h").' часа назад';
+    }
+    return $dt_range->format("%i").' минут назад';
+}
+

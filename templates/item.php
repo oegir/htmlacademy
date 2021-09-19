@@ -46,6 +46,20 @@
                 </form>
             </div>
             <?php endif; ?>
+            <?php if(count($bid_history) > 0): ?>
+            <div class="history">
+              <h3>История ставок (<span><?=count($bid_history); ?></span>)</h3> 
+              <table class="history__list">
+                <?php foreach($bid_history as $bid): ?>
+                <tr class="history__item">
+                  <td class="history__name"><?=xss_protection($bid['name']);?></td>
+                  <td class="history__price"><?=xss_protection($bid['price']);?></td>
+                  <td class="history__time"><?=xss_protection(getBidDate($bid['date']));?></td>
+                </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
+          <?php endif; ?>
         </div>
     </div>
 </section>
