@@ -29,6 +29,10 @@ $item = getItem($con, $id);
 if(isset($_POST['cost'])){
     $bid = $_POST['cost'];
     $error = checkCostForError($bid, $item);
+    if (!isset($error)) {
+        sendBidToDB($con, $id, $bid, sess_get_user_id());
+        header('Location: lot.php?id='.$id);
+    }
 }
 
 $page_content = include_template('item.php', ['id' => $id, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
@@ -101,4 +105,26 @@ function checkCostForError ($bid, array $item): ?string
     }
     return $message;
 
+}
+
+/**
+ * Отправляет проверенную ставку в БД
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $item_id id лота.
+ * @param int $bid Передаваемая ставка.
+ * @param int $user_id id автора ставки.
+ * @return void
+  */
+function sendBidToDB(mysqli $con, int $item_id, int $bid, int $user_id)
+{
+    $sql = "INSERT INTO bid (date, price, user_id, item_id) 
+        VALUE (?, ?, ?, ?)";
+    $stmt = db_get_prepare_stmt($con, $sql, [date('Y-m-d H:i:s', time()), $bid, $user_id, $item_id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+
+    if(mysqli_errno($con)){
+        printf("Connect failed: %s\n", mysqli_connect_error()); 
+        die();
+    }
 }
