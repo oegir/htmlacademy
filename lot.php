@@ -11,6 +11,8 @@ if(!isset($_GET['id'])){
 
 $id = (int)$_GET['id'];
 $categories_arr =[];
+$error = null;
+$bid = null;
 
 $con = db_connect();
 
@@ -23,10 +25,16 @@ $categories_arr = getCategories($con);
 
 $item = getItem($con, $id);
 
-$page_content = include_template('item.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
+
+if(isset($_POST['cost'])){
+    $bid = $_POST['cost'];
+    $error = checkCostForError($bid, $item);
+}
+
+$page_content = include_template('item.php', ['id' => $id, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
     'category_name' => $item['category_name'], 'description' => $item['description'],
     'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
-    'min_bid' => $item['min_bid']]);
+    'min_bid' => $item['min_bid'], 'bid' => $bid ,'error' => $error]);
 
 $layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => $item['name']]);
 
@@ -74,4 +82,23 @@ function getItem(mysqli $con, int $id): array{
         $item = $row;
     }
     return $item;
+}
+
+/**
+ * Проверяет введенные в форме ставки данные на корректность
+ * @param mixed $bid введенная ставка
+ * @param array $item текущий лот
+ * @return string сообщение об ошибке
+ */
+function checkCostForError ($bid, array $item): ?string
+{
+    $message = null;
+    if(!is_numeric($bid)){
+        return 'Неверный формат данных';
+    }
+    if ($bid < $item['min_bid']) {
+        return 'Введенная ставка меньше минимальной';
+    }
+    return $message;
+
 }
