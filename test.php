@@ -1,6 +1,10 @@
 <?php
 
 use TaskForce\logic\Task;
+use TaskForce\logic\ActionStart;
+use TaskForce\logic\ActionComplete;
+use TaskForce\logic\ActionCancel;
+use TaskForce\logic\ActionRefuse;
 
 require_once 'vendor/autoload.php';
 
@@ -14,7 +18,7 @@ require_once 'vendor/autoload.php';
 function assertTest($result, $expected, $msg)
 {
     try {
-        assert($result === $expected, $msg);
+        assert($result == $expected, $msg);
     } catch (Error $e) {
         echo $e->getMessage(), \PHP_EOL;
     }
@@ -37,7 +41,7 @@ $result = [
     'failed' => 'задание провалено',
     'work' => 'задание в работе'
 ];
-assertTest($result, $statusMap, 'Unexpected statuses map 1');
+assertTest($result, $statusMap, 'Unexpected statuses map');
 
 $actionMap = $task->getActionMap();
 $result = [
@@ -46,40 +50,58 @@ $result = [
     'refuse' => 'отказаться от задания',
     'cancel' => 'отменить задание'
 ];
-assertTest($result, $actionMap, 'Unexpected actions map 2');
 
-$result = $task->mapActionToStatus(Task::ACTION_START);
+assertTest($result, $actionMap, 'Unexpected actions map');
+
+$actStart = new ActionStart();
+$actComplete = new ActionComplete();
+$actCancel = new ActionCancel();
+$actRefuse = new ActionRefuse();
+
+$result = $task->mapActionToStatus($actStart);
 $expected = Task::STATUS_WORK;
-assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_START);
+assertTest($result, $expected, 'Unexpected status for action ' . $actStart->getName());
 
-$result = $task->mapActionToStatus(Task::ACTION_COMPLETE);
+$result = $task->mapActionToStatus($actComplete);
 $expected = Task::STATUS_DONE;
-assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_COMPLETE);
+assertTest($result, $expected, 'Unexpected status for action ' . $actComplete->getName());
 
-$result = $task->mapActionToStatus(Task::ACTION_REFUSE);
+$result = $task->mapActionToStatus($actRefuse);
 $expected = Task::STATUS_FAILED;
-assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_REFUSE);
+assertTest($result, $expected, 'Unexpected status for action ' . $actRefuse->getName());
 
-$result = $task->mapActionToStatus(Task::ACTION_CANCEL);
+$result = $task->mapActionToStatus($actCancel);
 $expected = Task::STATUS_CANCELED;
-assertTest($result, $expected, 'Unexpected status for action ' . Task::ACTION_CANCEL);
+assertTest($result, $expected, 'Unexpected status for action ' . $actCancel->getName());
 
-$result = $task->mapStatusToAllowedActions(Task::STATUS_NEW);
-$expected = [Task::ACTION_START, Task::ACTION_CANCEL];
+//пользователь - заказчик, проверка доступных действий
+$result = $task->mapStatusToAllowedActions(Task::STATUS_NEW, 1);
+$expected = [new ActionStart(), new ActionCancel()];
 assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_NEW);
 
-$result = $task->mapStatusToAllowedActions(Task::STATUS_WORK);
-$expected = [Task::ACTION_COMPLETE, Task::ACTION_REFUSE];
+//пользователь - исполнитель, проверка доступных действий
+$result = $task->mapStatusToAllowedActions(Task::STATUS_NEW, 23);
+$expected = [];
+assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_NEW);
+
+//пользователь - заказчик, проверка доступных действий
+$result = $task->mapStatusToAllowedActions(Task::STATUS_WORK, 1);
+$expected = [new ActionComplete()];
 assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_WORK);
 
-$result = $task->mapStatusToAllowedActions(Task::STATUS_CANCELED);
+//пользователь - исполнитель, проверка доступных действий
+$result = $task->mapStatusToAllowedActions(Task::STATUS_WORK, 23);
+$expected = [new ActionRefuse()];
+assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_WORK);
+
+$result = $task->mapStatusToAllowedActions(Task::STATUS_CANCELED, 1);
 $expected = [];
 assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_CANCELED);
 
-$result = $task->mapStatusToAllowedActions(Task::STATUS_DONE);
+$result = $task->mapStatusToAllowedActions(Task::STATUS_DONE, 1);
 $expected = [];
 assertTest($result, $expected, 'Unexpected map of actions for status ' . Task::STATUS_DONE);
 
-$result = $task->mapStatusToAllowedActions(Task::STATUS_FAILED);
+$result = $task->mapStatusToAllowedActions(Task::STATUS_FAILED, 1);
 $expected = [];
 assertTest($result, $expected, 'Unexpected map of actions' . Task::STATUS_FAILED);
