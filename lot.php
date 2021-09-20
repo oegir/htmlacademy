@@ -149,6 +149,12 @@ function getBidHistory (mysqli $con, int $id): array
     return $item;
 }
 
+
+/**
+ * Возвращает прошедшее с момента ставки время.
+ * @param string $date Дата ставки.
+ * @return string Время прошедшее с момента ставки.
+ */
 function getBidDate($date){
     date_default_timezone_set('Europe/Moscow');
     $placement_date = new DateTime($date);
@@ -158,9 +164,11 @@ function getBidDate($date){
     
     if($dt_range->days > 0){
         return $placement_date->format("d.m.y в H:i");
-    } elseif($dt_range->h > 0){
-        return $dt_range->format("%h").' часа назад';
+    } elseif($dt_range->h == 1 ){
+        return 'Час назад';
+    } elseif($dt_range->h > 1){
+        return $dt_range->format("%h").' '.get_noun_plural_form($dt_range->h, 'час', 'часа', 'часов').' назад';
     }
-    return $dt_range->format("%i").' минут назад';
+    return $dt_range->format("%i").' '.get_noun_plural_form($dt_range->i, 'минуту', 'минуты', 'минут').' назад';
 }
 
