@@ -13,11 +13,11 @@ class ActionCancel extends Action
 
     public function getName(): string
     {
-        return self::ACTION_CANCEL;
+        return 'cancel';
     }
 
     public function getTitle(): string
     {
-        return self::$actionMap[self::ACTION_CANCEL];
+        return 'отменить задание';
     }
 }

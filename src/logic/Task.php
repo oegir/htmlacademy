@@ -6,6 +6,8 @@ use TaskForce\logic\ActionStart;
 use TaskForce\logic\ActionComplete;
 use TaskForce\logic\ActionCancel;
 use TaskForce\logic\ActionRefuse;
+use TaskForce\ex\TaskForceException;
+use TaskForce\ex\TaskForceActionException;
 
 /**
  * Task - класс описания задания и работы с ним
@@ -106,9 +108,13 @@ class Task
      *
      * @return string - значение статуса, соответсвующего действию
      * или null, если такого статуса нет
+     * @throw TaskForceActionException, если такого статуса нет
      */
     public function mapActionToStatus(Action $action): ?string
     {
+        if (!array_key_exists($action->getName(), $this->actionStatusMap)) {
+            throw new TaskForceActionException('mapActionToStatus: недопустимое действие ' . $action->getName());
+        }
         return $this->actionStatusMap[$action->getName()] ?? null;
     }
 
@@ -120,9 +126,13 @@ class Task
      *
      * @return array - массив доступных действий
      * или пустой массив, если доступных действий нет
+     * @throw TaskForceException, если задан недопустимый статус
      */
     public function mapStatusToAllowedActions(string $status, int $userId): array
     {
+        if (!array_key_exists($status, $this->statusMap)) {
+            throw new TaskForceException('mapStatusToAllowedActions: недопустимый статус ' . $status);
+        }
         $this->user = $userId;
         return array_values(array_filter($this->allowedActions[$status] ?? [], function ($action) {
             return $action->checkActionRights($this->customer, $this->contractor, $this->user);

@@ -13,11 +13,11 @@ class ActionStart extends Action
 
     public function getName(): string
     {
-        return self::ACTION_START;
+        return 'start';
     }
 
     public function getTitle(): string
     {
-        return self::$actionMap[self::ACTION_START];
+        return 'стартовать задание';
     }
 }
