@@ -19,6 +19,7 @@ function assertTest($result, $expected, string $msg): void
 {
     try {
         if (is_array($result) and is_array($expected)) {
+            assert(count($result) == count($expected));
             $map = array_map(function ($res, $exp) {
                 return $res == $exp;
             }, $result, $expected);
