@@ -13,11 +13,11 @@ class ActionRefuse extends Action
 
     public function getName(): string
     {
-        return self::ACTION_REFUSE;
+        return 'refuse';
     }
 
     public function getTitle(): string
     {
-        return self::$actionMap[self::ACTION_REFUSE];
+        return 'отказаться от задания';
     }
 }

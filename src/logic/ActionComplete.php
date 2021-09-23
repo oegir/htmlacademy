@@ -13,11 +13,11 @@ class ActionComplete extends Action
 
     public function getName(): string
     {
-        return self::ACTION_COMPLETE;
+        return 'complete';
     }
 
     public function getTitle(): string
     {
-        return self::$actionMap[self::ACTION_COMPLETE];
+        return 'завершить задание';
     }
 }
