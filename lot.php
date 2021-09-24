@@ -181,8 +181,22 @@ function checkAccessForMakinBet(mysqli $con, int $id, ?int $user_id): bool
     if (!isset($user_id)){
         return false;
     }
-    if($authorItemId = getItemAuthorId($con, $id) !== NULL){
+    $authorItemId = getItemAuthorId($con, $id);
+    if(isset($authorItemId)){
         if ($authorItemId == $user_id){
+            return false;
+        }
+    }
+    $authorLastBidId = getAuthorLastBidId($con, $id);
+    if(isset($authorLastBidId)){
+        if($authorLastBidId == $user_id){
+            return false;
+        }
+    }
+
+    $date_range = get_dt_range(getItemDate($con, $id));
+    if (isset($date_range)) {
+        if ($date_range[0] ==0 && $date_range[1] == 0){
             return false;
         }
     }
@@ -192,8 +206,8 @@ function checkAccessForMakinBet(mysqli $con, int $id, ?int $user_id): bool
 
 function getItemAuthorId(mysqli $con, int $id): ?int
 {
-    $sql = "SELECT author_id FROM item WHERE id=?";
-    $author_id =null;
+    $sql = "SELECT author_id FROM item WHERE id = ?";
+    $author_id = null;
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
@@ -201,4 +215,29 @@ function getItemAuthorId(mysqli $con, int $id): ?int
         $author_id = $row['author_id'];
     }
     return $author_id;
+}
+
+function getAuthorLastBidId(mysqli $con, int $id): ?int
+{
+    $sql = "SELECT user_id FROM bid WHERE item_id=? ORDER BY date DESC LIMIT 1";
+    $bid_author_id = null;
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res && $row = $res->fetch_assoc()){
+        $bid_author_id = $row['user_id'];
+    }
+    return $bid_author_id;
+}
+
+function getItemDate(mysqli $con, int $id): ?string{
+    $date = '';
+    $sql = "SELECT * FROM item WHERE id = ?";
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res && $row = $res->fetch_assoc()){
+        $date = $row['completion_date'];
+    }
+    return $date;
 }
