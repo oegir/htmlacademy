@@ -25,7 +25,11 @@ $categories_arr = getCategories($con);
 
 $item = getItem($con, $id);
 
+$display_lot_item_form_flag = checkAccessForMakinBet($con, $id, sess_get_user_id());
+
 $bid_history_arr = getBidHistory($con, $id);
+
+
 
 if(isset($_POST['cost'])){
     $bid = $_POST['cost'];
@@ -39,7 +43,7 @@ if(isset($_POST['cost'])){
 $page_content = include_template('item.php', ['id' => $id, 'user_name' => $user_name, 'categories_arr' => $categories_arr, 'item_name' => $item['name'], 'img_path' => $item['img_path'],
     'category_name' => $item['category_name'], 'description' => $item['description'],
     'completion_date' => $item['completion_date'], 'current_price' => $item['current_price'],
-    'min_bid' => $item['min_bid'], 'bid' => $bid ,'error' => $error, 'bid_history' => $bid_history_arr]);
+    'min_bid' => $item['min_bid'], 'bid' => $bid ,'error' => $error, 'bid_history' => $bid_history_arr, 'display_lot_item_form_flag' => $display_lot_item_form_flag]);
 
 $layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => $item['name']]);
 
@@ -172,3 +176,29 @@ function getBidDate($date){
     return $dt_range->format("%i").' '.get_noun_plural_form($dt_range->i, 'минуту', 'минуты', 'минут').' назад';
 }
 
+function checkAccessForMakinBet(mysqli $con, int $id, ?int $user_id): bool
+{
+    if (!isset($user_id)){
+        return false;
+    }
+    if($authorItemId = getItemAuthorId($con, $id) !== NULL){
+        if ($authorItemId == $user_id){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function getItemAuthorId(mysqli $con, int $id): ?int
+{
+    $sql = "SELECT author_id FROM item WHERE id=?";
+    $author_id =null;
+    $stmt = db_get_prepare_stmt($con, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    if ($res && $row = $res->fetch_assoc()){
+        $author_id = $row['author_id'];
+    }
+    return $author_id;
+}
