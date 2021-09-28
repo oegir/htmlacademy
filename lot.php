@@ -18,7 +18,6 @@ $con = db_connect();
 
 $user_name = getUserNameById($con, sess_get_user_id());
 
-
 checkId($con, $id);
 
 $categories_arr = getCategories($con);
