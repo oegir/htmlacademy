@@ -70,10 +70,10 @@ class SqlDataExporter
         return $sql;
     }
 
-/**
- * Сохраняет данные строки таблицы в файле
- * @param array $fields массив, содержащий данные одной строки таблицы
-*/
+    /**
+     * Сохраняет данные строки таблицы в файле
+     * @param array $fields массив, содержащий данные одной строки таблицы
+    */
     public function save(array $fields): void
     {
         try {
