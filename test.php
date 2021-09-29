@@ -21,7 +21,12 @@ function assertTest($result, $expected, string $msg): void
         if (is_array($result) and is_array($expected)) {
             assert(count($result) == count($expected));
             $map = array_map(function ($res, $exp) {
-                return $res == $exp;
+                if (is_object($res) and is_object($exp)) {
+                    return get_class($res) == get_class($exp);
+                } elseif (!is_object($res) and !is_object($exp)) {
+                    return $res === $exp;
+                }
+                return false;
             }, $result, $expected);
             assert(array_reduce($map, function ($out, $value) {
                 $out &= $value;

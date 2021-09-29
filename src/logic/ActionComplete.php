@@ -6,6 +6,8 @@ use TaskForce\logic\Action;
 
 class ActionComplete extends Action
 {
+    public const ACTION_COMPLETE = 'complete';
+
     public function checkActionRights(int $customerId, int $contractorId, int $userId): bool
     {
         return $customerId == $userId;
@@ -13,7 +15,7 @@ class ActionComplete extends Action
 
     public function getName(): string
     {
-        return 'complete';
+        return self::ACTION_COMPLETE;
     }
 
     public function getTitle(): string
