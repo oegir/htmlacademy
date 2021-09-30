@@ -1,311 +1,359 @@
 <?php
 
-if ($_GET['post-id'] == null or empty($truePostResultRows) == true): ?>
-    <?php
-    http_response_code(404); ?>
-<?php
-else:
-    foreach ($postRows as $key => $val):
-        ?>
+require_once('src/helpers.php');
+require_once('src/function.php');
+require_once('src/db.php');
+/* @var mysqli $mysql */
+
+$is_auth = rand(0, 1);
+$user_name = 'Владик';
+
+$postId = request_retriveGetInt('post-id', 0);
+
+/**
+ * Проверяем существует ли пост
+ * @param mysqli $connection параметры соединения с sql
+ * @param int $postId отвалидированное значение int
+ * @return bool True если пост существует и false если нет
+ */
+function isPostExist(mysqli $connection, int $postId): bool
+{
+    if ($connection == false) {
+        print ("Ошибка подключения: ".mysqli_connect_error());
+    } else {
+        $truePost = "
+SELECT
+    post.id
+FROM
+    post
+WHERE
+    post.id = $postId
+    ";
+
+        $truePostResult = mysqli_query($connection, $truePost);
+        $postId = mysqli_fetch_all($truePostResult, MYSQLI_ASSOC);
+    };
+    if (empty($postId) == true) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+$postIdExist = isPostExist($mysql, $postId);
 
 
-        <div class="container">
-        <h1 class="page__title page__title--publication"><?= $val['header']; ?></h1>
-        <section class="post-details">
-        <h2 class="visually-hidden">Публикация</h2>
-        <div class="post-details__wrapper post-photo">
-        <div class="post-details__main-block post post--details">
+$post_id = $postId;
 
 
-        <?php
-        if ($val['icon_name'] == "post-photo"): ?>
+/**
+ * Массив, в который мы вкладываем ВСЕ данные о посте
+ */
+$postDetails = array();
+
+/**
+ * Подключаем бд для страницы поста, главный контент
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $post = "
+SELECT
+    post.id AS `post_num`, post.text_content as `text`,post.header AS `header`,post.media AS `media`,
+       post.author_copy_right AS `author_copy_right`, content_type.icon_name AS `icon_name`
 
 
-            <!-- пост-изображение -->
-            <div class="post-details__image-wrapper post-photo__image-wrapper">
-                <img src="<?= $val['media']; ?>" alt="Фото от пользователя" width="760" height="507">
-            </div>
+FROM
+    post
+        LEFT JOIN
+        user ON user.id = post.user_id
+        LEFT JOIN
+        content_type ON content_type.id = post.content_type_id
+WHERE  post.id = ?
+    ";
+    $postPrepare = db_get_prepare_stmt($mysql, $post, $data = [$postId]);
+    $postPrepareRes = mysqli_stmt_get_result($postPrepare);
+    $postResultRows = mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($postResultRows, $postDetails, 'main-content');
+};
+
+/**
+ * Запрос на информацию об авторе
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $additionalContent = "
+SELECT
+     user.reg_date AS `reg_date`, user.name AS `name`, user.avatar AS `avatar`, count(subscribe.user_subscribe_id) AS `subscribe-count`,
+       count(like_count.post_id) AS `like-count`
+
+FROM
+    post
+        LEFT JOIN
+        user ON user.id = post.user_id
+        LEFT JOIN
+        content_type ON content_type.id = post.content_type_id
+        LEFT JOIN
+        subscribe ON user_author_id = post.user_id
+        LEFT JOIN
+          like_count ON like_count.post_id = post.id
+WHERE  post.id = ?
+GROUP BY post.id
+    ";
+    $additionalContentPrepare = db_get_prepare_stmt($mysql, $additionalContent, $data = [$postId]);
+    $additionalContentPrepareRes = mysqli_stmt_get_result($additionalContentPrepare);
+    $additionalContentResultRows = mysqli_fetch_all($additionalContentPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($additionalContentResultRows, $postDetails, 'author-info');
+};
+
+/**
+ * Запрос на кол-во лайков
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $like_count = "
+SELECT
+   count(like_count.post_id) AS `like-count`
+
+FROM
+  post
+
+    LEFT JOIN
+  like_count ON like_count.post_id = post.id
+
+WHERE  post.id = ?
+    ";
+    $like_countPrepare = db_get_prepare_stmt($mysql, $like_count, $data = [$postId]);
+    $like_countPrepareRes = mysqli_stmt_get_result($like_countPrepare);
+    $like_countResultRows = mysqli_fetch_all($like_countPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($like_countResultRows, $postDetails, 'like-count');
+}
+
+/**
+ * Запрос на кол-во комментариев и просмотров
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $comment_count = "
+SELECT
+    count(comment.id) AS `comment-count`, post.views_number AS `views`
+
+FROM
+  post
+LEFT JOIN
+      comment ON comment.post_id = post.id
+
+WHERE  post.id = ?
+GROUP BY post.id
+    ";
+    $comment_countPrepare = db_get_prepare_stmt($mysql, $comment_count, $data = [$postId]);
+    $comment_countPrepareRes = mysqli_stmt_get_result($comment_countPrepare);
+    $comment_countResultRows = mysqli_fetch_all($comment_countPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($comment_countResultRows, $postDetails, 'comments&views-count');
+}
+
+/**
+ * узнаем id автора для проверки кол-ва постов
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $userID = "
+SELECT
+     post.user_id
+FROM
+    post
+
+WHERE  post.id = ?
+    ";
+    $userIDPrepare = db_get_prepare_stmt($mysql, $userID, $data = [$postId]);
+    $userIDPrepareRes = mysqli_stmt_get_result($userIDPrepare);
+    $userIDResultRows = mysqli_fetch_all($userIDPrepareRes, MYSQLI_ASSOC);
+};
+
+$authorArray = array_pop($userIDResultRows);
+$authorID = array_pop($authorArray);
+
+/**
+ * узнаем кол-во постов у автора
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $subscribeCount = "
+SELECT
+       count(post.id) AS `publication_count`
+FROM
+  post
+    LEFT JOIN
+  user ON user.id = post.user_id
+WHERE user_id = ?
+
+    ";
+    $subscribeCountPrepare = db_get_prepare_stmt($mysql, $subscribeCount, $data = [$authorID]);
+    $subscribeCountPrepareRes = mysqli_stmt_get_result($subscribeCountPrepare);
+    $subscribeCountResultRows = mysqli_fetch_all($subscribeCountPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($subscribeCountResultRows, $postDetails, 'authorPosts-count');
+}
+
+/**
+ * Запрос на Хештеги
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $hashtag = "
+SELECT
+     post.id AS `post_num`, hashtag.hashtag_name AS `hs-name`
+
+FROM
+    post
+LEFT JOIN
+        hashtag_post ON hashtag_post.post = post.id
+LEFT JOIN
+        hashtag ON hashtag.id = hashtag_post.hashtag
+WHERE  post.id = ?
+    ";
+    $hashtagPrepare = db_get_prepare_stmt($mysql, $hashtag, $data = [$post_id]);
+    $hashtagPrepareRes = mysqli_stmt_get_result($hashtagPrepare);
+    $hashtagResultRows = mysqli_fetch_all($hashtagPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($hashtagResultRows, $postDetails, 'hashtags');
+};
+
+/**
+ * запрос на список комментариев
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $comment = "
+SELECT
+     post.id AS `post_num`, comment.create_date AS `date`, comment.content AS `comment`, user.name AS `name`, user.avatar AS `avatar`
+
+FROM
+    post
+
+LEFT JOIN
+        comment ON comment.post_id = post.id
+
+LEFT JOIN
+        user ON user.id = comment.user_id
+
+WHERE  post.id = ?
+ORDER BY comment.create_date ASC
+LIMIT 2
+
+    ";
+    $commentPrepare = db_get_prepare_stmt($mysql, $comment, $data = [$post_id]);
+    $commentPrepareRes = mysqli_stmt_get_result($commentPrepare);
+    $commentResultRows = mysqli_fetch_all($commentPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($commentResultRows, $postDetails, 'comment-list');
+};
+
+/**
+ * число комментариев под списком комментариев
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $comment_int = "
+SELECT
+  post.id AS `post_num`, count(comment.id) AS `comment-count`
+
+FROM
+  post
+
+    LEFT JOIN
+  comment ON comment.post_id = post.id
+
+    LEFT JOIN
+  user ON user.id = comment.user_id
+
+WHERE  post.id = ?
+GROUP BY post.id
+
+    ";
+    $comment_intPrepare = db_get_prepare_stmt($mysql, $comment_int, $data = [$post_id]);
+    $comment_intPrepareRes = mysqli_stmt_get_result($comment_intPrepare);
+    $comment_intResultRows = mysqli_fetch_all($comment_intPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($comment_intResultRows, $postDetails, 'comment-count');
+};
+
+/**
+ * Список комментариев после второго
+ */
+
+if ($mysql == false) {
+    print ("Ошибка подключения: ".mysqli_connect_error());
+} else {
+    $noLimitComments = "
+SELECT
+     post.id AS `post_num`, comment.create_date AS `date`, comment.content AS `comment`, user.name AS `name`, user.avatar AS `avatar`
+
+FROM
+    post
+
+LEFT JOIN
+        comment ON comment.post_id = post.id
+
+LEFT JOIN
+        user ON user.id = comment.user_id
+
+WHERE  post.id = ?
+ORDER BY comment.create_date ASC
+    ";
+    $noLimitCommentsPrepare = db_get_prepare_stmt($mysql, $noLimitComments, $data = [$post_id]);
+    $noLimitCommentsPrepareRes = mysqli_stmt_get_result($noLimitCommentsPrepare);
+    $noLimitCommentsResultRows = mysqli_fetch_all($noLimitCommentsPrepareRes, MYSQLI_ASSOC);
+    $postDetails = getInfo($noLimitCommentsResultRows, $postDetails, 'comment-all-list');
+};
 
 
-        <?php
-        elseif ($val['icon_name'] == "post-quote"): ?>
+/**
+ * Подключаем шаблоны
+ */
+
+if ($postIdExist == false) {
+    header("Location: Not-found.php");
+} else {
+    $post_content = include_template(
+        'post.php',
+        [
+            'main_content' => $postDetails['main-content'],
+            'author_info' => $postDetails['author-info'],
+            'like_count' => $postDetails['like-count'],
+            'comments_views_count' => $postDetails['comments&views-count'],
+            'authorPosts_count' => $postDetails['authorPosts-count'],
+            'hashtags' => $postDetails['hashtags'],
+            'comment_list' => $postDetails['comment-list'],
+            'comment_count' => $postDetails['comment-count'],
+            'comment_all_list' => $postDetails['comment-all-list'],
+        ]
+    );
+    $layout_content = include_template(
+        'layout.php',
+        [
+
+            'content' => $post_content,
+            'is_auth' => $is_auth,
+            'user_name' => $user_name,
+            'title' => 'readme: публикация',
+
+        ]
+    );
 
 
-            <!-- пост-цитата -->
-            <div class="post-details__image-wrapper post-quote">
-                <div class="post__main">
-                    <blockquote>
-                        <p>
-                            <?= $val['text']; ?>
-                        </p>
-                        <cite><?= $val['author_copy_right']; ?></cite>
-                    </blockquote>
-                </div>
-            </div>
-
-
-        <?php
-        elseif ($val['icon_name'] == "post-text"): ?>
-
-            <!-- пост-текст -->
-            <div class="post-details__image-wrapper post-text">
-                <div class="post__main">
-                    <p>
-                        <?= $val['text']; ?>
-                    </p>
-                </div>
-            </div>
-
-
-        <?php
-        elseif ($val['icon_name'] == "post-link"): ?>
-
-
-            <div class="post__main">
-                <div class="post-link__wrapper">
-                    <a class="post-link__external" href="http://<?= $val['media'] ?>" title="Перейти по ссылке">
-                        <div class="post-link__info-wrapper">
-                            <div class="post-link__icon-wrapper">
-                                <img src="https://www.google.com/s2/favicons?domain=<?= $val['text'] ?>"
-                                     alt="Иконка">
-                            </div>
-                            <div class="post-link__info">
-                                <h3><?= $val['header'] ?></h3>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-        <?php
-        elseif ($val['icon_name'] == "post-video"): ?>
-
-            <!-- пост-видео -->
-            <div class="post-details__image-wrapper post-photo__image-wrapper">
-                <?= embed_youtube_cover($val['media']) ?>
-            </div>
-
-        <?php
-        endif ?>
-    <?php
-    endforeach; ?>
-
-    <div class="post__indicators">
-    <div class="post__buttons">
-    <?php
-    foreach ($like_countResultRows as $key => $val): ?>
-        <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-            <svg class="post__indicator-icon" width="20" height="17">
-                <use xlink:href="#icon-heart"></use>
-            </svg>
-            <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
-                 height="17">
-                <use xlink:href="#icon-heart-active"></use>
-            </svg>
-
-            <span><?= $val['like-count'] ?></span>
-
-            <span class="visually-hidden">количество лайков</span>
-        </a>
-    <?php
-    endforeach; ?>
-    <?php
-foreach ($comment_countResultRows
-
-    as $key => $val): ?>
-    <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
-        <svg class="post__indicator-icon" width="19" height="17">
-            <use xlink:href="#icon-comment"></use>
-        </svg>
-        <span><?= $val ['comment-count'] ?></span>
-        <span class="visually-hidden">количество комментариев</span>
-    </a>
-
-    <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-        <svg class="post__indicator-icon" width="19" height="17">
-            <use xlink:href="#icon-repost"></use>
-        </svg>
-        <span>5</span>
-        <span class="visually-hidden">количество репостов</span>
-    </a>
-    </div>
-    <span class="post__view"><?= $val['views'] ?></span>
-    </div>
-<?php
-endforeach; ?>
-    <ul class="post__tags">
-        <?php
-        foreach ($hashtagResultRows as $key => $val): ?>
-            <li><a href="#"><?= $val['hs-name'] ?></a></li>
-        <?php
-        endforeach; ?>
-    </ul>
-    <div class="comments">
-        <form class="comments__form form" action="#" method="post">
-            <div class="comments__my-avatar">
-                <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-            </div>
-            <div class="form__input-section form__input-section--error">
-                            <textarea class="comments__textarea form__textarea form__input"
-                                      placeholder="Ваш комментарий"></textarea>
-                <label class="visually-hidden">Ваш комментарий</label>
-                <button class="form__error-button button" type="button">!</button>
-                <div class="form__error-text">
-                    <h3 class="form__error-title">Ошибка валидации</h3>
-                    <p class="form__error-desc">Это поле обязательно к заполнению</p>
-                </div>
-            </div>
-            <button class="comments__submit button button--green" type="submit">Отправить</button>
-        </form>
-        <?php
-        if (array_key_exists('comment', $_GET) == true): ?>
-            <div class="comments__list-wrapper">
-                <ul class="comments__list">
-                    <?php
-                    foreach ($noLimitCommentsResultRows
-
-                    as $key => $val): ?>
-                    <?php
-                    if ($val['comment'] != null): ?>
-
-                    <li class="comments__item user">
-                        <div class="comments__avatar">
-                            <a class="user__avatar-link" href="#">
-                                <img class="comments__picture" src="<?= $val['avatar'] ?>"
-                                     alt="Аватар пользователя">
-                            </a>
-                        </div>
-                        <div class="comments__info">
-                            <div class="comments__name-wrapper">
-                                <a class="comments__user-name" href="#">
-                                    <span><?= $val['name'] ?></span>
-                                </a>
-                                <time class="comments__time" datetime="<?= $val['date'] ?>"><?= smallDate(
-                                        $val['date']
-                                    ) ?></time>
-                            </div>
-                            <p class="comments__text">
-                                <?= $val['comment'] ?>
-                            </p>
-                        </div>
-                        <?php
-                        endif; ?>
-                        <?php
-                        endforeach; ?>
-                    </li>
-                </ul>
-            </div>
-        <?php
-        else: ?>
-            <div class="comments__list-wrapper">
-                <ul class="comments__list">
-                    <?php
-                    foreach ($commentResultRows
-
-                    as $key => $val): ?>
-                    <?php
-                    if ($val['comment'] != null): ?>
-                    <li class="comments__item user">
-                        <div class="comments__avatar">
-                            <a class="user__avatar-link" href="#">
-                                <img class="comments__picture" src="<?= $val['avatar'] ?>"
-                                     alt="Аватар пользователя">
-                            </a>
-                        </div>
-                        <div class="comments__info">
-                            <div class="comments__name-wrapper">
-                                <a class="comments__user-name" href="#">
-                                    <span><?= $val['name'] ?></span>
-                                </a>
-                                <time class="comments__time" datetime="<?= $val['date'] ?>"><?= smallDate(
-                                        $val['date']
-                                    ) ?></time>
-                            </div>
-                            <p class="comments__text">
-                                <?= $val['comment'] ?>
-                            </p>
-                        </div>
-                        <?php
-                        endif; ?>
-                        <?php
-                        endforeach; ?>
-                    </li>
-                </ul>
-                <?php
-                foreach ($comment_intResultRows as $key => $val): ?>
-                    <?php
-                    if (($val['comment-count'] - 2) > 2): ?>
-                        <a class="comments__more-link" href="?post-id=<?= $val['post_num'] ?>&comment=all">
-                            <span>Показать все комментарии</span>
-                            <sup class="comments__amount"><?= $val['comment-count'] - 2 ?></sup>
-                        </a>
-                    <?php
-                    endif ?>
-                <?php
-                endforeach; ?>
-            </div>
-        <?php
-        endif; ?>
-    </div>
-    </div>
-    <?php
-foreach ($additionalContentResultRows
-
-    as $key => $val): ?>
-
-    <div class="post-details__user user">
-    <div class="post-details__user-info user__info">
-        <div class="post-details__avatar user__avatar">
-            <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="<?= $val['avatar'] ?>"
-                     alt="Аватар пользователя">
-            </a>
-        </div>
-
-
-        <div class="post-details__name-wrapper user__name-wrapper">
-            <a class="post-details__name user__name" href="#">
-                <span><?= $val['name'] ?></span>
-            </a>
-            <time class="post-details__time user__time" datetime="2014-03-20"><?= smallUSerDate(
-                    $val['reg_date']
-                ) ?></time>
-        </div>
-    </div>
-
-
-    <div class="post-details__rating user__rating">
-    <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-                        <span
-                            class="post-details__rating-amount user__rating-amount"> <?= $val['subscribe-count'] ?> </span>
-        <span class="post-details__rating-text user__rating-text">подписчиков</span>
-    </p>
-<?php
-endforeach; ?>
-
-    <?php
-foreach ($subscribeCountResultRows
-
-    as $key => $val): ?>
-    <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-                        <span
-                            class="post-details__rating-amount user__rating-amount"><?= $val['publication_count'] ?></span>
-        <span class="post-details__rating-text user__rating-text">публикаций</span>
-    </p>
-    </div>
-
-<?php
-endforeach; ?>
-
-    <div class="post-details__user-buttons user__buttons">
-        <button class="user__button user__button--subscription button button--main" type="button">
-            Подписаться
-        </button>
-        <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
-    </div>
-    </div>
-    </div>
-    </section>
-    </div>
-<?php
-endif; ?>
+    print ($layout_content);
+}

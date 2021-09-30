@@ -158,15 +158,82 @@ function smallUSerDate($date)
  * @param string|null $default Значение по умолчанию
  * @return string|null Возвращает параметр запроса в формате строки
  */
-function retriveGetString(string $param, string $default = null): ?string
+function request_retriveGetString(string $param, string $default): string
 {
-    $result = $_GET[$param] ?? $default;
-    return is_string($result) ? $result : $default;
+    {
+        $result = ($_GET[$param] ?? $default);
+        if (is_string($result)) {
+            return (string)$result;
+        }
+
+        return $default;
+    }
 }
 
-
-function retriveGetInt(string $param, string $default = null): ?int
+/**
+ * Обеспечиваем безопасность от sql инъекций для чисел
+ * @param string $param Ключ массива $_GET
+ * @param int $default Значение по умолчанию
+ * @return int строго возвращает число
+ */
+function request_retriveGetInt(string $param, int $default): int
 {
-    $result = $_GET[$param] ?? $default;
-    return is_string($result) ? $result : $default;
+    $result = ($_GET[$param] ?? $default);
+    if (is_numeric($result)) {
+        return (int)$result;
+    }
+
+    return $default;
+}
+
+/**
+ * Функция для удобного и красивого include по названию ключа массива
+ * @param array $pieceArr Массив из sql запроса
+ * @param array $unionArr Массив, в который мы объедениям
+ * @param string $arrName Название ключа массива
+ * @return array Массив с данными в ключе, который мы указали
+ */
+
+function getInfo(array $pieceArr, array $unionArr, string $arrName)
+{
+    foreach ($pieceArr as $key => $val) {
+        $unionArr["$arrName"][$key] = $val;
+    }
+
+    return $unionArr;
+}
+
+/**
+ * Выражение для вставки типа контента в sql запрос
+ * @param string $content_type_id Тип контента из $_GET для фильтра на главной странице
+ * @return array Тип контента для вставки в sql запрос
+ */
+function trueContent_type_id(string $content_type_id): array
+{
+    if ($content_type_id == 'all') {
+        $content_type_id = '1,2,3,4,5';
+    }
+    $arr = explode(',', $content_type_id);
+    return $arr;
+}
+
+/**
+ * Выражение для вставки Сортировки в sql запрос
+ * @param string $sort_id Сортировка из $_GET для фильтра на главной странице
+ * @return string Сортировка для вставки в sql запрос
+ */
+function trueSortId(string $sort_id)
+{
+    if ($sort_id == 'popular') {
+        $sort_id = 'views_number';
+    } elseif ($sort_id == 'date') {
+        $sort_id = 'create_date';
+    } elseif ($sort_id == 'like_count') {
+        $sort_id = 'count_likes';
+    } else{
+        $sort_id = 'views_number';
+    }
+
+
+    return $sort_id;
 }

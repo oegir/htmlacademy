@@ -47,11 +47,3 @@ INSERT INTO `like_count`  (user_id, post_id) VALUES ('2', '2'), ('3', '3'), ('4'
 
 
 
-
-
-
-
-
-
-
-
