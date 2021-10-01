@@ -79,10 +79,8 @@ foreach ($dbaseInfo as $table => $fields) {
         $dataImporter->import($csvDir . '\\' . $alias . '.csv', $filesInfo[$alias]);
         $result = $dataImporter->getData();
         foreach ($result as $value) {
-            $index = 0;
-            foreach ($dataDescr[$table][$alias] as $key) {
+            foreach ($dataDescr[$table][$alias] as $index => $key) {
                 $fields[$index][key($fields[$index])] = $value[$key];
-                $index++;
             }
             $dataExporter->save($fields);
         }
