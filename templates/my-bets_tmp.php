@@ -11,26 +11,31 @@
 <section class="rates container">
       <h2>Мои ставки</h2>
       <table class="rates__list">
+        <?php foreach($bets_arr as $bet_arr): ?>
         <tr class="rates__item">
           <td class="rates__info">
             <div class="rates__img">
-              <img src="../img/rate1.jpg" width="54" height="40" alt="Сноуборд">
+              <img src="<?=$bet_arr['img_path']?>" width="54" height="40" alt="<?=xss_protection($bet_arr['category_name']); ?>">
             </div>
-            <h3 class="rates__title"><a href="lot.html">2014 Rossignol District Snowboard</a></h3>
+            <h3 class="rates__title"><a href="lot.php?id=<?=$bet_arr['id']?>"><?=xss_protection($bet_arr['item_name']); ?></a></h3>
           </td>
           <td class="rates__category">
-            Доски и лыжи
+             <?=xss_protection($bet_arr['category_name']); ?>
           </td>
+          <?php $time_arr=get_dt_range($bet_arr['completion_date']);
+                            $red_flag = $time_arr[0] == '00'?'timer--finishing':'';
+                            ?>
           <td class="rates__timer">
-            <div class="timer timer--finishing">07:13:34</div>
+            <div class="timer <?=$red_flag?>"><?php print($time_arr[0].':'.$time_arr[1])?></div>
           </td>
           <td class="rates__price">
-            10 999 р
+          <?=price_format($bet_arr['price']); ?>
           </td>
           <td class="rates__time">
-            5 минут назад
+          <?=xss_protection(getBidDate($bet_arr['date']));?>
           </td>
         </tr>
+        <?php endforeach; ?>
         <tr class="rates__item">
           <td class="rates__info">
             <div class="rates__img">
