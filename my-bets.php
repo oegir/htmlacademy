@@ -18,7 +18,7 @@ $categories_arr = getCategories($con);
 $bets_arr = [];
 $bets_arr = getBetsArr($con, $user_id);
 
-$page_content = include_template('my-bets_tmp.php', ['categories_arr' => $categories_arr, 'bets_arr' => $bets_arr]);
+$page_content = include_template('my-bets_tmp.php', ['categories_arr' => $categories_arr, 'bets_arr' => $bets_arr, 'user_id' => $user_id]);
 
 $layout_content = include_template('layout.php', ['user_name' => $user_name, 'categories_arr' => $categories_arr, 'content' => $page_content ,'title' => 'Добавление лота']);
 
@@ -27,7 +27,8 @@ print($layout_content);
 function getBetsArr(mysqli $con, int $user_id): array
 {
     $result = [];
-    $sql = "SELECT i.id, i.img_path, i.name as item_name, u.contacts as contact, c.name as category_name, i.completion_date, b.price, b.date, winner_id 
+    $sql = "SELECT i.id, i.img_path, i.name as item_name, u.contacts as contact, c.name as category_name, i.completion_date, 
+    b.price, b.date, winner_id 
     FROM bid b 
     LEFT JOIN item i ON i.id = b.item_id 
     LEFT JOIN category c ON c.id=i.category_id 
