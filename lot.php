@@ -55,7 +55,8 @@ print($layout_content);
  * @param  int $id id лота.
  * @return void 
  */
-function checkId( mysqli $con, int $id){
+function checkId( mysqli $con, int $id)
+{
     $sql = "SELECT id FROM item WHERE id = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
     mysqli_stmt_execute($stmt);
@@ -72,7 +73,8 @@ function checkId( mysqli $con, int $id){
  * @param  mixed $id id лота.
  * @return array Массив с данными лота.
  */
-function getItem(mysqli $con, int $id): array{
+function getItem(mysqli $con, int $id): array
+{
     $sql = "SELECT i.name, img_path, c.name category_name,description, completion_date, IFNULL(b.price,start_price) current_price,
                 IFNULL(b.price + i.bid_step, start_price) min_bid
             FROM item i
@@ -154,7 +156,13 @@ function getBidHistory (mysqli $con, int $id): array
 
 
 
-
+/**
+ * Проверяет, можно ли разрешать производить ставку.
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @param ?int $user_id id текущего пользователя, или null, если пользователь не авторезирован
+ * @return bool true, если производить ставку разрешено, false в противном случае
+ */
 function checkAccessForMakinBet(mysqli $con, int $id, ?int $user_id): bool
 {
     if (!isset($user_id)){
@@ -183,6 +191,12 @@ function checkAccessForMakinBet(mysqli $con, int $id, ?int $user_id): bool
     return true;
 }
 
+/**
+ * Возвращает id автора лота, по id лота.
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @return int id автора лота
+ */
 function getItemAuthorId(mysqli $con, int $id): ?int
 {
     $sql = "SELECT author_id FROM item WHERE id = ?";
@@ -196,6 +210,12 @@ function getItemAuthorId(mysqli $con, int $id): ?int
     return $author_id;
 }
 
+/**
+ * Возвращает id автора последней ставки у лота.
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @return int id автора последней ставки
+ */
 function getAuthorLastBidId(mysqli $con, int $id): ?int
 {
     $sql = "SELECT user_id FROM bid WHERE item_id=? ORDER BY date DESC LIMIT 1";
@@ -209,7 +229,14 @@ function getAuthorLastBidId(mysqli $con, int $id): ?int
     return $bid_author_id;
 }
 
-function getItemDate(mysqli $con, int $id): ?string{
+/**
+ * Возвращает дату истечения лота.
+ * @param  mysqli $con Подключение к БД.
+ * @param  int $id id лота.
+ * @return string дата истечения лота.
+ */
+function getItemDate(mysqli $con, int $id): ?string
+{
     $date = '';
     $sql = "SELECT * FROM item WHERE id = ?";
     $stmt = db_get_prepare_stmt($con, $sql, [$id]);
