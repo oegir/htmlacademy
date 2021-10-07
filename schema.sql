@@ -17,8 +17,8 @@ USE task_force;
 CREATE TABLE city (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(128) NOT NULL,
-	lat FLOAT NOT NULL,
-	`long` FLOAT NOT NULL
+	latitude FLOAT NOT NULL,
+	longitude FLOAT NOT NULL
 );
 
 -- --------------------------------------------------------
@@ -147,8 +147,8 @@ CREATE TABLE task (
 	expire TIMESTAMP NULL,
 
 	address VARCHAR(128) NULL,
-	lat FLOAT NULL,
-	`long` FLOAT NULL,
+	latitude FLOAT NULL,
+	longitude FLOAT NULL,
 	city_id INT UNSIGNED NULL,
 
 	status_id INT UNSIGNED NOT NULL DEFAULT 1,
