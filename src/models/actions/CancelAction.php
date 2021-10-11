@@ -1,14 +1,11 @@
 <?php
 
+namespace taskforce\models\actions;
 
-namespace taskforce\actions;
-
-
-use taskforce\Task;
+use taskforce\models\Task;
 
 class CancelAction extends AbstractAction
 {
-
     public function getValue() :string
     {
         return 'cancel';

@@ -1,6 +1,8 @@
 <?php
 
 use taskforce\actions\ApproveAction;
+use taskforce\exceptions\NotValidStatusException;
+use taskforce\models\actions\CompleteAction;
 use taskforce\Task;
 
 require_once 'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
@@ -9,12 +11,24 @@ function dd($data) {
     echo '<pre>' . print_r($data, 1) . '</pre><hr/>';
 }
 
-$task = new Task(1, 2);
+try {
+    $not_valid_task = new Task(1, 2, 'abc');
+} catch (NotValidStatusException $e) {
+    echo $e->getMessage() . '<br/>';
+}
+
+try {
+    $task = new Task(1, 2, 'in_work');
+} catch (NotValidStatusException $e) {
+    echo $e->getMessage();
+    die();
+}
 
 $approveAction = new ApproveAction();
+$completeAction = new CompleteAction();
 
-if($task->getNextStatus($approveAction) == Task::STATUS_IN_WORK) {
-    echo 'Следующий статус: ' . $task->getNextStatus($approveAction);
+if($task->getNextStatus($completeAction) == Task::STATUS_COMPLETED) {
+    echo 'Следующий статус: ' . $task->getNextStatus($completeAction);
 }
 
 echo '<hr/>';

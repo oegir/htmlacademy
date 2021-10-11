@@ -1,8 +1,8 @@
 <?php
 
-namespace taskforce\actions;
+namespace taskforce\models\actions;
 
-use taskforce\Task;
+use taskforce\models\Task;
 
 abstract class AbstractAction
 {
