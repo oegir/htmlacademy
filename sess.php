@@ -14,6 +14,17 @@ function sess_check_auth(): void
 }
 
 /**
+ * Проверяет существование сессии.
+ */
+function sess_check_not_auth(): void
+{
+    if(isset($_SESSION['id'])){
+        header("location:/", false, 302);
+        die();
+    }
+}
+
+/**
  * Возвращает id пользователя из сессии.
  * @return int id пользователя, либо null.
  */

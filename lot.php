@@ -36,6 +36,7 @@ if(isset($_POST['cost'])){
     if (!isset($error)) {
         sendBidToDB($con, $id, $bid, sess_get_user_id());
         header('Location: lot.php?id='.$id);
+        die();
     }
 }
 
