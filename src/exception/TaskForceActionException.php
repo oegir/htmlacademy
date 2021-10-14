@@ -1,8 +1,8 @@
 <?php
 
-namespace TaskForce\ex;
+namespace TaskForce\exception;
 
-use TaskForce\ex\TaskForceException;
+use TaskForce\exception\TaskForceException;
 
 /**
  * Класс искдючений для работы с действиями

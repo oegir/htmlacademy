@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\ex;
+namespace TaskForce\exception;
 
 /**
  * Базовый класс исключений

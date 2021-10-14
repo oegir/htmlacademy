@@ -6,8 +6,8 @@ use TaskForce\logic\ActionStart;
 use TaskForce\logic\ActionComplete;
 use TaskForce\logic\ActionCancel;
 use TaskForce\logic\ActionRefuse;
-use TaskForce\ex\TaskForceException;
-use TaskForce\ex\TaskForceActionException;
+use TaskForce\exception\TaskForceException;
+use TaskForce\exception\TaskForceActionException;
 
 /**
  * Task - класс описания задания и работы с ним

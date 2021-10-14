@@ -6,6 +6,8 @@ use TaskForce\logic\Action;
 
 class ActionRefuse extends Action
 {
+    public const ACTION_REFUSE = 'refuse';
+
     public function checkActionRights(int $customerId, int $contractorId, int $userId): bool
     {
         return $contractorId == $userId;
@@ -13,7 +15,7 @@ class ActionRefuse extends Action
 
     public function getName(): string
     {
-        return 'refuse';
+        return self::ACTION_REFUSE;
     }
 
     public function getTitle(): string
