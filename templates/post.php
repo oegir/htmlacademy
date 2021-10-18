@@ -1,4 +1,13 @@
 <?php
+/* @var array $main_content */
+/* @var array $author_info */
+/* @var array $like_count */
+/* @var array $comments_views_count */
+/* @var array $authorPosts_count */
+/* @var array $hashtags */
+/* @var array $comment_list */
+/* @var array $comment_count */
+/* @var array $comment_all_list */
 
 foreach ($main_content
 

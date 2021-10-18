@@ -1,3 +1,12 @@
+<?php
+/* @var string $sort */
+/* @var null|string $current_type */
+/* @var array $content_types */
+/* @var string $post_content */
+
+
+?>
+
 <div class="container">
     <h1 class="page__title page__title--popular">Популярное</h1>
 </div>
@@ -8,31 +17,28 @@
             <ul class="popular__sorting-list sorting__list">
                 <li class="sorting__item sorting__item--popular">
                     <a class="sorting__link  <?php
-                    if ($_GET['sort'] == ('popular') or $_GET['sort'] == ('')) {
+                    if ($sort == SORT_VIEWS) {
                         print "sorting__link--active";
-                    } ?>" href="?sort=popular&content_type=<?= $_GET['content_type'] ?? 'all' ?>"">
-                    <span>Популярность</span>
-                    <svg class="sorting__icon" width="10" height="12">
-                        <use xlink:href="#icon-sort"></use>
-                    </svg>
+                    } ?>" href="?sort=<?= SORT_VIEWS ?>&content_type=<?= $current_type ?>">
+                        <span>Популярность</span>
+                        <svg class="sorting__icon" width="10" height="12">
+                            <use xlink:href="#icon-sort"></use>
+                        </svg>
                     </a>
                 </li>
                 <li class="sorting__item">
                     <a class="sorting__link <?
-                    if ($_GET['sort'] == ('like_count')) {
+                    if ($sort == SORT_LIKES) {
                         print "sorting__link--active";
-                    } ?>" href="?sort=like_count&content_type=<?= $_GET['content_type'] ?? 'all' ?>">
+                    } ?>" href="?sort=<?= SORT_LIKES ?>&content_type=<?= $current_type ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
                         </svg>
                     </a>
                 </li>
-                <li class="sorting__item <?
-                if ($_GET['sort'] == ('date')) {
-                    print "sorting__link--active";
-                } ?>">
-                    <a class="sorting__link" href="?sort=date&content_type=<?= $_GET['content_type'] ?? 'all' ?>">
+                <li class="sorting__item">
+                    <a class="sorting__link <?= $sort == SORT_DATE ? "sorting__link--active" : '' ?>" href="?sort=<?= SORT_DATE ?>&content_type=<?= $current_type ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -48,19 +54,19 @@
 
                 <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
                     <a class="filters__button filters__button--ellipse filters__button--all <?php
-                    if ($_GET['content_type'] == ('all') or $_GET['content_type'] == ('')) {
+                    if (is_null($current_type)) {
                         print "filters__button--active";
                     } ?> "
-                       href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=all">
+                       href="?sort=<?= $sort ?>">
                         <span>Все</span>
                     </a>
 
                 </li>
                 <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--photo button <?php
-                    if ($_GET['content_type'] == 3) {
+                    if ($current_type == $content_types[TYPE_PHOTO]['id']) {
                         print "filters__button--active";
-                    } ?>" href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=3">
+                    } ?>" href="?sort=<?= $sort ?>&content_type=<?= $content_types[TYPE_PHOTO]['id'] ?>">
                         <span class="visually-hidden">Фото</span>
                         <svg class="filters__icon" width="22" height="18">
                             <use xlink:href="#icon-filter-photo"></use>
@@ -69,9 +75,9 @@
                 </li>
                 <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--video button <?
-                    if ($_GET['content_type'] == 4) {
+                    if ($current_type == $content_types[TYPE_VIDEO]['id']) {
                         print "filters__button--active";
-                    } ?>" href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=4">
+                    } ?>" href="?sort=<?= $sort ?>&content_type=<?= $content_types[TYPE_VIDEO]['id'] ?>">
                         <span class="visually-hidden">Видео</span>
                         <svg class="filters__icon" width="24" height="16">
                             <use xlink:href="#icon-filter-video"></use>
@@ -80,9 +86,9 @@
                 </li>
                 <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--text button <?
-                    if ($_GET['content_type'] == 1) {
+                    if ($current_type == $content_types[TYPE_TEXT]['id']) {
                         print "filters__button--active";
-                    } ?>" href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=1">
+                    } ?>" href="?sort=<?= $sort ?>&content_type=<?= $content_types[TYPE_TEXT]['id'] ?>">
                         <span class="visually-hidden">Текст</span>
                         <svg class="filters__icon" width="20" height="21">
                             <use xlink:href="#icon-filter-text"></use>
@@ -91,9 +97,9 @@
                 </li>
                 <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--quote button <?
-                    if ($_GET['content_type'] == 2) {
+                    if ($current_type == $content_types[TYPE_QUOTE]['id']) {
                         print "filters__button--active";
-                    } ?>" href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=2">
+                    } ?>" href="?sort=<?= $sort ?>&content_type=<?= $content_types[TYPE_QUOTE]['id'] ?>">
                         <span class="visually-hidden">Цитата</span>
                         <svg class="filters__icon" width="21" height="20">
                             <use xlink:href="#icon-filter-quote"></use>
@@ -102,9 +108,9 @@
                 </li>
                 <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--link button <?
-                    if ($_GET['content_type'] == 5) {
+                    if ($current_type == $content_types[TYPE_LINK]['id']) {
                         print "filters__button--active";
-                    } ?>" href="?sort=<?= $_GET['sort'] ?? 'popular' ?>&content_type=5">
+                    } ?>" href="?sort=<?= $sort ?>&content_type=<?= $content_types[TYPE_LINK]['id'] ?>">
                         <span class="visually-hidden">Ссылка</span>
                         <svg class="filters__icon" width="21" height="18">
                             <use xlink:href="#icon-filter-link"></use>
@@ -117,7 +123,7 @@
     </div>
     <div class="popular__posts">
 
-    <?= $post_content ?>
+        <?= $post_content ?>
 
     </div>
 </div>
