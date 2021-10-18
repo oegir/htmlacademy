@@ -1,9 +1,9 @@
 <?php
 
-use taskforce\actions\ApproveAction;
 use taskforce\exceptions\NotValidStatusException;
+use taskforce\models\actions\ApproveAction;
 use taskforce\models\actions\CompleteAction;
-use taskforce\Task;
+use taskforce\models\Task;
 
 require_once 'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
