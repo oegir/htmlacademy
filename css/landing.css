@@ -41,41 +41,6 @@ footer {
   src: url(../fonts/MyriadPro-Semibold.woff);
   font-weight: 600; }
 
-@font-face {
-  font-family: Roboto;
-  src: url(../fonts/Roboto-Light.ttf);
-  font-weight: 300; }
-
-@font-face {
-  font-family: Roboto;
-  src: url(../fonts/Roboto-Regular.ttf);
-  font-weight: 400; }
-
-@font-face {
-  font-family: Roboto;
-  src: url(../fonts/Roboto-Medium.ttf);
-  font-weight: 500; }
-
-@font-face {
-  font-family: Roboto;
-  src: url(../fonts/Roboto-Bold.ttf);
-  font-weight: 700; }
-
-@font-face {
-  font-family: PT Sans;
-  src: url(../fonts/PTSans-Regular.ttf);
-  font-weight: 400; }
-
-@font-face {
-  font-family: PT Sans;
-  src: url(../fonts/PTSans-Italic.ttf);
-  font-style: italic; }
-
-@font-face {
-  font-family: PT Sans;
-  src: url(../fonts/PTSans-Bold.ttf);
-  font-weight: 700; }
-
 .visually-hidden {
   position: absolute !important;
   clip: rect(1px 1px 1px 1px);
@@ -2464,7 +2429,7 @@ footer {
     font-size: 20px;
     margin-top: 17px;
     margin-bottom: 16px; }
-  .form-modal p {
+  .form-modal form div {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -2616,6 +2581,6 @@ footer {
 .has-error .create__file {
   border-color: #FF116E; }
 
-.has-error span {
+.has-error div {
   color: #FF116E; }
 /*# sourceMappingURL=style.css.map */
