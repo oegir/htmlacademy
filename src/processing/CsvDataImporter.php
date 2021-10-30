@@ -23,8 +23,6 @@ class CsvDataImporter
     {
         $this->fileName = $fileName;
         $this->columnsList = $columnsList;
-        $this->result = [];
-
         $this->validateFile();
         $headerData = $this->getHeaderData();
         $this->validateHeaderData($headerData);

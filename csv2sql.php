@@ -40,12 +40,11 @@ $dataDescr = [
     'cities' => ['cities' => [0, 1, 2]]
 ];
 
-$dataImporter = new CsvDataImporter();
-
 try {
     if (!is_dir($csvDir)) {
         throw new SourceFileException('Отсутствует каталог: ' . $csvDir);
     }
+    $dataImporter = new CsvDataImporter();
     foreach ($dbaseInfo as $table => $fields) {
         $dataExporter = new SqlDataExporter($table, $sqlDir);
         $alias = key($dataDescr[$table]);
