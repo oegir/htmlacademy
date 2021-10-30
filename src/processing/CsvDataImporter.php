@@ -11,7 +11,6 @@ use TaskForce\exception\SourceFileException;
 class CsvDataImporter
 {
     private $fileName;
-    private $columnsList;
     private $fileObject;
 
     /**
@@ -22,10 +21,9 @@ class CsvDataImporter
     public function prepare(string $fileName, array $columnsList): void
     {
         $this->fileName = $fileName;
-        $this->columnsList = $columnsList;
         $this->validateFile();
         $headerData = $this->getHeaderData();
-        $this->validateHeaderData($headerData);
+        $this->validateHeaderData($headerData, $columnsList);
     }
 
     public function getData(): ?iterable
@@ -51,10 +49,11 @@ class CsvDataImporter
      * Проверка структуры заголовка файла заданному списку колонок БД
      * В случае ошибки выбрасывается исключение
      * @param array $headerData массив заголовков колонок, полученный из файла
+     * @param array $columnsList список требуемых заголовков
      */
-    private function validateHeaderData(array $headerData): void
+    private function validateHeaderData(array $headerData, array $columnsList): void
     {
-        if (count($headerData) !== count($this->columnsList)) {
+        if (count($headerData) !== count($columnsList)) {
             throw new FileFormatException(
                 "CsvDataImporter::import: количество столбцов не совпадает: " .
                 $this->fileName
@@ -62,7 +61,7 @@ class CsvDataImporter
         }
         $map = array_map(function ($header, $column) {
             return strstr($header, $column) !== false;
-        }, $headerData, $this->columnsList);
+        }, $headerData, $columnsList);
         $res = array_reduce($map, function ($out, $value) {
             $out &= $value;
             return $out;
