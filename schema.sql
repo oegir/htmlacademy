@@ -105,7 +105,7 @@ CREATE TABLE photo_of_work (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	path VARCHAR(128) NOT NULL UNIQUE,
 	profile_id INT UNSIGNED NOT NULL,
-	FOREIGN KEY (profile_id) REFERENCES profile(id)
+	FOREIGN KEY (profile_id) REFERENCES user_profile(id)
 );
 
 -- --------------------------------------------------------

@@ -9,8 +9,8 @@ const TASK_STATUS_MAP = [
 ];
 
 const TASK_ACTION_MAP = [
-    'action_cancel' => 'Отменить',
-    'action_respond' => 'Откликнуться',
-    'action_done' => 'Выполнено',
-    'action_refuse' => 'Отказаться'
+    'act_cancel' => 'Отменить',
+    'act_respond' => 'Откликнуться',
+    'act_done' => 'Выполнено',
+    'act_refuse' => 'Отказаться'
 ];

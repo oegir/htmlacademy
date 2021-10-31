@@ -10,11 +10,6 @@ class Task
     public const STATUS_DONE = 'done';
     public const STATUS_FAILED = 'failed';
 
-    public const ACTION_CANCEL = 'action_cancel';
-    public const ACTION_RESPOND = 'action_respond';
-    public const ACTION_DONE = 'action_done';
-    public const ACTION_REFUSE = 'action_refuse';
-
     public string $current_status = self::STATUS_NEW;
 
     public function __construct(
@@ -46,10 +41,10 @@ class Task
     public function getActionMap(): array
     {
         return [
-            self::ACTION_CANCEL => 'Отменить',
-            self::ACTION_RESPOND => 'Откликнуться',
-            self::ACTION_DONE => 'Выполнено',
-            self::ACTION_REFUSE => 'Отказаться'
+            ActCancel::getInnerName() => ActCancel::getName(),
+            ActRespond::getInnerName() => ActRespond::getName(),
+            ActDone::getInnerName() => ActDone::getName(),
+            ActRefuse::getInnerName() => ActRefuse::getName()
         ];
     }
 
@@ -62,33 +57,52 @@ class Task
     public function getNextStatus(string $action): string
     {
         $data = [
-            self::ACTION_CANCEL => self::STATUS_CANCEL,
-            self::ACTION_RESPOND => self::STATUS_WORK,
-            self::ACTION_DONE => self::STATUS_DONE,
-            self::ACTION_REFUSE => self::STATUS_FAILED
+            ActCancel::getInnerName() => self::STATUS_CANCEL,
+            ActRespond::getInnerName() => self::STATUS_WORK,
+            ActDone::getInnerName() => self::STATUS_DONE,
+            ActRefuse::getInnerName() => self::STATUS_FAILED
         ];
 
         return $data[$action] ?? '';
     }
 
     /**
-     * Возвращает массив доступных действий для указанного статуса
+     * Возвращает объект доступного действия
+     * для указанного статуса и пользователя
      * @param string $status Статус задания
-     * @return array
+     * @param int $user_id Идентификатор пользователя
+     *
+     * @return object|null
      */
-    public function getAvailableActions(string $status): array
+    public function getAvailableAction(string $status, int $user_id): ?object
     {
-        $data = [
-            self::STATUS_NEW => [
-                self::ACTION_CANCEL,
-                self::ACTION_RESPOND
-            ],
-            self::STATUS_WORK => [
-                self::ACTION_DONE,
-                self::ACTION_REFUSE
-            ]
-        ];
+        $ids = [$this->executor_id, $this->customer_id, $user_id];
 
-        return $data[$status] ?? [];
+        if (
+            $status === self::STATUS_NEW
+            && ActCancel::checkUserRights(...$ids)
+        ) {
+            $action = new ActCancel();
+
+        } elseif (
+            $status === self::STATUS_NEW
+            && ActRespond::checkUserRights(...$ids)
+        ) {
+            $action = new ActRespond();
+
+        } elseif (
+            $status === self::STATUS_WORK
+            && ActDone::checkUserRights(...$ids)
+        ) {
+            $action = new ActDone();
+
+        } elseif (
+            $status === self::STATUS_WORK
+            && ActRefuse::checkUserRights(...$ids)
+        ) {
+            $action = new ActRefuse();
+        }
+
+        return $action ?? null;
     }
 }
