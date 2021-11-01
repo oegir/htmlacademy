@@ -2,21 +2,17 @@
 /* @var array $main_content */
 /* @var array $author_info */
 /* @var array $like_count */
-/* @var array $comments_views_count */
 /* @var array $authorPosts_count */
 /* @var array $hashtags */
 /* @var array $comment_list */
-/* @var array $comment_count */
+/* @var array $comments_views_count */
 /* @var array $comment_all_list */
 
-foreach ($main_content
-
-as $key => $val):
 ?>
 
 
 <div class="container">
-    <h1 class="page__title page__title--publication"><?= $val['header']; ?></h1>
+    <h1 class="page__title page__title--publication"><?= $main_content['header']; ?></h1>
     <section class="post-details">
         <h2 class="visually-hidden">Публикация</h2>
         <div class="post-details__wrapper post-photo">
@@ -24,17 +20,17 @@ as $key => $val):
 
 
                 <?php
-                if ($val['icon_name'] == "post-photo"): ?>
+                if ($main_content['icon_name'] == "post-photo"): ?>
 
 
                     <!-- пост-изображение -->
                     <div class="post-details__image-wrapper post-photo__image-wrapper">
-                        <img src="<?= $val['media']; ?>" alt="Фото от пользователя" width="760" height="507">
+                        <img src="<?= $main_content['media']; ?>" alt="Фото от пользователя" width="760" height="507">
                     </div>
 
 
                 <?php
-                elseif ($val['icon_name'] == "post-quote"): ?>
+                elseif ($main_content['icon_name'] == "post-quote"): ?>
 
 
                     <!-- пост-цитата -->
@@ -42,41 +38,41 @@ as $key => $val):
                         <div class="post__main">
                             <blockquote>
                                 <p>
-                                    <?= $val['text']; ?>
+                                    <?= $main_content['text']; ?>
                                 </p>
-                                <cite><?= $val['author_copy_right']; ?></cite>
+                                <cite><?= $main_content['author_copy_right']; ?></cite>
                             </blockquote>
                         </div>
                     </div>
 
 
                 <?php
-                elseif ($val['icon_name'] == "post-text"): ?>
+                elseif ($main_content['icon_name'] == "post-text"): ?>
 
                     <!-- пост-текст -->
                     <div class="post-details__image-wrapper post-text">
                         <div class="post__main">
                             <p>
-                                <?= $val['text']; ?>
+                                <?= $main_content['text']; ?>
                             </p>
                         </div>
                     </div>
 
 
                 <?php
-                elseif ($val['icon_name'] == "post-link"): ?>
+                elseif ($main_content['icon_name'] == "post-link"): ?>
 
 
                     <div class="post__main">
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://<?= $val['media'] ?>" title="Перейти по ссылке">
+                            <a class="post-link__external" href="http://<?= $main_content['media'] ?>" title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
-                                        <img src="https://www.google.com/s2/favicons?domain=<?= $val['text'] ?>"
+                                        <img src="https://www.google.com/s2/favicons?domain=<?= $main_content['text'] ?>"
                                              alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
-                                        <h3><?= $val['header'] ?></h3>
+                                        <h3><?= $main_content['header'] ?></h3>
                                     </div>
                                 </div>
                             </a>
@@ -84,22 +80,18 @@ as $key => $val):
                     </div>
 
                 <?php
-                elseif ($val['icon_name'] == "post-video"): ?>
+                elseif ($main_content['icon_name'] == "post-video"): ?>
 
                     <!-- пост-видео -->
                     <div class="post-details__image-wrapper post-photo__image-wrapper">
-                        <?= embed_youtube_cover($val['media']) ?>
+                        <?= embed_youtube_cover($main_content['media']) ?>
                     </div>
 
                 <?php
                 endif ?>
-                <?php
-                endforeach; ?>
 
                 <div class="post__indicators">
                     <div class="post__buttons">
-                        <?php
-                        foreach ($like_count as $key => $val): ?>
                             <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
                                 <svg class="post__indicator-icon" width="20" height="17">
                                     <use xlink:href="#icon-heart"></use>
@@ -109,21 +101,15 @@ as $key => $val):
                                     <use xlink:href="#icon-heart-active"></use>
                                 </svg>
 
-                                <span><?= $val['like-count'] ?></span>
+                                <span><?= $author_info['like-count'] ?></span>
 
                                 <span class="visually-hidden">количество лайков</span>
                             </a>
-                        <?php
-                        endforeach; ?>
-                        <?php
-                        foreach ($comments_views_count
-
-                        as $key => $val): ?>
                         <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                             <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                             </svg>
-                            <span><?= $val ['comment-count'] ?></span>
+                            <span><?= $comments_views_count ['comment-count'] ?></span>
                             <span class="visually-hidden">количество комментариев</span>
                         </a>
 
@@ -135,10 +121,8 @@ as $key => $val):
                             <span class="visually-hidden">количество репостов</span>
                         </a>
                     </div>
-                    <span class="post__view"><?= $val['views'] ?></span>
+                    <span class="post__view"><?= $comments_views_count['views'] ?></span>
                 </div>
-            <?php
-            endforeach; ?>
                 <ul class="post__tags">
                     <?php
                     foreach ($hashtags as $key => $val): ?>
@@ -237,33 +221,25 @@ as $key => $val):
                                     endforeach; ?>
                                 </li>
                             </ul>
-                            <?php
-                            foreach ($comment_count as $key => $val): ?>
                                 <?php
-                                if (($val['comment-count'] - 2) > 2): ?>
+                                if (($comments_views_count['comment-count'] - 2) > 2): ?>
                                     <a class="comments__more-link" href="?post-id=<?= $val['post_num'] ?>&comment=all">
                                         <span>Показать все комментарии</span>
-                                        <sup class="comments__amount"><?= $val['comment-count'] - 2 ?></sup>
+                                        <sup class="comments__amount"><?= $comments_views_count['comment-count'] - 2 ?></sup>
                                     </a>
                                 <?php
                                 endif ?>
-                            <?php
-                            endforeach; ?>
                         </div>
                     <?php
                     endif; ?>
                 </div>
             </div>
-            <?php
-            foreach ($author_info
-
-            as $key => $val): ?>
 
             <div class="post-details__user user">
                 <div class="post-details__user-info user__info">
                     <div class="post-details__avatar user__avatar">
                         <a class="post-details__avatar-link user__avatar-link" href="#">
-                            <img class="post-details__picture user__picture" src="<?= $val['avatar'] ?>"
+                            <img class="post-details__picture user__picture" src="<?= $author_info['avatar'] ?>"
                                  alt="Аватар пользователя">
                         </a>
                     </div>
@@ -271,10 +247,10 @@ as $key => $val):
 
                     <div class="post-details__name-wrapper user__name-wrapper">
                         <a class="post-details__name user__name" href="#">
-                            <span><?= $val['name'] ?></span>
+                            <span><?= $author_info['name'] ?></span>
                         </a>
                         <time class="post-details__time user__time" datetime="2014-03-20"><?= smallUSerDate(
-                                $val['reg_date']
+                                $author_info['reg_date']
                             ) ?></time>
                     </div>
                 </div>
@@ -283,11 +259,9 @@ as $key => $val):
                 <div class="post-details__rating user__rating">
                     <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
                         <span
-                            class="post-details__rating-amount user__rating-amount"> <?= $val['subscribe-count'] ?> </span>
+                            class="post-details__rating-amount user__rating-amount"> <?= $author_info['subscribe-count'] ?> </span>
                         <span class="post-details__rating-text user__rating-text">подписчиков</span>
                     </p>
-                    <?php
-                    endforeach; ?>
 
                     <?php
                     foreach ($authorPosts_count

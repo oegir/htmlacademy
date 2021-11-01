@@ -15,44 +15,40 @@ $postId = request_retriveGetInt('post-id', 0);
 $authorID = findAuthorId($mysql, $postId);
 $postIdExist = isPostExist($mysql, $postId);
 
-
+if ($postIdExist == false) {
+    header("Location: Not-found.php");
+    die();
+}
 
 /**
  * Отображение данных
  */
 
-if ($postIdExist == false) {
-    header("Location: Not-found.php");
-} else {
-    $post_content = include_template(
-        'post.php',
-        [
-            'main_content' => mainContent($mysql, $postId),
-            'author_info' => authorInfo($mysql, $postId),
-            'like_count' => likeCount($mysql, $postId),
-            'comments_views_count' => commentsViewsCount($mysql, $postId),
-            'authorPosts_count' => authorPostsCount($mysql, $authorID),
-            'hashtags' => findHashtags($mysql, $postId),
-            'comment_list' => commentList($mysql, $postId),
-            'comment_count' => commentCount($mysql, $postId),
-            'comment_all_list' => commentAllList($mysql, $postId),
-        ]
-    );
-    $layout_content = include_template(
-        'layout.php',
-        [
+$post_content = include_template(
+    'post.php',
+    [
+        'main_content' => mainContent($mysql, $postId),
+        'author_info' => authorInfo($mysql, $postId),
+        'comments_views_count' => commentsViewsCount($mysql, $postId),
+        'authorPosts_count' => authorPostsCount($mysql, $authorID),
+        'hashtags' => findHashtags($mysql, $postId),
+        'comment_list' => commentList($mysql, $postId),
+        'comment_all_list' => commentAllList($mysql, $postId),
+    ]
+);
+$layout_content = include_template(
+    'layout.php',
+    [
 
-            'content' => $post_content,
-            'is_auth' => $is_auth,
-            'user_name' => $user_name,
-            'title' => 'readme: публикация',
+        'content' => $post_content,
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => 'readme: публикация',
 
-        ]
-    );
+    ]
+);
 
-
-    print ($layout_content);
-}
+print ($layout_content);
 /**
  * Обработка данных
  */
@@ -91,7 +87,7 @@ WHERE
  */
 function mainContent(mysqli $mysql, int $postId): array
 {
-    $data[] = $postId;
+    $data[] = $postId;  
 
     $query = "
 SELECT
@@ -110,7 +106,7 @@ WHERE  post.id = ?
     $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
     $postPrepareRes = mysqli_stmt_get_result($postPrepare);
 
-    return mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
+    return mysqli_fetch_array($postPrepareRes, MYSQLI_ASSOC) ?? [];
 }
 
 
@@ -144,39 +140,8 @@ GROUP BY post.id
     $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
     $postPrepareRes = mysqli_stmt_get_result($postPrepare);
 
-    return mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
+    return mysqli_fetch_array($postPrepareRes, MYSQLI_ASSOC) ?? [];
 }
-
-
-
-/**
- * Запрос на кол-во лайков
- * @param mysqli $mysql Соединение с бд
- * @param int $postId Номер поста
- * @return array Массив с данными из бд
- */
-function likeCount(mysqli $mysql, int $postId): array
-{
-    $data[] = $postId;
-    $query = "
-SELECT
-   count(like_count.post_id) AS `like-count`
-
-FROM
-  post
-
-    LEFT JOIN
-  like_count ON like_count.post_id = post.id
-
-WHERE  post.id = ?
-    ";
-    $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
-    $postPrepareRes = mysqli_stmt_get_result($postPrepare);
-
-    return mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
-}
-
-
 
 /**
  * Запрос на кол-во комментариев и просмотров
@@ -202,7 +167,7 @@ GROUP BY post.id
     $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
     $postPrepareRes = mysqli_stmt_get_result($postPrepare);
 
-    return mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
+    return mysqli_fetch_array($postPrepareRes, MYSQLI_ASSOC) ?? [];
 }
 
 
@@ -320,37 +285,6 @@ LEFT JOIN
 WHERE  post.id = ?
 ORDER BY comment.create_date ASC
 LIMIT $offset, $limit
-    ";
-    $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
-    $postPrepareRes = mysqli_stmt_get_result($postPrepare);
-
-    return mysqli_fetch_all($postPrepareRes, MYSQLI_ASSOC);
-}
-
-/**
- * Число комментариев под списком комментариев
- * @param mysqli $mysql Соединение с бд
- * @param int $postId Номер поста
- * @return array Массив с данными из бд
- */
-function commentCount(mysqli $mysql, int $postId):array
-{
-    $data[] = $postId;
-    $query ="
-SELECT
-  post.id AS `post_num`, count(comment.id) AS `comment-count`
-
-FROM
-  post
-
-    LEFT JOIN
-  comment ON comment.post_id = post.id
-
-    LEFT JOIN
-  user ON user.id = comment.user_id
-
-WHERE  post.id = ?
-GROUP BY post.id
     ";
     $postPrepare = db_get_prepare_stmt($mysql, $query, $data);
     $postPrepareRes = mysqli_stmt_get_result($postPrepare);
