@@ -41,7 +41,7 @@ class CsvConverter
                 $sql .= ' VALUES ';
             } else {
                 $sql .= $this->rowInSqlCreateString($row);
-                $sql .= ', ';
+                $sql .= ',' . PHP_EOL;
             }
 
             $i++;
@@ -74,7 +74,7 @@ class CsvConverter
             } else {
                 $sql .= 'UPDATE ' . $this->table_name . ' SET ';
                 $sql .= $this->rowInSqlUpdateString($row, $cols);
-                $sql .= ' WHERE id=' . $start_index . "; \n";
+                $sql .= ' WHERE id=' . $start_index . "; PHP_EOL";
                 $start_index++;
             }
 

@@ -126,11 +126,11 @@ ALTER TABLE `task` ADD CONSTRAINT `task_fk1` FOREIGN KEY (`city_id`) REFERENCES 
 
 ALTER TABLE `user` ADD CONSTRAINT `user_fk0` FOREIGN KEY (`city_id`) REFERENCES `city`(`id`);
 
-ALTER TABLE `response` ADD CONSTRAINT `response_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE CASCADE;
+ALTER TABLE `response` ADD CONSTRAINT `response_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE NO ACTION;
 
 ALTER TABLE `response` ADD CONSTRAINT `response_fk1` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`);
 
-ALTER TABLE `message` ADD CONSTRAINT `message_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE CASCADE;
+ALTER TABLE `message` ADD CONSTRAINT `message_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE NO ACTION;
 
 ALTER TABLE `message` ADD CONSTRAINT `message_fk1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
@@ -138,16 +138,16 @@ ALTER TABLE `review` ADD CONSTRAINT `review_fk0` FOREIGN KEY (`task_id`) REFEREN
 
 ALTER TABLE `review` ADD CONSTRAINT `review_fk1` FOREIGN KEY (`customer_id`) REFERENCES `user`(`id`);
 
-ALTER TABLE `review` ADD CONSTRAINT `review_fk2` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`) ON DELETE CASCADE;
+ALTER TABLE `review` ADD CONSTRAINT `review_fk2` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `user_category` ADD CONSTRAINT `user_category_fk0` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE;
+ALTER TABLE `user_category` ADD CONSTRAINT `user_category_fk0` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `user_category` ADD CONSTRAINT `user_category_fk1` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`) ON DELETE CASCADE;
+ALTER TABLE `user_category` ADD CONSTRAINT `user_category_fk1` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `favorite` ADD CONSTRAINT `favorite_fk0` FOREIGN KEY (`customer_id`) REFERENCES `user`(`id`) ON DELETE CASCADE;
+ALTER TABLE `favorite` ADD CONSTRAINT `favorite_fk0` FOREIGN KEY (`customer_id`) REFERENCES `user`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `favorite` ADD CONSTRAINT `favorite_fk1` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`) ON DELETE CASCADE;
+ALTER TABLE `favorite` ADD CONSTRAINT `favorite_fk1` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `file` ADD CONSTRAINT `file_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE CASCADE;
+ALTER TABLE `file` ADD CONSTRAINT `file_fk0` FOREIGN KEY (`task_id`) REFERENCES `task`(`id`) ON DELETE NO ACTION;
 
-ALTER TABLE `portfolio` ADD CONSTRAINT `portfolio_fk0` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE;
+ALTER TABLE `portfolio` ADD CONSTRAINT `portfolio_fk0` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE NO ACTION;
