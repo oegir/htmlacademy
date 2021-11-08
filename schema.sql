@@ -24,17 +24,6 @@ CREATE TABLE city (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы user_role
---
-
-CREATE TABLE user_role (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(64) NOT NULL
-);
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы user
 --
 
@@ -45,21 +34,20 @@ CREATE TABLE user (
 	name VARCHAR(128) NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	city_id INT UNSIGNED NOT NULL,
-	role_id INT UNSIGNED NOT NULL,
+	is_executor BOOLEAN NOT NULL DEFAULT 1,
+	last_online TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
 	FOREIGN KEY (city_id) REFERENCES city(id),
-	FOREIGN KEY (role_id) REFERENCES user_role(id),
 	FULLTEXT INDEX user_ft_search(name)
 );
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы profile
+-- Структура таблицы user_profile
 --
 
-CREATE TABLE profile (
+CREATE TABLE user_profile (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	last_online TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
 	address VARCHAR(128) NULL,
 	birthday TIMESTAMP NULL,
 	about VARCHAR(128) NULL,
@@ -117,7 +105,7 @@ CREATE TABLE photo_of_work (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	path VARCHAR(128) NOT NULL UNIQUE,
 	profile_id INT UNSIGNED NOT NULL,
-	FOREIGN KEY (profile_id) REFERENCES profile(id)
+	FOREIGN KEY (profile_id) REFERENCES user_profile(id)
 );
 
 -- --------------------------------------------------------
