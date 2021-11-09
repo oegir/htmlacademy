@@ -5,6 +5,8 @@ require_once('src/database.php');
 require_once('src/functions.php');
 require_once('src/templates.php');
 
+$connection = database_get_connection();
+
 $sql_single_lot = "
  SELECT l.`heading`, l.`description`, l.`image`, l.`first_price`, l.`finish`, c.`title` FROM lot l
 JOIN category c ON l.`category_id` = c.`id`
@@ -22,16 +24,15 @@ if (!empty($_GET['id'])) {
         $single_item = mysqli_fetch_array($res, MYSQLI_ASSOC) ?? [];
 
         if(!empty($single_item)) {
+            $categories = get_categories($connection);
             $content = include_template ('single-lot.php', ['categories' => $categories, 'single_item' => $single_item]);
             }
         else {
             $error = "Данной страницы не существует на сайте";
-            show_error($content, $error);
+            $content = show_error($content, $error);
             }
 
-        $page_content = include_template ('layout.php', ['header' => $header, 'main_content' => ' ', 'top_menu' => $top_menu, 'single_lot_content' => $content, 'categories' => $categories]);
-
-        print($page_content);
+            print_page($content, $connection);
     }
     else {
         $error = "Данной страницы не существует на сайте";

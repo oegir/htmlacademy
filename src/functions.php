@@ -100,12 +100,8 @@ function date_finishing($finishing) {
     return($diff_array);
 }
 
-function show_error(&$content, $error) {
-    $content = include_template ('error.php', ['error' => $error]);
-}
-
-function getPostVal($name) {
-    return filter_input(INPUT_POST, $name);
+function show_error($content, $error) {
+    return include_template ('error.php', ['error' => $error]);
 }
 
 function validateLength($name, $min, $max) {
@@ -118,14 +114,19 @@ function validateLength($name, $min, $max) {
 }
 
 function validateNumeric($name) {
-    switch ($name) {
-        case (!is_numeric($name)):
-            return "Введите число";
-            break;
-        case (abs($name) != $name):
-            return "Число должно быть больше нуля";
-            break;
-    }  
+    
+    if (!is_numeric($name)) {
+        return "Введите число";
+    }
+    
+//     switch ($name) {
+//         case (!is_numeric($name)):
+//             return "Введите число";
+//             break;
+//         case (abs($name) != $name):
+//             return "Число должно быть больше нуля";
+//             break;
+//     }  
 }
 
 function validateDate($name) {
