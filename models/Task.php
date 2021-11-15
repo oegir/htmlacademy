@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "tasks".
@@ -20,8 +21,11 @@ use Yii;
  * @property string $fin_date фактический срок выполнения задания
  * @property string $status
  */
-class Task extends \yii\db\ActiveRecord
+class Task extends ActiveRecord
 {
+    public $street;
+    public $city;
+    public $category;
     /**
      * {@inheritdoc}
      */
