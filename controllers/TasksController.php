@@ -17,7 +17,7 @@ class TasksController extends Controller
                 'locations.street as street',
                 'categories.name as category',
                 'add_date',
-            ])->
+            ])->where(['tasks.status' => 'new'])->
             innerJoin('locations', 'loc_id = locations.id')->
             innerJoin('categories', 'cat_id = categories.id')->
             innerJoin('cities', 'cities.id = locations.city_id')->
