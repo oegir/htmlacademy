@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "locations".
@@ -15,7 +16,7 @@ use Yii;
  * @property string|null $street улица
  * @property string|null $info дополн. информация
  */
-class Location extends \yii\db\ActiveRecord
+class Location extends ActiveRecord
 {
     /**
      * {@inheritdoc}
