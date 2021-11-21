@@ -46,13 +46,15 @@ class Task
      */
     public function getActionMap(): array
     {
-        $actions = ['act_cancel', 'act_respond', 'act_done', 'act_refuse'];
+        $actions = [ActCancel::class, ActRespond::class, ActDone::class, ActRefuse::class];
+        $action_map = [];
+        
         foreach ($actions as $action_key) {
             $action = $this->getAction($action_key);
             $action_map[$action->getInnerName()] = $action->getName();
         }
 
-        return $action_map ?? [];
+        return $action_map;
     }
 
     /**
@@ -70,10 +72,10 @@ class Task
         }
 
         $data = [
-            $this->getAction('act_cancel')->getInnerName() => self::STATUS_CANCEL,
-            $this->getAction('act_respond')->getInnerName() => self::STATUS_WORK,
-            $this->getAction('act_done')->getInnerName() => self::STATUS_DONE,
-            $this->getAction('act_refuse')->getInnerName() => self::STATUS_FAILED
+            $this->getAction(ActCancel::class)->getInnerName() => self::STATUS_CANCEL,
+            $this->getAction(ActRespond::class)->getInnerName() => self::STATUS_WORK,
+            $this->getAction(ActDone::class)->getInnerName() => self::STATUS_DONE,
+            $this->getAction(ActRefuse::class)->getInnerName() => self::STATUS_FAILED
         ];
 
         return $data[$action] ?? '';
@@ -96,25 +98,29 @@ class Task
 
         $array = [
             self::STATUS_NEW => [
-                $this->getAction('act_cancel'),
-                $this->getAction('act_respond')
+                $this->getAction(ActCancel::class),
+                $this->getAction(ActRespond::class)
             ],
             self::STATUS_WORK => [
-                $this->getAction('act_done'),
-                $this->getAction('act_refuse')
+                $this->getAction(ActDone::class),
+                $this->getAction(ActRefuse::class)
             ]
         ];
+        
+        $available_actions = [];
 
         foreach ($array as $key => $actions) {
+            
             foreach ($actions as $action) {
                 $ids = [$this->executor_id, $this->customer_id, $user_id];
+                
                 if ($status === $key && $action->checkUserRights(...$ids)) {
                     $available_actions[] = $action;
                 }
             }
         }
 
-        return $available_actions ?? [];
+        return $available_actions;
     }
 
     /**
@@ -126,17 +132,12 @@ class Task
      */
     private function getAction(string $action): TaskAction
     {
-        $actions = ['act_cancel', 'act_respond', 'act_done', 'act_refuse'];
-        if (!in_array($action, $actions)) {
-            throw new ActionNotExistException("Действие не существует");
+        if (!class_exists($action)) {
+            throw new ClassNotFoundException("Класс действия не найден");
         }
-
+        
         if (!isset($this->actions[$action])) {
-            $classname = '\Anatolev\Service\\' . str_replace('_', '', $action);
-            if (!class_exists($classname)) {
-                throw new ClassNotFoundException("Класс не найден");
-            }
-            $this->actions[$action] = new $classname();
+            $this->actions[$action] = new $action();
         }
 
         return $this->actions[$action];
