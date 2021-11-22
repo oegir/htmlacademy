@@ -3,9 +3,9 @@ city_id,birthday,about,phone,skype,role
 2,1989-03-05,Pellentesque ultrices mattis odio.,75531015353,mobile,worker
 3,1989-12-30,Morbi a ipsum. Integer a nibh. In quis justo.,16371407508,Re-engineered,worker
 4,0629-03-03,Suspendisse potenti.,21468788926,Grass-roots,worker
-5,1989-04-08,"Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",62931646367,fault-tolerant,worker
-4,1989-04-18,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",63271348718,Team-oriented,worker
+1,1989-04-08,"Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.",62931646367,fault-tolerant,worker
+2,1989-04-18,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.",63271348718,Team-oriented,worker
 3,1989-03-20,Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.,41056175169,portal,worker
 4,1989-12-13,"Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",72882384431,intermediate,worker
-8,1989-01-14,Morbi ut odio.,69043821394,local area network,worker
-8,1989-02-03,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",28396220507,upward-trending,worker
+1,1989-01-14,Morbi ut odio.,69043821394,local area network,worker
+2,1989-02-03,"Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",28396220507,upward-trending,worker
