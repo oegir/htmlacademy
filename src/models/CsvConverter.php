@@ -6,33 +6,33 @@ namespace taskforce\models;
 use taskforce\models\exceptions\FileNotExistException;
 use taskforce\models\exceptions\CantWriteFileException;
 
-require_once 'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+require_once '../../vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-$output_file_name = 'data/data';
+$output_file_name = '../../data/data';
 
-$converter = new CsvConverter('data/categories.csv', 'category', $output_file_name, true);
+$converter = new CsvConverter('../../data/categories.csv', 'category', $output_file_name, true);
 
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/cities.csv', 'city', $output_file_name, false);
+$converter = new CsvConverter('../../data/cities.csv', 'city', $output_file_name, false);
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/tasks.csv', 'task', $output_file_name, false);
+$converter = new CsvConverter('../../data/tasks.csv', 'task', $output_file_name, false);
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/profiles.csv', 'user', $output_file_name, false);
+$converter = new CsvConverter('../../data/profiles.csv', 'user', $output_file_name, false);
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/users.csv', 'user', $output_file_name, false);
+$converter = new CsvConverter('../../data/users.csv', 'user', $output_file_name, false);
 $converter->createUpdateSql(1);
 
-$converter = new CsvConverter('data/opinions.csv', 'review', $output_file_name, false);
+$converter = new CsvConverter('../../data/opinions.csv', 'review', $output_file_name, false);
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/replies.csv', 'response', $output_file_name, false);
+$converter = new CsvConverter('../../data/replies.csv', 'response', $output_file_name, false);
 $converter->createInsertSql();
 
-$converter = new CsvConverter('data/user-category.csv', 'user_category', $output_file_name, false);
+$converter = new CsvConverter('../../data/user-category.csv', 'user_category', $output_file_name, false);
 $converter->createInsertSql();
 
 class CsvConverter
@@ -65,8 +65,6 @@ class CsvConverter
             $row = $spl_file_object->fgetcsv();
 
             if($row[0] === null) {
-                $sql = rtrim($sql, ", ");
-                $sql .= ';';
                 break;
             }
 

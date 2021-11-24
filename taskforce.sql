@@ -45,7 +45,7 @@ CREATE TABLE `user` (
     `about` varchar(512) COLLATE utf8mb4_general_ci DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	INDEX (`city_id`),
-	UNIQUE (`email`(128))
+	INDEX (`email`(128))
 );
 
 CREATE TABLE `response` (
