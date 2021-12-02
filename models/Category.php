@@ -18,6 +18,9 @@ use yii\db\ActiveRecord;
  */
 class Category extends ActiveRecord
 {
+    public $catChecked = true;
+    public $withoutPerformer = false;
+
     /**
      * {@inheritdoc}
      */
@@ -36,6 +39,7 @@ class Category extends ActiveRecord
             [['name', 'code'], 'string', 'max' => 64],
             [['icon'], 'string', 'max' => 256],
             [['code'], 'unique'],
+            [['checked'], 'safe'],
         ];
     }
 
@@ -73,5 +77,15 @@ class Category extends ActiveRecord
     public function getUsersCategories()
     {
         return $this->hasMany(UsersCategories::className(), ['category_id' => 'id']);
+    }
+
+    public function getCatChecked()
+    {
+        return $this->catChecked;
+    }
+
+    public function setCatChecked($checked)
+    {
+        $this->catChecked = $checked;
     }
 }
