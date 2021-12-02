@@ -70,8 +70,7 @@ class TasksController extends Controller
         if (strlen($period) > 0) {
             $hours = [1, 12, 24];
             $date = date("Y-m-d H:i:s", time() - 3600 * $hours[$period]);
-            //$date = time() - 3600 * $hours[$period];
-            $query = $query->where(['>', 'add_date', "$date"]);
+            $query = $query->andWhere(['>', 'add_date', "$date"]);
         }
         $query = $query->limit(3)->offset(0)->orderBy(['add_date' => SORT_DESC]);
         $tasks = $query->all();
