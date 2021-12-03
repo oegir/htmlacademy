@@ -18,9 +18,6 @@ use yii\db\ActiveRecord;
  */
 class Category extends ActiveRecord
 {
-    public $catChecked = true;
-    public $withoutPerformer = false;
-
     /**
      * {@inheritdoc}
      */
