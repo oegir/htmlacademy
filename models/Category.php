@@ -36,7 +36,6 @@ class Category extends ActiveRecord
             [['name', 'code'], 'string', 'max' => 64],
             [['icon'], 'string', 'max' => 256],
             [['code'], 'unique'],
-            [['checked'], 'safe'],
         ];
     }
 
