@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -20,7 +18,8 @@ class m211106_161838_create_messages_table extends Migration
             'from_id' => $this->integer()->notNull()->comment('от кого сообщение'),
             'whom_id' => $this->integer()->notNull()->comment('кому сообщение'),
             'add_date' => $this->dateTime()->notNull(),
-        ])->comment('Таблица сообщений пользователей');
+        ]);
+        $this->addCommentOnTable('{{%messages}}', 'Таблица сообщений пользователей');
     }
 
     /**

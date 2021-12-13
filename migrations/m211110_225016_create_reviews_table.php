@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -19,7 +17,7 @@ class m211110_225016_create_reviews_table extends Migration
             'task_id' => $this->integer()->notNull(),
             'custom_id' => $this->integer()->notNull()->comment('заказчик работы'),
             'contr_id' => $this->integer()->notNull()->comment('исполнитель работы'),
-            'add_date' =>  => $this->dateTime()->notNull(),
+            'add_date' => $this->dateTime()->notNull(),
             'comment' => $this->text()->null()->comment('отзыв заказчика о работе'),
             'rating' => $this->integer()->notNull(),
         ]);

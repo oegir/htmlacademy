@@ -15,5 +15,11 @@ return [
     'add_date' => $faker->date(),
     'deadline' => $faker->date(),
     'fin_date' => $faker->date(),
-    'status' => $faker->sentence(2, true),
+    'status' => $faker->randomElement([
+        TaskForce\logic\Task::STATUS_CANCELED,
+        TaskForce\logic\Task::STATUS_DONE,
+        TaskForce\logic\Task::STATUS_FAILED,
+        TaskForce\logic\Task::STATUS_NEW,
+        TaskForce\logic\Task::STATUS_WORK,
+    ]),
 ];

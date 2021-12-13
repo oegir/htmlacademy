@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\ActiveField;
 use app\models\Categories;
+use app\models\CategoryFilterForm;
 
 ?>
 <div class="left-column">
@@ -74,7 +75,6 @@ use app\models\Categories;
                                 value='{$value}' id='{$index}'>
                                 <label class='control-label' for='{$index}'>{$label}</label></span>";
                         },
-                        'unselect' => Categories::CATEGORIES_NOT_SELECTED,
                     ]
                 );
                 ?>
@@ -84,7 +84,7 @@ use app\models\Categories;
             <?php
                 $options = [
                     'label' => $categoryNames[Categories::ADD_CONDITION],
-                    'uncheck' => Categories::NO_ADDITION_SELECTED,
+                    'uncheck' => CategoryFilterForm::NO_ADDITION_SELECTED,
                 ];
                 echo $form->field(
                     $categories,
@@ -94,7 +94,7 @@ use app\models\Categories;
                             'class' => 'head-card',
                         ],
                         'template' => '{input}<label class="control-label" 
-                                    for="categories-additioncategorycheck">{label}</label>',
+                                    for="categoryfilterform-additioncategorycheck">{label}</label>',
                     ]
                 )->checkbox($options, false);
                 ?>

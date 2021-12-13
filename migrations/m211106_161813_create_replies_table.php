@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -23,7 +21,8 @@ class m211106_161813_create_replies_table extends Migration
             'add_date' => $this->dateTime()->notNull(),
             'rating' => $this->integer()->notNull(),
             'status' => $this->string(16)->notNull()->comment('accepted или rejected'),
-        ])->comment('Таблица откликов исполнителей');
+        ]);
+        $this->addCommentOnTable('{{%replies}}', 'Таблица откликов исполнителей');
     }
 
     /**

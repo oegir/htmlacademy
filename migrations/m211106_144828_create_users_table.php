@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -20,7 +18,8 @@ class m211106_144828_create_users_table extends Migration
             'email' => $this->string(64)->notNull()->unique(),
             'password' => $this->string(64)->notNull(),
             'add_date' => $this->dateTime()->notNull(),
-        ])->comment('Таблица пользователей');
+        ]);
+        $this->addCommentOnTable('{{%users}}', 'Таблица пользователей');
     }
 
     /**

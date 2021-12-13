@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -18,7 +16,8 @@ class m211106_161604_create_images_table extends Migration
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'img' => $this->string(256)->notNull(),
-        ])->comment('Таблица фотографий работ исполнителя');
+        ]);
+        $this->addCommentOnTable('{{%images}}', 'Таблица фотографий работ исполнителя');
     }
 
     /**
